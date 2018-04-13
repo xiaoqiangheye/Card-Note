@@ -17,6 +17,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let ifLauched = UserDefaults.standard.bool(forKey: "ifLauched")
+        if !ifLauched{
+        UserDefaults.standard.set(true, forKey: Constant.Key.ifLauched)
+        var tags = [String]()
+        UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent("card.txt")
+        manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil)
+        let cardList = [Card]()
+        let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
+            do{
+                try datawrite.write(to: url!)
+            }catch{
+                print("fail to add")
+            }
+        }else
+        {
+            let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)
+            if tags == nil{
+                var tags = [String]()
+                UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
+            }
+        }
         return true
     }
 
