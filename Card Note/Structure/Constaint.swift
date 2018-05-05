@@ -7,17 +7,16 @@
 //
 
 import Foundation
-
-
-class Constaint{
-    var type:Constaint.type!
+import Font_Awesome_Swift
+class Constraint{
+    var type:Constraint.type!
     var value:Any!
     enum type{
         case color
         case tag
     }
-    init(_ type:Constaint.type!, _ value: Any) {
+    init(_ type:Constraint.type!, _ value: Any) {
         self.type = type
         self.value = value
     }
-}
+}  

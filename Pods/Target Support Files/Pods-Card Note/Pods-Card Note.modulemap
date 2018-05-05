@@ -1,0 +1,6 @@
+framework module Pods_Card_Note {
+  umbrella header "Pods-Card Note-umbrella.h"
+
+  export *
+  module * { export * }
+}

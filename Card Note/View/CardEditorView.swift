@@ -28,9 +28,6 @@ class CardEditorView:UIView{
         cardTitle.center.x = self.bounds.width/2
         cardTitle.layer.cornerRadius = 10
         cardTitle.textAlignment = .center
-
-        
-        
         classification.frame = CGRect(x: 0, y: 50, width: self.bounds.width*0.8, height: 30)
         classification.font = UIFont.systemFont(ofSize: 15)
         classification.textColor = .white
@@ -89,6 +86,7 @@ class CardEditorView:UIView{
         self.card = card
         
         var cumulatedHeight = descriptions.frame.origin.y + descriptions.frame.height + 20
+        /*
         for example in card.getExamples(){
             let exaView = CardView.singleExampleView()
             exaView.textView.text = example
@@ -100,6 +98,7 @@ class CardEditorView:UIView{
             self.frame.size.height += exaView.frame.height + 20
             self.examples.append(exaView)
         }
+ */
         
         for card in card.getChilds(){
             let cardView = CardView.getSubCardView(card)

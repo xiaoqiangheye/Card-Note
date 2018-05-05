@@ -1,0 +1,3 @@
+[submodule "Card Note/Alamofire"]
+	path = Card Note/Alamofire
+	url = https://github.com/Alamofire/Alamofire.git

@@ -8,31 +8,43 @@
 
 import UIKit
 import CoreData
+import AMapFoundationKit
 
+var ifloggedin = false
+var loggedusername = ""
+var loggedemail = ""
+var loggedID = ""
+var emailVerification = ""
+var signUpEmail = ""
+var signUpPassword = ""
+var signUpUsername = ""
+var signUpAuthCode = ""
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
+class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
+    
+    func signature(with fileds: QCloudSignatureFields!, request: QCloudBizHTTPRequest!, urlRequest urlRequst: NSMutableURLRequest!, compelete continueBlock: QCloudHTTPAuthentationContinueBlock!) {
+        
+    }
+    
+    
     var window: UIWindow?
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+      let configuration = QCloudServiceConfiguration()
+        configuration.appID = "1253464939"
+       configuration.signatureProvider = self
+        let endpoint = QCloudEndPoint()
+        endpoint.regionName = "ap-chengdu"
+        configuration.endpoint = endpoint
+        
+        AMapServices.shared().apiKey = "cd1079b6f89a637f97e367d5b2baa101"
         let ifLauched = UserDefaults.standard.bool(forKey: "ifLauched")
         if !ifLauched{
         UserDefaults.standard.set(true, forKey: Constant.Key.ifLauched)
         var tags = [String]()
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent("card.txt")
-        manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil)
-        let cardList = [Card]()
-        let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
-            do{
-                try datawrite.write(to: url!)
-            }catch{
-                print("fail to add")
-            }
+       
         }else
         {
             let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)

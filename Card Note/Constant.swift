@@ -24,7 +24,11 @@ class Constant{
     }
     
     struct Key{
+        static let Token = "userToken"
         static let Tags = "tags"
         static let ifLauched = "ifLauched"
+        static let loggedEmail = "loggedEmail"
+        static let loggedUsername = "username"
+        static let loggedID = "id"
     }
 }
