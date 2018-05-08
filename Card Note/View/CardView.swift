@@ -35,6 +35,7 @@ class CardView: UIView{
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
             url?.appendPathComponent(loggedID)
             url?.appendPathComponent(self.card.getId() + ".jpg")
+            /*deprecated
                 User.getImage(email: loggedemail, cardID: self.card.getId(), completionHandler: { (im:UIImage?) in
                     if im != nil{
                         DispatchQueue.main.async {
@@ -46,6 +47,16 @@ class CardView: UIView{
                         print("get Image failed")
                     }
                 })
+            */
+            User.downloadPhotosUsingQCloud(email: loggedemail, cardID: self.card.getId()) { (bool, error) in
+                if bool{
+                    DispatchQueue.main.async {
+                        (self.card as! PicCard).pic = UIImage(contentsOfFile: (url?.path)!)
+                        self.image.image = UIImage(contentsOfFile: (url?.path)!)
+                    }
+                    print("load picture success; cardId\(self.card.getId())")
+                }
+            }
             }
     }
     
@@ -77,6 +88,7 @@ class CardView: UIView{
             url?.appendPathComponent("mapPic")
             try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
             url?.appendPathComponent(self.card.getId() + ".jpg")
+            /*deprecared
             User.getImage(email: loggedemail, cardID: self.card.getId(), completionHandler: { (im:UIImage?) in
                 if im != nil{
                     let imageData = UIImageJPEGRepresentation(im!, 0.5)
@@ -90,6 +102,18 @@ class CardView: UIView{
                      print("get map failed")
                 }
             })
+ */
+          
+            User.downloadMapUsingQCloud(email: loggedemail, cardID: self.card.getId()) { (bool, error) in
+                if bool{
+                    DispatchQueue.main.async {
+                        (self.card as! MapCard).image = UIImage(contentsOfFile: (url?.path)!)!
+                        self.image.image = UIImage(contentsOfFile: (url?.path)!)
+                    }
+                    print("load map success; cardId\(self.card.getId())")
+                }
+            }
+            
         }
     }
     

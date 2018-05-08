@@ -23,7 +23,12 @@ var signUpAuthCode = ""
 class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
     
     func signature(with fileds: QCloudSignatureFields!, request: QCloudBizHTTPRequest!, urlRequest urlRequst: NSMutableURLRequest!, compelete continueBlock: QCloudHTTPAuthentationContinueBlock!) {
-        
+        let credential = QCloudCredential()
+        credential.secretID = "AKIDCRdjfPSdQAkAORR6f3FSYVGrJnAZvyWx"
+        credential.secretKey = "QMCrKbgdQQK6h5HH5h9S9g1AA2lLjvuh"
+        let creation = QCloudAuthentationV5Creator.init(credential: credential)
+        let sig = creation?.signature(forData: urlRequst)
+        continueBlock(sig,nil)
     }
     
     
@@ -33,9 +38,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
       let configuration = QCloudServiceConfiguration()
         configuration.appID = "1253464939"
        configuration.signatureProvider = self
-        let endpoint = QCloudEndPoint()
+        let endpoint = QCloudCOSXMLEndPoint()
         endpoint.regionName = "ap-chengdu"
         configuration.endpoint = endpoint
+        
+        QCloudCOSXMLService.registerDefaultCOSXML(with: configuration)
+        QCloudCOSTransferMangerService.registerDefaultCOSTransferManger(with: configuration)
         
         AMapServices.shared().apiKey = "cd1079b6f89a637f97e367d5b2baa101"
         let ifLauched = UserDefaults.standard.bool(forKey: "ifLauched")

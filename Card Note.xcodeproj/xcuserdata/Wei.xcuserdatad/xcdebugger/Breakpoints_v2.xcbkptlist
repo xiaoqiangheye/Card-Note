@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.51958"
+            timestampString = "547459596.8070509"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "381"
-            endingLineNumber = "381"
+            startingLineNumber = "560"
+            endingLineNumber = "560"
             landmarkName = "getUserCards(email:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.52643"
+            timestampString = "547459596.844286"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "382"
-            endingLineNumber = "382"
+            startingLineNumber = "561"
+            endingLineNumber = "561"
             landmarkName = "getUserCards(email:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.526801"
+            timestampString = "547459596.845647"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "384"
-            endingLineNumber = "384"
+            startingLineNumber = "563"
+            endingLineNumber = "563"
+            landmarkName = "getUserCards(email:completionHandler:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/Structure/User.swift"
+            timestampString = "547459596.84703"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "564"
+            endingLineNumber = "564"
             landmarkName = "User"
             landmarkType = "3">
          </BreakpointContent>
@@ -58,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.5270979"
+            timestampString = "547459596.848444"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "385"
-            endingLineNumber = "385"
+            startingLineNumber = "565"
+            endingLineNumber = "565"
             landmarkName = "login(email:password:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -74,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.527474"
+            timestampString = "547459596.849699"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "386"
-            endingLineNumber = "386"
+            startingLineNumber = "570"
+            endingLineNumber = "570"
             landmarkName = "login(email:password:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -90,27 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.528175"
+            timestampString = "547459596.850855"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "391"
-            endingLineNumber = "391"
-            landmarkName = "login(email:password:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.528969"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "392"
-            endingLineNumber = "392"
+            startingLineNumber = "571"
+            endingLineNumber = "571"
             landmarkName = "login(email:password:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.26122"
+            timestampString = "547459596.8520581"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "687"
-            endingLineNumber = "687"
+            startingLineNumber = "691"
+            endingLineNumber = "691"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.319474"
+            timestampString = "547459596.852232"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "689"
-            endingLineNumber = "689"
+            startingLineNumber = "693"
+            endingLineNumber = "693"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.320923"
+            timestampString = "547459596.852352"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "630"
-            endingLineNumber = "630"
+            startingLineNumber = "634"
+            endingLineNumber = "634"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.3224961"
+            timestampString = "547459596.852443"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "670"
-            endingLineNumber = "670"
+            startingLineNumber = "674"
+            endingLineNumber = "674"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.324016"
+            timestampString = "547459596.852585"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "668"
-            endingLineNumber = "668"
+            startingLineNumber = "672"
+            endingLineNumber = "672"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.798656"
+            timestampString = "547459596.852748"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.7987649"
+            timestampString = "547459596.852999"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
             <Locations>
@@ -266,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.798857"
+            timestampString = "547459596.853138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
             <Locations>
@@ -314,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.798972"
+            timestampString = "547459596.853305"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
             <Locations>
@@ -362,11 +362,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.799091"
+            timestampString = "547459596.853442"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -378,11 +378,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.530648"
+            timestampString = "547459596.85357"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "288"
-            endingLineNumber = "288"
+            startingLineNumber = "467"
+            endingLineNumber = "467"
             landmarkName = "upLoadImage(email:pic:)"
             landmarkType = "7">
             <Locations>
@@ -426,11 +426,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.5310121"
+            timestampString = "547459596.854717"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "418"
-            endingLineNumber = "418"
+            startingLineNumber = "597"
+            endingLineNumber = "597"
             landmarkName = "login(email:password:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -442,11 +442,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.531314"
+            timestampString = "547459596.855812"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "403"
-            endingLineNumber = "403"
+            startingLineNumber = "582"
+            endingLineNumber = "582"
             landmarkName = "login(email:password:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -458,11 +458,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.5315959"
+            timestampString = "547459596.856974"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
+            startingLineNumber = "592"
+            endingLineNumber = "592"
             landmarkName = "login(email:password:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -474,11 +474,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.531882"
+            timestampString = "547459596.858171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "415"
-            endingLineNumber = "415"
+            startingLineNumber = "594"
+            endingLineNumber = "594"
             landmarkName = "login(email:password:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -490,23 +490,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.7999049"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "viewDidAppear(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.799988"
+            timestampString = "547459596.8593889"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "61"
@@ -522,11 +506,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.800052"
+            timestampString = "547459596.859586"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -538,11 +522,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.800163"
+            timestampString = "547459596.859726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "viewDidAppear(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/ViewController/AdViewController.swift"
+            timestampString = "547459596.85987"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
             <Locations>
@@ -586,11 +586,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.800295"
+            timestampString = "547459596.860005"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -602,11 +602,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.800416"
+            timestampString = "547459596.8601331"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -618,23 +618,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.800527"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "viewDidAppear(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.800613"
+            timestampString = "547459596.860237"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "69"
@@ -650,11 +634,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.802806"
+            timestampString = "547459596.860432"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "viewDidAppear(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/ViewController/AdViewController.swift"
+            timestampString = "547459596.860539"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -666,7 +666,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/SignUpController.swift"
-            timestampString = "547034696.049247"
+            timestampString = "547452988.705613"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "157"
@@ -682,11 +682,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.3271689"
+            timestampString = "547459596.862165"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "633"
-            endingLineNumber = "633"
+            startingLineNumber = "637"
+            endingLineNumber = "637"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -698,11 +698,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.328853"
+            timestampString = "547459596.862285"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "634"
-            endingLineNumber = "634"
+            startingLineNumber = "638"
+            endingLineNumber = "638"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -714,71 +714,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.3306561"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "609"
-            endingLineNumber = "609"
-            landmarkName = "save(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.332145"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "610"
-            endingLineNumber = "610"
-            landmarkName = "save(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.334152"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "611"
-            endingLineNumber = "611"
-            landmarkName = "save(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.335755"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "612"
-            endingLineNumber = "612"
-            landmarkName = "save(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.3383271"
+            timestampString = "547459596.862438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "613"
@@ -794,11 +730,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.339909"
+            timestampString = "547459596.862538"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "634"
-            endingLineNumber = "634"
+            startingLineNumber = "614"
+            endingLineNumber = "614"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -810,11 +746,75 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.3425699"
+            timestampString = "547459596.862626"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "684"
-            endingLineNumber = "684"
+            startingLineNumber = "615"
+            endingLineNumber = "615"
+            landmarkName = "save(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/ViewController/CardEditor.swift"
+            timestampString = "547459596.862722"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
+            landmarkName = "save(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/ViewController/CardEditor.swift"
+            timestampString = "547459596.8628089"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "617"
+            endingLineNumber = "617"
+            landmarkName = "save(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/ViewController/CardEditor.swift"
+            timestampString = "547459596.862923"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "638"
+            endingLineNumber = "638"
+            landmarkName = "save(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/ViewController/CardEditor.swift"
+            timestampString = "547459596.863025"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "688"
+            endingLineNumber = "688"
             landmarkName = "save(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -842,11 +842,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/AdViewController.swift"
-            timestampString = "546964296.815313"
+            timestampString = "547459596.863188"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -890,11 +890,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.533003"
+            timestampString = "547459596.8633519"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "325"
+            endingLineNumber = "325"
             landmarkName = "getImage(email:cardID:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -906,11 +906,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.533306"
+            timestampString = "547459596.8645509"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "getImage(email:cardID:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -922,11 +922,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.533597"
+            timestampString = "547459596.86564"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
+            startingLineNumber = "321"
+            endingLineNumber = "321"
             landmarkName = "getImage(email:cardID:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -986,11 +986,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/View/CardView.swift"
-            timestampString = "547132054.018916"
+            timestampString = "547459596.866998"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "loadPic()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1002,11 +1002,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/View/CardView.swift"
-            timestampString = "547132054.018996"
+            timestampString = "547459596.867133"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "loadPic()"
             landmarkType = "7">
             <Locations>
@@ -1050,7 +1050,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/View/CardView.swift"
-            timestampString = "547132054.019082"
+            timestampString = "547459596.867221"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "loadPic()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/View/CardView.swift"
+            timestampString = "547459596.867309"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "43"
@@ -1065,92 +1081,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Card Note/View/CardView.swift"
-            timestampString = "547132054.0191391"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "loadPic()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.53404"
+            timestampString = "547459596.8674051"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "shareCard(card:states:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.534337"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "shareCard(card:states:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.534618"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
-            landmarkName = "shareCard(card:states:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.534947"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
-            landmarkName = "shareCard(card:states:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.53527"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
             landmarkName = "shareCard(card:states:)"
             landmarkType = "7">
             <Locations>
@@ -1194,11 +1130,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.5356261"
+            timestampString = "547459596.868589"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
             landmarkName = "shareCard(card:states:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1210,11 +1146,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.536061"
+            timestampString = "547459596.8696491"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
+            startingLineNumber = "297"
+            endingLineNumber = "297"
             landmarkName = "shareCard(card:states:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1226,107 +1162,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.53642"
+            timestampString = "547459596.870868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
-            landmarkName = "shareCard(card:states:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.536707"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "User"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.53699"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
-            landmarkName = "shareCard(card:states:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static Card_Note.User.getImage(email: Swift.String, cardID: Swift.String, completionHandler: (Swift.Optional&lt;__ObjC.UIImage&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "Card Note"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Desktop/%E7%BC%96%E7%A8%8B/Card%20Note/Card%20Note/Structure/User.swift"
-                  timestampString = "546802357.150367"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "85"
-                  endingLineNumber = "85"
-                  offsetFromSymbolStart = "1384">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__ObjC.URLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in static Card_Note.User.getImage(email: Swift.String, cardID: Swift.String, completionHandler: (Swift.Optional&lt;__ObjC.UIImage&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "Card Note"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Desktop/%E7%BC%96%E7%A8%8B/Card%20Note/Card%20Note/Structure/User.swift"
-                  timestampString = "546802357.154304"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "86"
-                  endingLineNumber = "86"
-                  offsetFromSymbolStart = "72">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.537271"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "User"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.537553"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
+            startingLineNumber = "375"
+            endingLineNumber = "375"
             landmarkName = "getAudio(email:cardID:completionHandler:)"
             landmarkType = "7">
             <Locations>
@@ -1370,11 +1210,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.537836"
+            timestampString = "547459596.872021"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
+            startingLineNumber = "376"
+            endingLineNumber = "376"
             landmarkName = "getAudio(email:cardID:completionHandler:)"
             landmarkType = "7">
             <Locations>
@@ -1418,11 +1258,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.538113"
+            timestampString = "547459596.873058"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "361"
+            endingLineNumber = "361"
             landmarkName = "getAudio(email:cardID:completionHandler:)"
             landmarkType = "7">
             <Locations>
@@ -1466,11 +1306,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.538389"
+            timestampString = "547459596.874156"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "364"
+            endingLineNumber = "364"
             landmarkName = "getAudio(email:cardID:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1482,23 +1322,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.700137"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "mapView(_:mapDidMoveByUser:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.70611"
+            timestampString = "547459596.875282"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
@@ -1514,11 +1338,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.706706"
+            timestampString = "547459596.875433"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "mapView(_:mapDidMoveByUser:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Note/UIMapPIcker.swift"
+            timestampString = "547459596.875508"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1530,11 +1370,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.707233"
+            timestampString = "547459596.875577"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1546,11 +1386,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.707841"
+            timestampString = "547459596.875649"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
             landmarkName = "onReGeocodeSearchDone(_:response:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1578,11 +1418,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.53881"
+            timestampString = "547459596.875789"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "175"
-            endingLineNumber = "175"
+            startingLineNumber = "354"
+            endingLineNumber = "354"
             landmarkName = "getAudio(email:cardID:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1594,11 +1434,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/User.swift"
-            timestampString = "547134716.539103"
+            timestampString = "547459596.876896"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "getImage(email:cardID:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1609,28 +1449,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Card Note/Structure/Card/MapCard.swift"
-            timestampString = "547141865.365209"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "init(coder:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/CardParser.swift"
-            timestampString = "547104546.05892"
+            timestampString = "547459596.878078"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "JSONToCard(_:)"
             landmarkType = "7">
             <Locations>
@@ -1674,11 +1498,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/CardParser.swift"
-            timestampString = "547104546.058992"
+            timestampString = "547459596.87823"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
             landmarkName = "JSONToCard(_:)"
             landmarkType = "7">
             <Locations>
@@ -1722,11 +1546,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/Card/MapCard.swift"
-            timestampString = "547141865.365381"
+            timestampString = "547459596.878379"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
             landmarkName = "init(id:formalAddress:neighbourAddress:longitude:latitude:)"
             landmarkType = "7">
             <Locations>
@@ -1770,11 +1594,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/CardParser.swift"
-            timestampString = "547104546.0591069"
+            timestampString = "547459596.878978"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "JSONToCard(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1786,11 +1610,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/CardParser.swift"
-            timestampString = "547104546.059212"
+            timestampString = "547459596.87909"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
             landmarkName = "JSONToCard(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1802,11 +1626,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/Card/MapCard.swift"
-            timestampString = "547141865.3654751"
+            timestampString = "547459596.879191"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "init(id:formalAddress:neighbourAddress:longitude:latitude:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1818,7 +1642,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/Card/MapCard.swift"
-            timestampString = "547141865.365553"
+            timestampString = "547459596.879578"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "56"
@@ -1866,7 +1690,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/Card/MapCard.swift"
-            timestampString = "547141865.36562"
+            timestampString = "547459596.8799731"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "58"
@@ -1914,7 +1738,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/Card/MapCard.swift"
-            timestampString = "547141865.3657269"
+            timestampString = "547459596.880353"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "59"
@@ -1962,11 +1786,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/Structure/CardParser.swift"
-            timestampString = "547104546.059386"
+            timestampString = "547459596.880855"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
             landmarkName = "JSONToCard(_:)"
             landmarkType = "7">
             <Locations>
@@ -2010,11 +1834,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.353946"
+            timestampString = "547459596.880957"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "269"
+            endingLineNumber = "269"
             landmarkName = "keyboardWillShow(aNotification:)"
             landmarkType = "7">
             <Locations>
@@ -2058,11 +1882,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.356182"
+            timestampString = "547459596.881085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "270"
+            endingLineNumber = "270"
             landmarkName = "keyboardWillShow(aNotification:)"
             landmarkType = "7">
             <Locations>
@@ -2106,60 +1930,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Note/ViewController/CardEditor.swift"
-            timestampString = "547189011.357733"
+            timestampString = "547459596.881184"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
             landmarkName = "keyboardWillShow(aNotification:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.708735"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
-            landmarkName = "mapView(_:didUpdate:updatingLocation:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.7090451"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Note/UIMapPIcker.swift"
-            timestampString = "547142008.709371"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
-            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

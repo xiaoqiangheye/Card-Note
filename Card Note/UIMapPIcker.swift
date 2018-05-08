@@ -31,11 +31,8 @@ class UIMapPicker:UIViewController,MAMapViewDelegate, AMapSearchDelegate, UIText
     override func viewDidLoad() {
         AMapServices.shared().enableHTTPS = true
         mapView = MAMapView(frame: self.view.bounds)
-        if self.action == Action.add.rawValue{
         mapView.isShowsUserLocation = true
         mapView.userTrackingMode = .follow
-        }
-        
         mapView.delegate = self
         mapView.setZoomLevel(16, animated: false)
         searchApi?.delegate = self
@@ -94,8 +91,12 @@ class UIMapPicker:UIViewController,MAMapViewDelegate, AMapSearchDelegate, UIText
         request.requireExtension = true
         searchApi?.aMapReGoecodeSearch(request)
         }else if action == Action.update.rawValue{
-            
             mapView.setCenter(CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude!), longitude: CLLocationDegrees(longitude!)), animated: true)
+            let location = mapView.centerCoordinate
+            let request = AMapReGeocodeSearchRequest()
+            request.location = AMapGeoPoint.location(withLatitude: CGFloat(location.latitude), longitude: CGFloat(location.longitude))
+            request.requireExtension = true
+            searchApi?.aMapReGoecodeSearch(request)
         }
     }
     

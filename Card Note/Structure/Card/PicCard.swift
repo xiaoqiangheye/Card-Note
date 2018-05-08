@@ -28,6 +28,7 @@ class PicCard:Card{
             self.pic = im
         }else{
             self.pic = #imageLiteral(resourceName: "bubble")
+            /*deprecared
             User.getImage(email: loggedemail, cardID: self.getId(), completionHandler: { (image:UIImage?) in
                 if image != nil{
                     DispatchQueue.main.async {
@@ -35,6 +36,12 @@ class PicCard:Card{
                     }
                 }
             })
+            */
+            User.downloadPhotosUsingQCloud(email: loggedemail, cardID: self.getId()) { (bool, error) in
+                if bool{
+                    self.pic = UIImage(contentsOfFile: (url?.path)!)
+                }
+            }
         }
        
        // fatalError("init(coder:) has not been implemented")

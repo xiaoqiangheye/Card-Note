@@ -56,7 +56,10 @@ class MapCard:Card{
         
         if manager.fileExists(atPath: (url?.path)!)
         {
-            self.image = UIImage(contentsOfFile: (url?.path)!)!
+            let image = UIImage(contentsOfFile: (url?.path)!)
+            if image != nil{
+                self.image = image!
+            }
         }
         self.imagePath = (url?.path)!
     }
@@ -77,8 +80,11 @@ class MapCard:Card{
         url?.appendPathComponent(self.getId() + ".jpg")
         self.imagePath = url?.path
         if manager.fileExists(atPath: imagePath!){
+            let image = UIImage(contentsOfFile: imagePath!)
+            if image != nil{
+            self.image = image!
             
-            self.image = UIImage(contentsOfFile: imagePath!)!
+            }
         }else{
             self.image = #imageLiteral(resourceName: "searchBar")
         }

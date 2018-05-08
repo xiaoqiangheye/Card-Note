@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 class UserViewController:UIViewController{
+    @IBOutlet weak var collect: UIButton!
+    @IBOutlet weak var like: UIButton!
+    @IBOutlet weak var branch: UIButton!
     @IBAction func logout(_ sender: Any) {
         ifloggedin = false
         UserDefaults.standard.set("", forKey: Constant.Key.Token)
@@ -25,6 +28,9 @@ class UserViewController:UIViewController{
     }
     @IBOutlet weak var userLabel: UILabel!
     override func viewDidLoad() {
+        collect.setFAIcon(icon: .FAUserPlus, forState: .normal)
+        like.setFAIcon(icon: .FAHeart, forState: .normal)
+        branch.setFAIcon(icon: .FACodeFork, forState: .normal)
         if (ifloggedin){
             userLabel.text = loggedusername
         }

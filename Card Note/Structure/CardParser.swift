@@ -43,19 +43,24 @@ class CardParser{
                 url?.appendPathComponent(id + ".jpg")
                 if manager.fileExists(atPath: (url?.path)!){
                     // manager.createDirectory(atPath: url?.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-                   let image = try? UIImage(data: NSData(contentsOf: url!) as Data)!
+                   let image = UIImage(contentsOfFile: (url?.path)!)
                     if image != nil{
-                    card = PicCard(image!)
+                        card = PicCard(image!)
                     }else{
                     card = PicCard(#imageLiteral(resourceName: "searchBar"))
                     }
                 }else{
                     card = PicCard(#imageLiteral(resourceName: "searchBar"))
+                    /*deprecated at May 7th
                     User.getImage(email: loggedemail, cardID: id, completionHandler: { (image) in
                         if image != nil{
                             print("get pic success")
                         }
                     })
+                    */
+                    User.downloadPhotosUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                        //
+                    }
                 }
                 card.setId(id)
                 card.updateTime(modifytime)
@@ -68,9 +73,14 @@ class CardParser{
                 url?.appendPathComponent("audio")
                 url?.appendPathComponent(id + ".wav")
                 if !manager.fileExists(atPath:(url?.path)!){
+                    /* deprecated at May.7th
                 User.getAudio(email: loggedemail, cardID: id, completionHandler: { (path) in
                     print("get audio success")
                 })
+                    */
+                }
+                User.downloadAudioUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                    //
                 }
                 let state = json!["state"].stringValue
                 if state == RecordManager.State.willRecord.rawValue || state == RecordManager.State.recording.rawValue{
@@ -87,7 +97,7 @@ class CardParser{
                 try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
                 url?.appendPathComponent(id + ".jpg")
                 if !manager.fileExists(atPath:(url?.path)!){
-                    
+                    /* deprecated at May.7th
                     User.getImage(email: loggedemail, cardID: id, completionHandler: { (image) in
                         if image != nil{
                         let imageData = UIImageJPEGRepresentation(image!, 0.5)
@@ -103,6 +113,12 @@ class CardParser{
                         }
                         
                     })
+                  */
+                    User.downloadMapUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                        if error != nil{
+                            //
+                        }
+                    }
                 }
             }
             

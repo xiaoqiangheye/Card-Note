@@ -40,6 +40,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     var ifPaletteShowed:Bool = false
     /////pictureAction/////
     var picTureAction:String = ""
+    var mapAction:String = ""
     /////////selected
     var selectedPictureView:CardView.PicView?
     var selectedTextView:UITextView?
@@ -537,7 +538,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         if manager.fileExists(atPath: (url?.path)!){
                             let image = UIImage(data: try! NSData(contentsOf: url!) as Data)!
                            // User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
-                            User.uploadPhotoUsingFTP(url: url!)
+                           // User.uploadPhotoUsingFTP(url: url!)
+                            //deprecated above
+                            User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                         }
                     }else if card.isKind(of: CardView.ExaView.self){
                         (card.card as! ExampleCard).setExample((card as! CardView.ExaView).textView.text)
@@ -552,7 +555,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         if manager.fileExists(atPath: (url?.path)!){
                             let data = NSData(contentsOfFile: (url?.path)!)
                            // User.uploadAudioWithAF(email: loggedemail, filePath: (url?.path)!, cardID: card.card.getId())
-                            User.uploadAudioUsingFTP(url: url!)
+                           // User.uploadAudioUsingFTP(url: url!)
+                            User.uploadAudioUsingQCloud(email: loggedemail, url: url!)
                         }
                     }else if card.isKind(of: CardView.MapCardView.self){
                         let manager = FileManager.default
@@ -563,7 +567,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         if manager.fileExists(atPath: (url?.path)!){
                             let image = UIImage(contentsOfFile: (url?.path)!)
                             //User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
-                            User.uploadPhotoUsingFTP(url:url!)
+                            User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                         }
                     }
                 }
@@ -641,7 +645,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                             if manager.fileExists(atPath: (url?.path)!){
                                let image = UIImage(data: try! NSData(contentsOf: url!) as Data)!
                              //User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
-                                User.uploadPhotoUsingFTP(url: url!)
+                               User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
                         }else if card.isKind(of: CardView.ExaView.self){
                            (card.card as! ExampleCard).setExample((card as! CardView.ExaView).textView.text)
@@ -656,7 +660,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                             if manager.fileExists(atPath: (url?.path)!){
                                 let data = NSData(contentsOfFile: (url?.path)!)
                                // User.uploadAudioWithAF(email: loggedemail, filePath: (url?.path)!, cardID: card.card.getId())
-                                User.uploadAudioUsingFTP(url: url!)
+                                User.uploadAudioUsingQCloud(email: loggedemail, url: url!)
                             }
                         }else if card.isKind(of: CardView.MapCardView.self){
                             let manager = FileManager.default
@@ -668,7 +672,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                                 let image = UIImage(contentsOfFile: (url?.path)!)
                                 
                                // User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
-                                User.uploadPhotoUsingFTP(url: url!)
+                               User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
                         }
                     }
@@ -1004,6 +1008,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     @objc func addMap(){
         let picker = UIMapPicker()
         picker.delegate = self
+        mapAction = "add"
         picker.action = UIMapPicker.Action.add.rawValue
         self.present(picker, animated: false, completion: nil)
     }
@@ -1015,11 +1020,14 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
          picker.latitude = (mapView.card as! MapCard).latitude
          picker.longitude = (mapView.card as! MapCard).longitude
          picker.delegate = self
+         mapAction = "update"
+         selectedMapView = mapView
         self.present(picker,animated:false,completion: nil)
         
     }
     
     func UIMapDidSelected(image:UIImage,poi:AMapPOI?,formalAddress:String) {
+        if mapAction == "add"{
         let id = UUID().uuidString
         let imageData = UIImageJPEGRepresentation(image, 0.5)
         let manager = FileManager.default
@@ -1049,5 +1057,23 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         subCards.append(mapview)
         cardBackGround.frame.size.height = mapview.frame.origin.y + mapview.frame.height + 20
         scrollView.contentSize.height = mapview.frame.origin.y + mapview.frame.height + 20
+        }else if mapAction == "update"{
+            selectedMapView?.image.image = image
+            let mapCard = (selectedMapView?.card as! MapCard)
+            mapCard.image = image
+            let manager = FileManager.default
+            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+            url?.appendPathComponent(loggedID)
+            url?.appendPathComponent("mapPic")
+            try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
+            url?.appendPathComponent(mapCard.getId() + ".jpg")
+            let imageData = UIImageJPEGRepresentation(image, 0.5)
+            do{
+                try? imageData?.write(to: url!)
+            }catch let err{
+                print(err.localizedDescription)
+            }
+            
+        }
     }
 }

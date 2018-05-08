@@ -13,11 +13,13 @@ import GoogleMobileAds
 class AdViewController:UIViewController{
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-       // User.getImage(email: "weiqiang2000@vip.qq.com", cardID: "")
         let token = UserDefaults.standard.string(forKey: Constant.Key.Token)
+        
         if token != nil && token != ""{
+            
             User.loginWithToken(completionHandler: {
                 (json:JSON?)->Void in
+                
                 if json != nil{
                 let ifSuccess = json!["ifSuccess"].boolValue
                 if !ifSuccess{

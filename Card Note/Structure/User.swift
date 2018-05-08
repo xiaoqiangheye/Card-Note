@@ -11,9 +11,7 @@ import SwiftyJSON
 import UIKit
 import Alamofire
 import RebekkaTouch
-import QCloudCOSXML
-
-class User{
+class User:NSObject,URLSessionDelegate{
     private var username:String!
     private var password:String!
     private var email:String!
@@ -45,11 +43,156 @@ class User{
     }
     
     
-    static func uploadPhotosUsingQCloud(){
-    
-        let put = QCloudCOSXMLUploadObjectRequest()
+    static func uploadPhotoUsingQCloud(email:String,url:URL){
+        let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
+        print("userImage/"  + email + "/" + url.lastPathComponent)
+        put.object =  "userImage/"  + email + "/" + url.lastPathComponent
+        put.bucket = "cardnote-1253464939"
+        put.body = NSURL(fileURLWithPath: url.path)
+        put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
+             NSLog("upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+        }
         
+        put.setFinish { (result, error) in
+             print("finish Upload")
+        }
+        QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
+
     }
+    
+    static func uploadAudioUsingQCloud(email:String,url:URL){
+        let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
+        put.object = "userAudio/"  + email + "/" + url.lastPathComponent
+        put.bucket = "cardnote-1253464939"
+        put.body = NSURL(fileURLWithPath: url.path)
+        put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
+            NSLog("upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+        }
+        
+        put.setFinish { (result, error) in
+            print("finish Upload")
+        }
+        QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
+    }
+    
+    static func uploadMovieUsingQCloud(email:String,url:URL){
+        let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
+        put.object = "userMobie/"  + email + "/" + url.lastPathComponent
+        put.bucket = "cardnote-1253464939"
+        put.body = NSURL(fileURLWithPath: url.path)
+        put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
+            NSLog("upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+        }
+        
+        put.setFinish { (result, error) in
+            print("finish Upload")
+        }
+        QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
+    }
+    
+    
+    
+    
+    static func downloadPhotosUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+        let request = QCloudGetObjectRequest()
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent(loggedID)
+         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
+        url?.appendPathComponent(cardID + ".jpg")
+        request.downloadingURL = url
+        request.bucket = "cardnote-1253464939"
+        request.object = "userImage/" + email + "/" + cardID + ".jpg"
+        request.finishBlock = {(outputObject,error) in
+            if error == nil{
+                completionHandler(true,nil)
+            print("download successfully, Object ID\(outputObject)")
+            }else{
+                completionHandler(false,error)
+            }
+        }
+        request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
+             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+        }
+        QCloudCOSXMLService.defaultCOSXML().getObject(request)
+    }
+    
+    static func downloadMapUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+        let request = QCloudGetObjectRequest()
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent(loggedID)
+        url?.appendPathComponent("mapPic")
+         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
+        url?.appendPathComponent(cardID + ".jpg")
+        request.downloadingURL = url
+        request.bucket = "cardnote-1253464939"
+        request.object = "userImage/" + email + "/" + cardID + ".jpg"
+        request.finishBlock = {(outputObject,error) in
+            if error == nil{
+                completionHandler(true,nil)
+                print("download successfully, Object ID\(outputObject)")
+            }else{
+                completionHandler(false,error)
+            }
+        }
+        request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
+            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+        }
+         QCloudCOSXMLService.defaultCOSXML().getObject(request)
+    }
+    
+    static func downloadAudioUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+        let request = QCloudGetObjectRequest()
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent(loggedID)
+        url?.appendPathComponent("audio")
+         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
+        url?.appendPathComponent(cardID + ".wav")
+        request.downloadingURL = url
+        request.bucket = "cardnote-1253464939"
+        request.object = "userAudio/" + email + "/" + cardID + ".wav"
+        request.finishBlock = {(outputObject,error) in
+            if error == nil{
+            print("download successfully, Object ID\(outputObject)")
+                completionHandler(true,nil)
+            }else{
+                 completionHandler(false,error)
+            }
+        }
+        request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
+            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+        }
+         QCloudCOSXMLService.defaultCOSXML().getObject(request)
+    }
+    
+    static func downloadMovieUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+        let request = QCloudGetObjectRequest()
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent(loggedID)
+        url?.appendPathComponent("movie")
+         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
+        url?.appendPathComponent(cardID + ".mp4")
+        request.downloadingURL = url
+        request.bucket = "cardnote-1253464939"
+        request.object = "userMovie/" + email + "/" + cardID + ".mp4"
+        request.finishBlock = {(outputObject,error) in
+            if error == nil{
+            completionHandler(true,nil)
+            print("download successfully, Object ID\(outputObject)")
+            }else{
+            completionHandler(false,error)
+            }
+        }
+        request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
+            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+        }
+         QCloudCOSXMLService.defaultCOSXML().getObject(request)
+    }
+    
+   
     
     static func uploadPhotoUsingFTP(url:URL){
          connectServer()
@@ -64,6 +207,7 @@ class User{
         }
     }
     
+   
     static func uploadAudioUsingFTP(url:URL){
         connectServer()
         showList(path: "/")
@@ -78,8 +222,43 @@ class User{
         }
     }
     
+    
+    func alamofireCertificateConfig(){
+        let manager = SessionManager.default
+        manager.delegate.sessionDidReceiveChallenge = { session, challenge in
+            //认证服务器证书
+            if challenge.protectionSpace.authenticationMethod
+                == NSURLAuthenticationMethodServerTrust {
+                print("服务端证书认证！")
+                let serverTrust:SecTrust = challenge.protectionSpace.serverTrust!
+                let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)!
+                let credential = URLCredential(trust: serverTrust)
+                challenge.sender!.continueWithoutCredential(for: challenge)
+                challenge.sender?.use(credential, for: challenge)
+            }
+            return (URLSession.AuthChallengeDisposition.useCredential,
+                    URLCredential(trust: challenge.protectionSpace.serverTrust!))
+        }
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if challenge.protectionSpace.authenticationMethod
+            == (NSURLAuthenticationMethodServerTrust) {
+            print("服务端证书认证！")
+            let serverTrust:SecTrust = challenge.protectionSpace.serverTrust!
+            let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+            
+            let credential = URLCredential(trust: serverTrust)
+            challenge.sender!.continueWithoutCredential(for: challenge)
+            challenge.sender?.use(credential, for: challenge)
+            completionHandler(URLSession.AuthChallengeDisposition.useCredential,
+                              URLCredential(trust: challenge.protectionSpace.serverTrust!))
+            
+        }
+    }
+    
     static func follow(email:String,follow:String){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/follow.php","47.95.205.243/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/follow.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let session = URLSession.shared
@@ -105,7 +284,7 @@ class User{
     static func shareCard(card:Card,states:[String]){
         let json = JSON(arrayLiteral: states)
         let string = json.rawString()
-    let url = NSURL.init(string: NSString.init(format: "http://%@/share.php","47.95.205.243/cardnote") as String)
+    let url = NSURL.init(string: NSString.init(format: "https://%@/share.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let session = URLSession.shared
@@ -134,7 +313,7 @@ class User{
     
     
     static func getImage(email:String,cardID:String,completionHandler:@escaping (UIImage?)->()){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/getPhoto.php","forum.bryanqiang.com/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/getPhoto.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let session = URLSession.shared
@@ -172,7 +351,7 @@ class User{
     }
     
     static func getAudio(email:String,cardID:String,completionHandler:@escaping (String?)->()){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/getPhoto.php","forum.bryanqiang.com/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/getPhoto.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let session = URLSession.shared
@@ -217,7 +396,7 @@ class User{
             multipartFormData.append(data as! Data, withName: "file", fileName: "\(cardID).wav", mimeType: "audio/x-wav")
             multipartFormData.append(email.data(using: String.Encoding.utf8)!, withName: "userEmail")
             multipartFormData.append("audio".data(using: String.Encoding.utf8)!, withName: "type")
-        }, to: NSString.init(format: "http://%@/uploadPhoto.php","47.95.205.243/cardnote") as String) { (encodingResult) in
+        }, to: NSString.init(format: "https://%@/uploadPhoto.php","app.cardnotebook.com/cardnote") as String) { (encodingResult) in
             switch encodingResult {
             case .success(let upload, _, _):
                 //连接服务器成功后，对json的处理
@@ -254,7 +433,7 @@ class User{
                 multipartFormData.append("image".data(using: String.Encoding.utf8)!, withName: "type")
                 
                 //......
-        },to: NSString.init(format: "http://%@/uploadPhoto.php","47.95.205.243/cardnote") as String,encodingCompletion: { encodingResult in
+        },to: NSString.init(format: "https://%@/uploadPhoto.php","app.cardnotebook.com/cardnote") as String,encodingCompletion: { encodingResult in
             switch encodingResult {
             case .success(let upload, _, _):
                 //连接服务器成功后，对json的处理
@@ -281,7 +460,7 @@ class User{
     
     
     static func upLoadImage(email:String,pic:PicCard){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/uploadPhoto.php","47.95.205.243/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/uploadPhoto.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let session = URLSession.shared
@@ -314,7 +493,7 @@ class User{
 
     
     static func getTime(completionHandler:@escaping (String?)->()){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/getTime.php","47.95.205.243/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/getTime.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let session = URLSession.shared
@@ -333,7 +512,7 @@ class User{
     }
     
     static func getUserCards(email:String,completionHandler:@escaping (JSON?)->()){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/getCards.php","47.95.205.243/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/getCards.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let bodyStr = NSString.init(format: "email=%@",email)
@@ -384,7 +563,7 @@ class User{
     }
     
     static func login(email:String, password:String, completionHandler:@escaping (JSON?)->()){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/login.php","47.95.205.243/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/login.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
          request.httpMethod = "POST"
         let bodyStr = NSString.init(format: "email=%@&password=%@",email,password)
@@ -465,7 +644,7 @@ class User{
     static func addCard(email:String,card:Card,completionHandler:@escaping (JSON?)->()){
         let cardData = CardParser.CardToJSON(card)
         print("cardData" + cardData)
-        let url = NSURL.init(string: NSString.init(format: "http://%@/addCard.php","47.95.205.243/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/addCard.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let bodyStr = NSString.init(format: "email=%@&card=%@",email,cardData)
@@ -529,7 +708,7 @@ class User{
     
     static func updateCard(card:Card,email:String,completionHandler:@escaping (JSON?)->()){
             let cardData = CardParser.CardToJSON(card)
-            let url = NSURL.init(string: NSString.init(format: "http://%@/updateCard.php","47.95.205.243/cardnote") as String)
+            let url = NSURL.init(string: NSString.init(format: "https://%@/updateCard.php","app.cardnotebook.com/cardnote") as String)
             let request = NSMutableURLRequest.init(url: url! as URL)
             request.httpMethod = "POST"
             let bodyStr = NSString.init(format: "email=%@&card=%@",email,cardData)
@@ -579,7 +758,7 @@ class User{
     }
     
     static func verifyEmail(auth:String, completionHandler:@escaping (JSON?)->()){
-        let url = NSURL.init(string: NSString.init(format: "http://%@/verifyEmail.php","47.95.205.243/cardnote") as String)
+        let url = NSURL.init(string: NSString.init(format: "https://%@/verifyEmail.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let bodyStr = NSString.init(format: "verification=%@&code=%@&email=%@",emailVerification,auth,signUpEmail)
@@ -625,7 +804,7 @@ class User{
     }
     
     static func signUp(email:String, username:String, password:String,auth:String, completionHandler:@escaping (JSON?)->()){
-            let url = NSURL.init(string: NSString.init(format: "http://%@/signUp.php","47.95.205.243/cardnote") as String)
+            let url = NSURL.init(string: NSString.init(format: "https://%@/signUp.php","app.cardnotebook.com/cardnote") as String)
             let request = NSMutableURLRequest.init(url: url! as URL)
             request.httpMethod = "POST"
             let bodyStr = NSString.init(format: "email=%@&password=%@&username=%@&verification=%@&code=%@",email,password,username,emailVerification,auth)
@@ -663,8 +842,9 @@ class User{
         }
     
     static func loginWithToken(completionHandler:@escaping (JSON?)->()){
+        
         if UserDefaults.standard.string(forKey: "userToken") != ""{
-            let url = NSURL.init(string: NSString.init(format: "http://%@/loginWithToken.php","47.95.205.243/cardnote") as String)
+            let url = NSURL.init(string: NSString.init(format: "https://%@/loginwithtoken.php","app.cardnotebook.com/cardnote") as String)
             let request = NSMutableURLRequest.init(url: url! as URL)
             request.httpMethod = "POST"
             let bodyStr = NSString.init(format: "token=%@",UserDefaults.standard.string(forKey: "userToken")!)
@@ -698,7 +878,9 @@ class User{
                                 completionHandler(json)
                             }
                          }
-                        }
+                    }else{
+                        completionHandler(nil)
+                    }
                 }else{
                     DispatchQueue.main.async() {
                         completionHandler(nil)
@@ -706,7 +888,9 @@ class User{
                 }
             })
        
-    }
+        }else{
+            completionHandler(nil)
+        }
     }
     
 

@@ -89,6 +89,8 @@
 		B6BA3AC22064AE5400290BBB /* Card_NoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA3AC12064AE5400290BBB /* Card_NoteTests.swift */; };
 		B6BA3ACD2064AE5400290BBB /* Card_NoteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA3ACC2064AE5400290BBB /* Card_NoteUITests.swift */; };
 		B6BA3ADB2064AF4C00290BBB /* Card.xib in Resources */ = {isa = PBXBuildFile; fileRef = B6BA3ADA2064AF4C00290BBB /* Card.xib */; };
+		B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADCA20A18317008B6761 /* TapBarController.swift */; };
+		B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADDC20A196F8008B6761 /* FilterView.swift */; };
 		B6E505072077D49F003504D8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E505062077D49F003504D8 /* Extension.swift */; };
 		B6E8FA2E208F168E00A0B22B /* InMobiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */; };
 		B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */; };
@@ -363,6 +365,8 @@
 		B6BA3ACC2064AE5400290BBB /* Card_NoteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card_NoteUITests.swift; sourceTree = "<group>"; };
 		B6BA3ACE2064AE5400290BBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B6BA3ADA2064AF4C00290BBB /* Card.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Card.xib; sourceTree = "<group>"; };
+		B6BAADCA20A18317008B6761 /* TapBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapBarController.swift; sourceTree = "<group>"; };
+		B6BAADDC20A196F8008B6761 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		B6E505062077D49F003504D8 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = InMobiSDK.framework; sourceTree = "<group>"; };
 		B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
@@ -496,6 +500,7 @@
 				B610298D2098614C00DA91BB /* LocationListView.swift */,
 				B61029672096D53F00DA91BB /* VoiceView.xib */,
 				B610298F209891DA00DA91BB /* LocationListViewDelegate.swift */,
+				B6BAADDC20A196F8008B6761 /* FilterView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -513,6 +518,7 @@
 				B6A86DE8208822DF00F2C6EC /* SignUpController.swift */,
 				B6A86DF32088D6E200F2C6EC /* AdViewController.swift */,
 				B6A86DF12088243200F2C6EC /* OrientationController.swift */,
+				B6BAADCA20A18317008B6761 /* TapBarController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1066,6 +1072,7 @@
 				B6E505072077D49F003504D8 /* Extension.swift in Sources */,
 				B6A86DE9208822DF00F2C6EC /* SignUpController.swift in Sources */,
 				B677A4C5209B067700D2B17C /* Session.swift in Sources */,
+				B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */,
 				B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */,
 				B605E0FC208CAADE00F2C260 /* ExampleCard.swift in Sources */,
 				B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */,
@@ -1075,6 +1082,7 @@
 				B60F40DA2074CFE700196DD5 /* CardView.swift in Sources */,
 				B677A4C0209B067700D2B17C /* FileUploadOperation.swift in Sources */,
 				B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */,
+				B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */,
 				B6613B0D20803A59001D117B /* Constaint.swift in Sources */,
 				B6613B0B207CD440001D117B /* CardEditorView.swift in Sources */,
 			);
