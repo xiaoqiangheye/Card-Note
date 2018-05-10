@@ -72,10 +72,14 @@ class AdViewController:UIViewController{
                                 if cardList == nil{
                                     cardList = [Card]()
                                 }
+                                var sameArray = [Card]()
+                                 var i = 0
+                        
                                 for interNetCard in cardArray{
-                                    var i = 0
+                                   var j = 0
+                                    var removed:Bool = false
                                     for localCard in cardList!{
-                                        var j = 0
+                                        
                                         if interNetCard.getId() == localCard.getId(){
                                             let formatter = DateFormatter()
                                             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -99,11 +103,17 @@ class AdViewController:UIViewController{
                                             }
                                             cardArray.remove(at: i)
                                             cardList?.remove(at: j)
+                                            removed = true
                                         }
+                                        if !removed{
                                         j+=1
+                                        }
                                     }
+                                    if !removed{
                                     i+=1
+                                    }
                                 }
+                                
                                 //add rest InterNetCard to local
                                 cardCopiedList?.append(contentsOf:cardArray)
                                 

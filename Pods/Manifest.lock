@@ -4,6 +4,7 @@ PODS:
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
   - Font-Awesome-Swift (1.7.2)
+  - Hero (1.2.0)
   - InMobiSDK (7.1.1)
   - QCloudCore (5.4.3)
   - QCloudCOSXML (5.4.3):
@@ -11,39 +12,58 @@ PODS:
     - QCloudCOSXML/Transfer (= 5.4.3)
   - QCloudCOSXML/Transfer (5.4.3):
     - QCloudCore (= 5.4.3)
+  - SCLAlertView (0.8)
+  - Spring (1.0.5)
+  - SwiftMessages (4.1.2)
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
   - Font-Awesome-Swift (~> 1.7.2)
+  - Hero (~> 1.2.0)
   - InMobiSDK
   - QCloudCOSXML
+  - SCLAlertView
+  - Spring (from `https://github.com/MengTo/Spring.git`)
+  - SwiftMessages
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - Font-Awesome-Swift
+    - Hero
     - InMobiSDK
     - QCloudCore
     - QCloudCOSXML
+    - SCLAlertView
+    - SwiftMessages
 
 EXTERNAL SOURCES:
   ChameleonFramework:
     :git: https://github.com/ViccAlexander/Chameleon.git
+  Spring:
+    :git: https://github.com/MengTo/Spring.git
 
 CHECKOUT OPTIONS:
   ChameleonFramework:
     :commit: 6dd284bde21ea2e7f9fd89bc36f40df16e16369d
     :git: https://github.com/ViccAlexander/Chameleon.git
+  Spring:
+    :commit: c540239f3590bbaf4a35c3959c329dd5ed4e3eee
+    :git: https://github.com/MengTo/Spring.git
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   Font-Awesome-Swift: 83ab9db365379ee6025167cec67bdc5d3226a811
+  Hero: 33dadf2cd1c98af71e213dcbc2902e6e03622a4e
   InMobiSDK: 8306ff9c9a966b4a43dd957f57b407a1a9ab7ba5
   QCloudCore: 91bff302e250f7f0066bcca8d9e5c3f3b75e9f78
   QCloudCOSXML: 45d66cd7ceb4ad64d4411f882996b77356ebbb76
+  SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
+  Spring: 3c7666eccefdeb87140008dc81043f89f8dbb787
+  SwiftMessages: d81f48c1f8b6bc1dbebdfffe11226f0344f937ca
 
-PODFILE CHECKSUM: a7b4279826c8b919d87c63226473c8e9168f6d73
+PODFILE CHECKSUM: fc8626b9996c5239c20eafc61f3cf534216ee3d6
 
 COCOAPODS: 1.5.0

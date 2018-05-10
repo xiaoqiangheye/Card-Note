@@ -53,6 +53,8 @@
 		B62EC98B20820168004EE3C0 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62EC98A20820168004EE3C0 /* User.swift */; };
 		B62EC9A5208207D5004EE3C0 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B62EC99820820761004EE3C0 /* SwiftyJSON.framework */; };
 		B62EC9A6208207D5004EE3C0 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B62EC99820820761004EE3C0 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B64489D220A2FB0100ED3400 /* CardViewPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64489C220A2FB0100ED3400 /* CardViewPanelDelegate.swift */; };
+		B64489D420A41FCC00ED3400 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64489D320A41FCC00ED3400 /* ShareView.swift */; };
 		B64BADA5209C8BF600B9ED73 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B64BADA4209C8BF600B9ED73 /* CloudKit.framework */; };
 		B6613B09207B80A1001D117B /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B08207B80A1001D117B /* Palette.swift */; };
 		B6613B0B207CD440001D117B /* CardEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0A207CD440001D117B /* CardEditorView.swift */; };
@@ -95,6 +97,7 @@
 		B6E8FA2E208F168E00A0B22B /* InMobiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */; };
 		B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */; };
 		B6E8FA32208F171A00A0B22B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA31208F171A00A0B22B /* WebKit.framework */; };
+		B6FF866420A1B9B8000D0B51 /* CardViewPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FF866320A1B9B8000D0B51 /* CardViewPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -323,6 +326,8 @@
 		B62EC9882081FF1A004EE3C0 /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		B62EC98A20820168004EE3C0 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyJSON.xcodeproj; path = "../../../Downloads/SwiftyJSON-master/SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
+		B64489C220A2FB0100ED3400 /* CardViewPanelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewPanelDelegate.swift; sourceTree = "<group>"; };
+		B64489D320A41FCC00ED3400 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		B64BAD8B209C3FE200B9ED73 /* Card Note.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Card Note.entitlements"; sourceTree = "<group>"; };
 		B64BADA4209C8BF600B9ED73 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B6613B08207B80A1001D117B /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
@@ -371,6 +376,7 @@
 		B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = InMobiSDK.framework; sourceTree = "<group>"; };
 		B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		B6E8FA31208F171A00A0B22B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		B6FF866320A1B9B8000D0B51 /* CardViewPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewPanel.swift; sourceTree = "<group>"; };
 		CBECEEB608B44188F61CFEE6 /* Pods_Card_NoteUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Card_NoteUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFCB930C37325DE33FEA805C /* Pods_Card_NoteTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Card_NoteTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -501,6 +507,9 @@
 				B61029672096D53F00DA91BB /* VoiceView.xib */,
 				B610298F209891DA00DA91BB /* LocationListViewDelegate.swift */,
 				B6BAADDC20A196F8008B6761 /* FilterView.swift */,
+				B64489C220A2FB0100ED3400 /* CardViewPanelDelegate.swift */,
+				B6FF866320A1B9B8000D0B51 /* CardViewPanel.swift */,
+				B64489D320A41FCC00ED3400 /* ShareView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -961,16 +970,24 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Font-Awesome-Swift/Font_Awesome_Swift.framework",
+				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
 				"${BUILT_PRODUCTS_DIR}/QCloudCOSXML/QCloudCOSXML.framework",
 				"${BUILT_PRODUCTS_DIR}/QCloudCore/QCloudCore.framework",
+				"${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework",
+				"${BUILT_PRODUCTS_DIR}/Spring/Spring.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftMessages/SwiftMessages.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Font_Awesome_Swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QCloudCOSXML.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QCloudCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Spring.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftMessages.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1042,6 +1059,7 @@
 				B677A4C6209B067700D2B17C /* StreamOperation.swift in Sources */,
 				B6BA3AAC2064AE5300290BBB /* ViewController.swift in Sources */,
 				B62EC9892081FF1A004EE3C0 /* UserViewController.swift in Sources */,
+				B64489D220A2FB0100ED3400 /* CardViewPanelDelegate.swift in Sources */,
 				B677A4C2209B067700D2B17C /* Operation.swift in Sources */,
 				B6A86DF62088F4EF00F2C6EC /* AlertView.swift in Sources */,
 				B6613B09207B80A1001D117B /* Palette.swift in Sources */,
@@ -1057,10 +1075,12 @@
 				B6BA3AAA2064AE5300290BBB /* AppDelegate.swift in Sources */,
 				B677A4C7209B067700D2B17C /* WriteStreamOperation.swift in Sources */,
 				B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */,
+				B6FF866420A1B9B8000D0B51 /* CardViewPanel.swift in Sources */,
 				B6155EBD208AEE840031F262 /* SearchBar.swift in Sources */,
 				B62EC98B20820168004EE3C0 /* User.swift in Sources */,
 				B602B1562093232600CD8A40 /* VoiceCard.swift in Sources */,
 				B6BA3AB22064AE5300290BBB /* Card_Note.xcdatamodeld in Sources */,
+				B64489D420A41FCC00ED3400 /* ShareView.swift in Sources */,
 				B6A86DF42088D6E200F2C6EC /* AdViewController.swift in Sources */,
 				B677A4BF209B067700D2B17C /* FileDownloadOperation.swift in Sources */,
 				B677A4C4209B067700D2B17C /* ResourceListOperation.swift in Sources */,

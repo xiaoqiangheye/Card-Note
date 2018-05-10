@@ -13,10 +13,10 @@ class SharedCard:Card{
     var card:Card!
     var username:String = ""
     var date:String = ""
-    var states:[String] = [State.editable.rawValue]
+    var states:[String] = [State.readable.rawValue]
     enum State:String{
-        case editable
-        case readtable
+        case branchable
+        case readable
         case reprintable
     }
     

@@ -9,6 +9,10 @@ pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chamel
 pod 'Font-Awesome-Swift', '~> 1.7.2'
 pod 'QCloudCOSXML'
 pod ‘InMobiSDK’
+pod 'Spring', :git => 'https://github.com/MengTo/Spring.git'
+pod 'SwiftMessages'
+pod 'Hero', '~> 1.2.0'
+pod 'SCLAlertView'
   # Pods for Card Note
 
 

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5A3403F39677BAFD2FD7648191884234"
+               BlueprintIdentifier = "B2B28C68EED58C23B5CF6D55EA433861"
                BuildableName = "Pods_Card_Note.framework"
                BlueprintName = "Pods-Card Note"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -26,7 +26,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
@@ -37,7 +36,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -47,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5A3403F39677BAFD2FD7648191884234"
+            BlueprintIdentifier = "B2B28C68EED58C23B5CF6D55EA433861"
             BuildableName = "Pods_Card_Note.framework"
             BlueprintName = "Pods-Card Note"
             ReferencedContainer = "container:Pods.xcodeproj">

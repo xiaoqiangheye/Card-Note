@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8CA1ABB4516DF1DAC17E0FEE96EF437F"
+               BlueprintIdentifier = "53E3F7AABBA10D0ADF75BB65DDF76967"
                BlueprintName = "QCloudCOSXML"
                ReferencedContainer = "container:Pods.xcodeproj"
                BuildableName = "QCloudCOSXML.framework">

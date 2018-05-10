@@ -8,8 +8,9 @@
 
 import Foundation
 import UIKit
-
-class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate{
+import Spring
+import SCLAlertView
+class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate{
     @IBOutlet weak var addCardButton: UIButton!
     var scrollView:UIScrollView!
     var searchTextView:SearchBar = SearchBar()
@@ -141,7 +142,6 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             
             var cumulatedY = 10
             for card in cardList!{
-                
                 let cardView:CardView = CardView.getSingleCardView(card:card)
                 cardView.frame.origin.y = CGFloat(cumulatedY)
                 cumulatedY += Int(cardView.bounds.height
@@ -151,6 +151,11 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 tapGesture.numberOfTapsRequired = 1
                 tapGesture.numberOfTouchesRequired = 1
                 cardView.addGestureRecognizer(tapGesture)
+                
+                let gesture = UISwipeGestureRecognizer()
+                gesture.direction = .left
+                gesture.addTarget(self, action: #selector(controllPanel))
+                cardView.addGestureRecognizer(gesture)
                 scrollView.addSubview(cardView)
                 scrollView.contentSize = CGSize(width: self.view.bounds.width, height: scrollView.contentSize.height + cardView.bounds.height + 10)
             }
@@ -197,12 +202,96 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 tapGesture.numberOfTapsRequired = 1
                 tapGesture.numberOfTouchesRequired = 1
                 cardView.addGestureRecognizer(tapGesture)
+                
+                let gestureleft = UISwipeGestureRecognizer()
+                gestureleft.direction = .left
+                gestureleft.addTarget(self, action: #selector(controllPanel))
+                cardView.addGestureRecognizer(gestureleft)
+                
                 scrollView.addSubview(cardView)
                 scrollView.contentSize = CGSize(width: self.view.bounds.width, height: scrollView.contentSize.height + cardView.bounds.height + 10)
             }
         }
+    
+    @objc func controllPanel(_ sender:UISwipeGestureRecognizer){
+        let selectedView = sender.view as! CardView
+        let controllPanel = CardViewPanel.getSingleCardViewPanel(frame: CGRect(x:selectedView.frame.origin.x,y:selectedView.frame.origin.y,width:selectedView.frame.width,height:selectedView.frame.height))
+        scrollView.addSubview(controllPanel)
+        controllPanel.animation = "squeezeLeft"
+        controllPanel.curve = "EaseIn"
+        controllPanel.animate()
+        controllPanel.delegate = self
+        controllPanel.controlledView = selectedView
+        let gestureright = UISwipeGestureRecognizer()
+        gestureright.direction = .right
+        gestureright.addTarget(self, action: #selector(controllPanelEaseOut))
+        controllPanel.addGestureRecognizer(gestureright)
+    }
+    
+    @objc func controllPanelEaseOut(_ sender:UISwipeGestureRecognizer){
+      let panel = sender.view as! CardViewPanel
+        panel.frame.origin.x = self.view.frame.width
+        panel.animation = "squeezeRight"
+        panel.curve = "EaseIn"
+        panel.animate()
+        panel.animateNext {
+            panel.removeFromSuperview()
+        }
+    }
+    
+    func shareButtonClicked(_ controllPanel:CardViewPanel) {
+        let cardView = controllPanel.controlledView as! CardView
+        let alertView = SCLAlertView()
+        alertView.addButton("Yes") {
+            self.shareCard(card:cardView.card)
+        }
+      
+        let responder = alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
+    }
+    
+    func deleteButtonClicked(_ controllPanel:CardViewPanel) {
+        let cardView = controllPanel.controlledView as! CardView
+        let alertView = SCLAlertView()
+        alertView.addButton("Delete") {
+            self.deleteCard(card: cardView.card)
+        }
+         let responder = alertView.showWarning("Warning", subTitle: "Are you deleting this card?")
+    
+    }
+    
+    @objc private func shareCard(card:Card){
+        User.shareCard(card: card, states: <#T##[String]#>)
+    }
         
     
+    @objc private func deleteCard(card:Card){
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent(loggedID)
+        url?.appendPathComponent("card.txt")
+        if let dateRead = try? Data.init(contentsOf: url!){
+            var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
+            if cardList == nil{
+                cardList = [Card]()
+            }
+            var index = 0
+            for c in cardList!{
+                if c.getId() == card.getId(){
+                    cardList?.remove(at: index)
+                    break
+                }
+                index += 1
+            }
+            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
+            do{
+                try datawrite.write(to: url!)
+            }catch{
+                print("Fail to delete Card")
+            }
+        }
+    
+    
+    }
     
     @objc func tapped(_ sender:UITapGestureRecognizer){
         let card:Card = (sender.view as! CardView).card
