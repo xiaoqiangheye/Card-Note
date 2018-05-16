@@ -101,7 +101,6 @@ class RecordManager {
     
     //播放
     func play()->Bool{
-        
         do {
                 try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
                 try AVAudioSession.sharedInstance().setActive(true)
@@ -111,6 +110,12 @@ class RecordManager {
             player = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: file_path!))
             print("歌曲长度：\(player!.duration)")
             player!.play()
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
+                if Double((self.player?.currentTime)!) >= Double((self.player?.duration)!){
+                    self.state = State.haveRecord
+                    timer.invalidate()
+                }
+            }
             return true
         } catch let err {
             print("播放失败:\(err.localizedDescription)")

@@ -78,6 +78,7 @@
 		B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */; };
 		B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */; };
 		B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68ACBBE206BB1EF0085E5C5 /* Card.swift */; };
+		B696AF3F20AC38E1004C7E9E /* CardViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696AF3E20AC38E1004C7E9E /* CardViewDelegate.swift */; };
 		B6A86DE9208822DF00F2C6EC /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A86DE8208822DF00F2C6EC /* SignUpController.swift */; };
 		B6A86DF22088243200F2C6EC /* OrientationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A86DF12088243200F2C6EC /* OrientationController.swift */; };
 		B6A86DF42088D6E200F2C6EC /* AdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A86DF32088D6E200F2C6EC /* AdViewController.swift */; };
@@ -351,6 +352,7 @@
 		B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewItemController.swift; sourceTree = "<group>"; };
 		B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		B68ACBBE206BB1EF0085E5C5 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		B696AF3E20AC38E1004C7E9E /* CardViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewDelegate.swift; sourceTree = "<group>"; };
 		B6A86DE8208822DF00F2C6EC /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		B6A86DF12088243200F2C6EC /* OrientationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationController.swift; sourceTree = "<group>"; };
 		B6A86DF32088D6E200F2C6EC /* AdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdViewController.swift; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 			isa = PBXGroup;
 			children = (
 				B60F40D92074CFE700196DD5 /* CardView.swift */,
+				B696AF3E20AC38E1004C7E9E /* CardViewDelegate.swift */,
 				B6613B08207B80A1001D117B /* Palette.swift */,
 				B6613B0A207CD440001D117B /* CardEditorView.swift */,
 				B62EC9862081D59E004EE3C0 /* UserView.swift */,
@@ -1069,6 +1072,7 @@
 				B60F40E12074EB2900196DD5 /* CardEditor.swift in Sources */,
 				B610298C209840CE00DA91BB /* UIMapPickerDelegate.swift in Sources */,
 				B6A86DF22088243200F2C6EC /* OrientationController.swift in Sources */,
+				B696AF3F20AC38E1004C7E9E /* CardViewDelegate.swift in Sources */,
 				B602B1582093244300CD8A40 /* RecordManager.swift in Sources */,
 				B605E0F3208CA90000F2C260 /* CardParser.swift in Sources */,
 				B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */,

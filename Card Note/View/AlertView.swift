@@ -21,6 +21,7 @@ class AlertView:UIView{
         while targetView.superview != nil{
             targetView = targetView.superview!
         }
+        
         let alertView = AlertView()
         alertView.backgroundColor = .white
         alertView.frame.size = CGSize(width:UIScreen.main.bounds.width,height:100)
@@ -41,7 +42,6 @@ class AlertView:UIView{
         alertView.addSubview(exitButton)
         targetView.addSubview(alertView)
         currentView = alertView
-        
     }
     
    

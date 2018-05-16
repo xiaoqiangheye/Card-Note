@@ -282,8 +282,10 @@ class User:NSObject,URLSessionDelegate{
     
     
     static func shareCard(card:Card,states:[String]){
-        let json = JSON(arrayLiteral: states)
+        //let json = JSON(arrayLiteral: states)
+        let json = JSON(states)
         let string = json.rawString()
+        print(string)
     let url = NSURL.init(string: NSString.init(format: "https://%@/share.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
@@ -593,7 +595,11 @@ class User:NSObject,URLSessionDelegate{
                     loggedemail = ""
                     loggedusername = ""
                 }
-                }
+                }else{
+                    DispatchQueue.main.async() {
+                        completionHandler(nil)
+                    }
+                    }
                 }
             }else
             {
@@ -875,7 +881,7 @@ class User:NSObject,URLSessionDelegate{
                         }else
                          {
                             DispatchQueue.main.async() {
-                                completionHandler(json)
+                                completionHandler(nil)
                             }
                          }
                     }else{

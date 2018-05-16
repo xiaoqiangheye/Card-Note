@@ -142,7 +142,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             
             var cumulatedY = 10
             for card in cardList!{
-                let cardView:CardView = CardView.getSingleCardView(card:card)
+                var cardView:CardView = CardView.getSingleCardView(card:card)
                 cardView.frame.origin.y = CGFloat(cumulatedY)
                 cumulatedY += Int(cardView.bounds.height
                 + 10)
@@ -151,7 +151,6 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 tapGesture.numberOfTapsRequired = 1
                 tapGesture.numberOfTouchesRequired = 1
                 cardView.addGestureRecognizer(tapGesture)
-                
                 let gesture = UISwipeGestureRecognizer()
                 gesture.direction = .left
                 gesture.addTarget(self, action: #selector(controllPanel))
@@ -242,10 +241,13 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     func shareButtonClicked(_ controllPanel:CardViewPanel) {
         let cardView = controllPanel.controlledView as! CardView
         let alertView = SCLAlertView()
-        alertView.addButton("Yes") {
+        alertView.addButton("To Notes Library") {
             self.shareCard(card:cardView.card)
         }
-      
+        alertView.addButton("To Other Apps") {
+            //Todo
+        }
+        
         let responder = alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
     }
     
@@ -260,7 +262,12 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     @objc private func shareCard(card:Card){
-        User.shareCard(card: card, states: <#T##[String]#>)
+        //User.shareCard(card: card, states: [String]())
+        let shareView = ShareView.show(target: self.view, card: card)
+        shareView.shareBlock = {
+            User.shareCard(card: card, states: shareView.state)
+            shareView.cancel()
+        }
     }
         
     
@@ -295,6 +302,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     
     @objc func tapped(_ sender:UITapGestureRecognizer){
         let card:Card = (sender.view as! CardView).card
+        sender.view?.hero.id = "batman"
         self.performSegue(withIdentifier: "cardEditor", sender: card)
     }
     

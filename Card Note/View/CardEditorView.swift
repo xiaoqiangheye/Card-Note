@@ -21,50 +21,51 @@ class CardEditorView:UIView{
     var examples:[CardView.ExaView] = [CardView.ExaView]()
     override init(frame: CGRect) {
         super.init(frame: frame)
-        cardTitle.frame = CGRect(x: 0, y: 0, width: self.bounds.width*0.8, height: 50)
-        cardTitle.font = UIFont.boldSystemFont(ofSize: 20)
-        cardTitle.textColor = .white
-        cardTitle.backgroundColor = .clear
+        cardTitle.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 50)
+        cardTitle.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+        cardTitle.textColor = .black
+        cardTitle.backgroundColor = color
         cardTitle.center.x = self.bounds.width/2
-        cardTitle.layer.cornerRadius = 10
+        
+       // cardTitle.layer.cornerRadius = 10
         cardTitle.textAlignment = .center
         classification.frame = CGRect(x: 0, y: 50, width: self.bounds.width*0.8, height: 30)
         classification.font = UIFont.systemFont(ofSize: 15)
-        classification.textColor = .white
+        classification.textColor = .black
         classification.backgroundColor = .clear
         classification.center.x = self.bounds.width/2
-        classification.layer.cornerRadius = 10
+       // classification.layer.cornerRadius = 10
         let definitionLabel = UILabel()
-        definitionLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        definitionLabel.font =  UIFont(name: "AmericanTypewriter", size: 20)
         definitionLabel.text = "Definition"
         definitionLabel.frame = CGRect(x:20, y: classification.frame.origin.y + classification.frame.height + 20, width: self.bounds.width, height: 20)
-        definitionLabel.textColor = .white
+        definitionLabel.textColor = .black
         
         definition.frame = CGRect(x: 0, y: definitionLabel.frame.origin.y + definitionLabel.frame.height + 20, width: self.bounds.width*0.8, height: 100)
         definition.font = UIFont.systemFont(ofSize: 15)
         definition.textColor = .white
         definition.backgroundColor = .clear
         definition.center.x = self.bounds.width/2
-        definition.layer.cornerRadius = 10
+      //  definition.layer.cornerRadius = 10
         definition.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
         
         
         let descriptionLabel = UILabel()
-        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        descriptionLabel.font =  UIFont(name: "AmericanTypewriter", size: 20)
         descriptionLabel.text = "Description"
-        descriptionLabel.textColor = .white
+        descriptionLabel.textColor = .black
         descriptionLabel.frame = CGRect(x: 20, y: definition.frame.origin.y + definition.frame.height + 20, width: self.bounds.width, height: 20)
         
         descriptions.frame = CGRect(x:0, y: descriptionLabel.frame.height + descriptionLabel.frame.origin.y + 20, width: self.bounds.width*0.8, height: 200)
         descriptions.font = .systemFont(ofSize:15)
-        descriptions.textColor = .white
+        descriptions.textColor = .black
         descriptions.backgroundColor = .clear
         descriptions.center.x = self.bounds.width/2
-        descriptions.layer.cornerRadius = 10
+       // descriptions.layer.cornerRadius = 10
         descriptions.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
         
         cardBackGround.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height-20)
-        cardBackGround.backgroundColor = color
+        cardBackGround.backgroundColor = .white
         cardBackGround.addSubview(cardTitle)
         cardBackGround.addSubview(classification)
         cardBackGround.addSubview(definition)
@@ -81,10 +82,10 @@ class CardEditorView:UIView{
         descriptions.text = card.getDescription()
         definition.text = card.getDefinition()
         cardTitle.text = card.getTitle()
+        cardTitle.textColor = card.getColor()
         classification.text = card.getTag()
-        cardBackGround.backgroundColor = card.getColor()
+        cardBackGround.backgroundColor = .white
         self.card = card
-        
         var cumulatedHeight = descriptions.frame.origin.y + descriptions.frame.height + 20
         /*
         for example in card.getExamples(){

@@ -10,6 +10,20 @@ import Foundation
 import UIKit
 
 class Constant{
+    
+    struct Configuration{
+        static let version = 1.0
+        struct url {
+            static let manager = FileManager.default
+            static var url = (manager.urls(for: .documentDirectory, in:.userDomainMask).first)!
+            static var user:URL = url.appendingPathComponent(loggedID)
+            static let Card:URL = user
+            static let PicCard:URL = user
+            static let Audio:URL = url.appendingPathComponent("audio")
+            static let Map:URL = url.appendingPathComponent("mapPic")
+            static let Movie:URL = url.appendingPathComponent("movie")
+        }
+    }
     enum TextMode {
         case PlaceHolderMode
         case EditingMode

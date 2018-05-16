@@ -616,7 +616,7 @@
                     <tabBarItem key="tabBarItem" title="Mine" id="j9u-FN-neg"/>
                     <connections>
                         <outlet property="addCardButton" destination="DCX-Yi-o8G" id="Mxi-GH-r8G"/>
-                        <segue destination="mU0-QR-a5V" kind="presentation" identifier="cardEditor" modalTransitionStyle="coverVertical" id="WVL-Kb-NaM"/>
+                        <segue destination="mU0-QR-a5V" kind="presentation" identifier="cardEditor" modalTransitionStyle="crossDissolve" id="WVL-Kb-NaM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O8I-oO-rup" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -71,3 +71,15 @@ extension UIColor{
         return UIColor(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0, blue: CGFloat(b) / 255.0, alpha: CGFloat(1))
     }
 }
+
+func getCurrentLanguage() -> String{
+    
+    let defs = UserDefaults.standard
+    
+    let languages = defs.object(forKey: "AppleLanguages")//获取系统支持的所有语言集合
+
+    let preferredLanguage = (languages! as AnyObject).object(at: 0)
+    
+    return preferredLanguage as! String
+    
+}

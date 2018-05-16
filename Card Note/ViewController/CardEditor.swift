@@ -10,7 +10,9 @@ import Foundation
 import UIKit
 import SwiftyJSON
 import Font_Awesome_Swift
-class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate{
+import ChameleonFramework
+import Hero
+class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate{
     //main components
     var cardTitle: UITextView! = UITextView()
     var tag: UITextView! = UITextView()
@@ -159,60 +161,64 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     override func viewDidLoad() {
+        self.hero.isEnabled = true
+        self.view.hero.id = "batman"
+        self.view.backgroundColor = .white
         
         cardTitle.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width*0.8, height: 50)
-        cardTitle.font = UIFont.boldSystemFont(ofSize: 20)
-        cardTitle.textColor = .white
+        cardTitle.textColor = .black
         cardTitle.backgroundColor = .clear
         cardTitle.center.x = self.view.bounds.width/2
         cardTitle.layer.cornerRadius = 10
         cardTitle.textAlignment = .center
+        cardTitle.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+        cardTitle.textColor = color
        
-        
         tag.frame = CGRect(x: 0, y: 50, width: self.view.bounds.width*0.8, height: 30)
-        tag.font = UIFont.systemFont(ofSize: 15)
-        tag.textColor = .white
+        tag.font =  UIFont(name: "AmericanTypewriter", size: 15)
+        tag.textColor = .black
         tag.backgroundColor = .clear
         tag.center.x = self.view.bounds.width/2
         tag.layer.cornerRadius = 10
+        
         let definitionLabel = UILabel()
-        definitionLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        definitionLabel.font =  UIFont(name: "AmericanTypewriter", size: 20)
         definitionLabel.text = "Definition"
         definitionLabel.frame = CGRect(x:20, y: tag.frame.origin.y + tag.frame.height + 20, width: self.view.bounds.width, height: 20)
-        definitionLabel.textColor = .white
+        definitionLabel.textColor = .black
         
         definition.frame = CGRect(x: 0, y: definitionLabel.frame.origin.y + definitionLabel.frame.height + 20, width: self.view.bounds.width*0.8, height: 100)
         definition.font = UIFont.systemFont(ofSize: 15)
-        definition.textColor = .white
-        definition.backgroundColor = .clear
+        definition.textColor = .black
+        definition.backgroundColor = .black
         definition.center.x = self.view.bounds.width/2
         definition.layer.cornerRadius = 10
         definition.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
       
         
         let descriptionLabel = UILabel()
-        descriptionLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        descriptionLabel.font =  UIFont(name: "AmericanTypewriter", size: 20)
         descriptionLabel.text = "Description"
-        descriptionLabel.textColor = .white
+        descriptionLabel.textColor = .black
         descriptionLabel.frame = CGRect(x: 20, y: definition.frame.origin.y + definition.frame.height + 20, width: self.view.bounds.width, height: 20)
         
         descriptions.frame = CGRect(x:0, y: descriptionLabel.frame.height + descriptionLabel.frame.origin.y + 20, width: self.view.bounds.width*0.8, height: 200)
         descriptions.font = .systemFont(ofSize:15)
-        descriptions.textColor = .white
+        descriptions.textColor = .black
         descriptions.backgroundColor = .clear
         descriptions.center.x = self.view.bounds.width/2
         descriptions.layer.cornerRadius = 10
         descriptions.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
         
         cardBackGround.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height:  self.view.bounds.height - CGFloat(UIDevice.current.Xdistance()))
-        cardBackGround.backgroundColor = color
+        cardBackGround.backgroundColor = .white
         cardBackGround.addSubview(cardTitle)
         cardBackGround.addSubview(tag)
         cardBackGround.addSubview(definition)
         cardBackGround.addSubview(descriptions)
         cardBackGround.addSubview(definitionLabel)
         cardBackGround.addSubview(descriptionLabel)
-        cardBackGround.layer.cornerRadius = 15
+       // cardBackGround.layer.cornerRadius = 15
         let tapGesture = UITapGestureRecognizer()
         tapGesture.numberOfTapsRequired = 1
         tapGesture.numberOfTouchesRequired = 1
@@ -223,7 +229,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         scrollView.frame = CGRect(x: CGFloat(0), y: CGFloat(UIDevice.current.Xdistance()), width: self.view.bounds.width, height: self.view.bounds.height - CGFloat(UIDevice.current.Xdistance()) + 34)
         scrollView.delegate = self
         scrollView.backgroundColor = .clear
-        scrollView.layer.cornerRadius = 15
+        //scrollView.layer.cornerRadius = 15
         scrollView.isScrollEnabled = true
         scrollView.bounces = false
         scrollView.contentSize.height = cardBackGround.frame.height
@@ -263,15 +269,20 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             //print(UIScreen.main.bounds.height - (rect?.origin.y)! - (rect?.height)!)
             //print(height)
             var relativeHeight:CGFloat!
-            if !(selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.ExaView.self))!{
+            if !(selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.ExaView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.SubCardView.self))!{
             relativeHeight = (selectedTextView?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedTextView?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
             }else{
-                
             relativeHeight = (selectedTextView?.superview?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedTextView?.superview?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
                 
             }
             print(selectedTextView?.frame.origin.y)
             //print((selectedTextView?.frame.origin.y)! - scrollView.contentOffset.y + (selectedTextView?.frame.height)!)
+            
+            let heightDifference = relativeHeight - (self.view.frame.height - height!)
+            UIView.animate(withDuration: 0.5) {
+                self.scrollView.contentOffset.y += heightDifference
+            }
+            /*
             while (relativeHeight) > (self.view.frame.height - height!){
     /*
         UIView.animate(withDuration: 0.1, animations: {
@@ -288,7 +299,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                     relativeHeight = (self.selectedTextView?.superview?.frame.origin.y)! - self.self.scrollView.contentOffset.y  + (self.selectedTextView?.superview?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
                 }
             }
+ */
     }
+ 
     }
     
     enum type:String{
@@ -324,28 +337,48 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         }
     }
     
+    
+    @objc func longTap(_ sender:UILongPressGestureRecognizer){
+        let cardView = sender.view as! CardView
+        for card in subCards{
+        
+        }
+    }
+    
+    func deleteButtonClicked() {
+        
+    }
+    
     func loadCard(card:Card){
         self.card = card
         cardTitle.text = card.getTitle()
+        cardTitle.textColor = card.getColor()
         tag.text = card.getTag()
         definition.text = card.getDefinition()
         descriptions.text = card.getDescription()
         color = card.getColor()
-        cardBackGround.backgroundColor = color
+        cardBackGround.backgroundColor = .white
+       // self.view.backgroundColor = color
         var cumulatedHeight = descriptions.frame.origin.y + descriptions.frame.height + 20
-        
         for card in card.getChilds(){
+            let longTapGesture = UILongPressGestureRecognizer()
+            longTapGesture.numberOfTapsRequired = 1
+            longTapGesture.numberOfTouchesRequired = 1
+            longTapGesture.minimumPressDuration = 2
+            longTapGesture.addTarget(self, action: #selector(longTap))
             if card.isKind(of: ExampleCard.self){
                 let exaView = CardView.singleExampleView(card:card)
                 exaView.textView.text = (card as! ExampleCard).getExample()
                 exaView.example = (card as! ExampleCard).getExample()
                 exaView.frame.origin.y = cumulatedHeight
                 exaView.textView.delegate = self
+                exaView.delegate = self
                 cumulatedHeight += exaView.frame.height + 20
                 cardBackGround.addSubview(exaView)
                 self.subCards.append(exaView)
             }else if card.isKind(of: PicCard.self){
                 let picCard = CardView.getSinglePicView(pic: card as! PicCard)
+                picCard.delegate = self
                 cardBackGround.addSubview(picCard)
                 subCards.append(picCard)
                // picCard.image.image = #imageLiteral(resourceName: "searchBar")
@@ -373,6 +406,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             }else if card.isKind(of: TextCard.self){
                 let text = (card as! TextCard).getText()
                 let textCard = CardView.getSingleTextView(string: text)
+                textCard.delegate = self
                 textCard.frame.origin.y = cumulatedHeight
                 textCard.textView.delegate = self
                 textCard.addSubview(textCard.textView)
@@ -382,12 +416,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             }else if card.isKind(of: VoiceCard.self){
                 let voiceCard = card as! VoiceCard
                 let voiceCardView = CardView.getSingleVoiceView(card: voiceCard)
+                voiceCardView.delegate = self
                 if voiceCard.voiceManager!.state == .willRecord || voiceCard.voiceManager!.state == .recording{
                     voiceCard.voiceManager?.state = .willRecord
                 }else{
                     voiceCard.voiceManager?.state = .haveRecord
                 }
-                
                 voiceCardView.frame.origin.y = cumulatedHeight
                 cumulatedHeight += voiceCardView.frame.height + 20
                 cardBackGround.addSubview(voiceCardView)
@@ -395,6 +429,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             }else if card.isKind(of: MapCard.self){
                 let mapCard = card as! MapCard
                 let mapCardView = CardView.getSingleMapView(card: mapCard)
+                mapCardView.delegate = self
                 let manager = FileManager.default
                 var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
                 url?.appendPathComponent(loggedID)
@@ -420,10 +455,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             }
             else{
          let cardView = CardView.getSubCardView(card)
+        cardView.delegate = self
          cardView.frame.origin.y = cumulatedHeight
          cardView.layer.shadowOpacity = 0.5
          cardView.layer.shadowColor = UIColor.black.cgColor
          cardView.layer.shadowOffset = CGSize(width:1, height:1)
+         cardView.title.delegate = self
+         cardView.content.delegate = self
         let tapGesture = UITapGestureRecognizer()
             tapGesture.numberOfTapsRequired = 1
             tapGesture.numberOfTouchesRequired = 1
@@ -446,7 +484,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         definition.text = card?.getDefinition()
         cardTitle.text = card?.getTitle()
         tag.text = card?.getTag()
-        cardBackGround.backgroundColor = card?.getColor()
+        cardTitle.textColor = card?.getColor()
         
         for subview in cardBackGround.subviews{
             if subview.isKind(of: CardView.self) || subview.isKind(of: CardView.ExaView.self){
@@ -483,8 +521,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         }
                         last?.card?.setChilds(childs)
                         EditingSubCard[EditingSubCard.count-2].subCards[index].card = EditingSubCard.last?.card!
-                        EditingSubCard[EditingSubCard.count-2].subCards[index].label.text = last?.card?.getTitle()
-                        EditingSubCard[EditingSubCard.count-2].subCards[index].labelofDes.text = last?.card?.getDefinition()
+                        (EditingSubCard[EditingSubCard.count-2].subCards[index] as! CardView.SubCardView).title.text = last?.card?.getTitle()
+                        (EditingSubCard[EditingSubCard.count-2].subCards[index] as! CardView.SubCardView).content.text = last?.card?.getDefinition()
                         break
                     }
                     index += 1
@@ -674,6 +712,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                                // User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
+                        }else if card.isKind(of: CardView.SubCardView.self){
+                             let sub = card.card
+                             let view = card as! CardView.SubCardView
+                             sub?.setTitle(view.title.text)
+                             sub?.setDefinition(view.content.text)
                         }
                     }
                   
@@ -936,9 +979,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     @objc func performCardEditor(_ sender:UITapGestureRecognizer){
-    let card = (sender.view as! CardView).card
+    let card = (sender.view as! CardView.SubCardView).card
     let cardEditorView = CardEditorView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height - CGFloat(UIDevice.current.Xdistance() - UIDevice.current.BottomDistance())))
         cardEditorView.loadCard(card!)
+        cardEditorView.cardTitle.text = (sender.view as! CardView.SubCardView).title.text
+        cardEditorView.definition.text = (sender.view as! CardView.SubCardView).content.text
         self.scrollView.addSubview(cardEditorView)
         self.scrollView.contentSize = CGSize(width: cardEditorView.frame.width, height: cardEditorView.frame.height)
         self.scrollView.contentOffset.y = 0
