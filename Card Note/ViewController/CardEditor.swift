@@ -79,6 +79,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     
     
     func textViewDidChange(_ textView: UITextView) {
+        let y = scrollView.contentOffset.y
         let frame = textView.frame
         
         //定义一个constrainSize值用于计算textview的高度
@@ -99,11 +100,18 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 textView.superview?.frame.size.height = size.height
                 var origin = (textView.superview?.frame.origin.y)! + (textView.superview?.frame.height)! + 20
                 guard let index = subCards.index(of: cardView) else{return}
+                if index < subCards.count - 1{
                 for i in index + 1...subCards.endIndex - 1{
                       let card = subCards[i]
                         card.frame.origin.y = origin
                         origin = card.frame.origin.y + card.frame.height + 20
                 }
+                   
+                }
+                cardBackGround.frame.size.height = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
+                scrollView.contentSize.height = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
+                scrollView.contentOffset.y = y
+                
             }
         }
         //重新设置textview的高度
@@ -282,24 +290,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             UIView.animate(withDuration: 0.5) {
                 self.scrollView.contentOffset.y += heightDifference
             }
-            /*
-            while (relativeHeight) > (self.view.frame.height - height!){
-    /*
-        UIView.animate(withDuration: 0.1, animations: {
-           // self.scrollView.frame.origin.y = CGFloat(UIDevice.current.Xdistance()) - height!
-           // self.scrollView.frame.origin.y = CGFloat(UIDevice.current.Xdistance()) - height!
-           
-        }, completion: nil)
- */
-                
-                 self.scrollView.contentOffset.y += 1
-                if !(self.selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && !(self.selectedTextView?.superview?.isKind(of: CardView.ExaView.self))!{
-                    relativeHeight = (self.selectedTextView?.frame.origin.y)! - self.scrollView.contentOffset.y  + (self.selectedTextView?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
-                }else{
-                    relativeHeight = (self.selectedTextView?.superview?.frame.origin.y)! - self.self.scrollView.contentOffset.y  + (self.selectedTextView?.superview?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
-                }
-            }
- */
+          
     }
  
     }
@@ -592,8 +583,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         url?.appendPathComponent(card.card.getId() + ".wav")
                         if manager.fileExists(atPath: (url?.path)!){
                             let data = NSData(contentsOfFile: (url?.path)!)
-                           // User.uploadAudioWithAF(email: loggedemail, filePath: (url?.path)!, cardID: card.card.getId())
-                           // User.uploadAudioUsingFTP(url: url!)
+                           
                             User.uploadAudioUsingQCloud(email: loggedemail, url: url!)
                         }
                     }else if card.isKind(of: CardView.MapCardView.self){
@@ -604,7 +594,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         url?.appendPathComponent(card.card.getId() + ".jpg")
                         if manager.fileExists(atPath: (url?.path)!){
                             let image = UIImage(contentsOfFile: (url?.path)!)
-                            //User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
+                          
                             User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                         }
                     }
@@ -681,7 +671,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                             url?.appendPathComponent(loggedID)
                             url?.appendPathComponent(card.card.getId() + ".jpg")
                             if manager.fileExists(atPath: (url?.path)!){
-                               let image = UIImage(data: try! NSData(contentsOf: url!) as Data)!
+                            
                              //User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
@@ -696,7 +686,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                             url?.appendPathComponent("audio")
                             url?.appendPathComponent(card.card.getId() + ".wav")
                             if manager.fileExists(atPath: (url?.path)!){
-                                let data = NSData(contentsOfFile: (url?.path)!)
+                            
                                // User.uploadAudioWithAF(email: loggedemail, filePath: (url?.path)!, cardID: card.card.getId())
                                 User.uploadAudioUsingQCloud(email: loggedemail, url: url!)
                             }
@@ -707,8 +697,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                             url?.appendPathComponent("mapPic")
                             url?.appendPathComponent(card.card.getId() + ".jpg")
                             if manager.fileExists(atPath: (url?.path)!){
-                                let image = UIImage(contentsOfFile: (url?.path)!)
-                                
+                           
                                // User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
@@ -757,8 +746,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         subCardLabel.text = title
         subCardLabel.setFAText(prefixText: "", icon: icon, postfixText: "", size: 20)
         let button = UIView(frame: frame)
-        button.backgroundColor = .orange
-        button.layer.cornerRadius = 10
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 25
         button.addSubview(subCardLabel)
         return button
     }
@@ -766,7 +755,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     @IBAction func addButton(_ sender: UIButton) {
         if !addButtonStateisOpen{
         addButtonStateisOpen = true
-            addSubCard = createButtonWithLabel(title: "SubCard", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 100, height: 50),icon:FAType.FAIdCard)
+            addSubCard = createButtonWithLabel(title: "SubCard", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),icon:FAType.FAIdCard)
         let subCardtapGesture = UITapGestureRecognizer()
         subCardtapGesture.numberOfTapsRequired = 1
         subCardtapGesture.numberOfTouchesRequired = 1
@@ -774,7 +763,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         addSubCard.addGestureRecognizer(subCardtapGesture)
         
        
-       addExa = createButtonWithLabel(title: "Example", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 100, height: 50),icon: FAType.FAApple)
+       addExa = createButtonWithLabel(title: "Example", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),icon: FAType.FAApple)
         let exaTapGesture = UITapGestureRecognizer()
         exaTapGesture.numberOfTapsRequired = 1
         exaTapGesture.numberOfTouchesRequired = 1
@@ -782,7 +771,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         addExa.addGestureRecognizer(exaTapGesture)
         
             
-            addPicCard = createButtonWithLabel(title: "Photo", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 100, height: 50),icon:FAType.FAPhoto)
+            addPicCard = createButtonWithLabel(title: "Photo", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),icon:FAType.FAPhoto)
             let picGesture = UITapGestureRecognizer()
             picGesture.numberOfTapsRequired = 1
             picGesture.numberOfTouchesRequired = 1
@@ -790,21 +779,21 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             addPicCard.addGestureRecognizer(picGesture)
             
             
-            addText = createButtonWithLabel(title: "Text", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 100, height: 50),icon:FAType.FAFont)
+            addText = createButtonWithLabel(title: "Text", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),icon:FAType.FAFont)
         let addtextGesture = UITapGestureRecognizer()
             addtextGesture.numberOfTapsRequired = 1
             addtextGesture.numberOfTouchesRequired = 1
             addtextGesture.addTarget(self, action: #selector(addTextView))
             addText.addGestureRecognizer(addtextGesture)
             
-            addVoiceView = createButtonWithLabel(title: "Voice", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 100, height: 50),icon:FAType.FAMicrophone)
+            addVoiceView = createButtonWithLabel(title: "Voice", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),icon:FAType.FAMicrophone)
            let addVoiceGesture = UITapGestureRecognizer()
             addVoiceGesture.numberOfTapsRequired = 1
             addVoiceGesture.numberOfTouchesRequired = 1
             addVoiceGesture.addTarget(self, action: #selector(addVoice))
             addVoiceView.addGestureRecognizer(addVoiceGesture)
             
-            addMapView = createButtonWithLabel(title: "Location", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 100, height: 50),icon:FAType.FAMap)
+            addMapView = createButtonWithLabel(title: "Location", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),icon:FAType.FAMapMarker)
             let addMapGesture = UITapGestureRecognizer()
             addMapGesture.numberOfTapsRequired = 1
             addMapGesture.numberOfTouchesRequired = 1

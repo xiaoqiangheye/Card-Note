@@ -8,7 +8,7 @@
 
 import Foundation
 class TranslationManager{
-    class func translate(text:String)->String{
+    class func translate(text:String,completionHandler:@escaping (String?)->()){
         let yd = YDTranslateInstance.shared()
         yd?.appKey = "0388377d12128473"
         var results = ""
@@ -24,11 +24,14 @@ class TranslationManager{
                 if string != nil{
                 DispatchQueue.main.async {
                     results = string as! String
-                    print(string)
+                    completionHandler(results)
+                    }
+                }else{
+                    completionHandler(nil)
                 }
-                }
+            }else{
+                    completionHandler(nil)
             }
         }
-        return results
     }
 }

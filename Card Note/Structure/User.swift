@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 import UIKit
 import Alamofire
-import RebekkaTouch
+
 class User:NSObject,URLSessionDelegate{
     private var username:String!
     private var password:String!
@@ -22,26 +22,6 @@ class User:NSObject,URLSessionDelegate{
         self.email = email
         
     }
-    
-    
-    static func connectServer(){
-        var configuration = SessionConfiguration()
-        configuration.host = "sk509.webcname.net"
-        configuration.username = "ftp6107825"
-        configuration.password = "741852963Aa"
-        session = Session(configuration: configuration)
-    }
-    
-    
-    static func showList(path: String) {
-        session.list(path) {
-            (resources, error) -> Void in
-            for item in resources!{
-                print("文件类型：\(item.type)   文件名称：\(item.name)")
-            }
-        }
-    }
-    
     
     static func uploadPhotoUsingQCloud(email:String,url:URL){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
@@ -190,36 +170,6 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
-    }
-    
-   
-    
-    static func uploadPhotoUsingFTP(url:URL){
-         connectServer()
-          showList(path: "/")
-            print("Data/\(loggedemail)/userImage/" + url.lastPathComponent)
-            session.upload(url, path: "/Data/\(loggedemail)/userImage/" + url.lastPathComponent) {
-            (result, error) -> Void in
-            print("Upload file with result:\n\(result), error: \(error?.localizedDescription)\n\n")
-            if result{
-                
-            }
-        }
-    }
-    
-   
-    static func uploadAudioUsingFTP(url:URL){
-        connectServer()
-        showList(path: "/")
-        session.upload(url, path: "/Data/\(loggedemail)/userAudio/" + url.lastPathComponent) {
-            (result, error) -> Void in
-            print("Upload file with result:\n\(result), error: \(error?.localizedDescription)\n")
-            if error == nil{
-            
-            }else{
-                print("Sync failed")
-            }
-        }
     }
     
     
