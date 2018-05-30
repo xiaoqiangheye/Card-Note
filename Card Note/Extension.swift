@@ -83,3 +83,37 @@ func getCurrentLanguage() -> String{
     return preferredLanguage as! String
     
 }
+
+func cutFullImageWithView(scrollView:UIScrollView) -> UIImage
+{
+    scrollView.contentOffset.y = scrollView.contentSize.height
+    // 记录当前的scrollView的偏移量和坐标
+    let currentContentOffSet:CGPoint = scrollView.contentOffset
+    let currentFrame:CGRect = scrollView.frame;
+    var image:UIImage? = nil
+    // 设置为zero和相应的坐标
+    scrollView.contentOffset.y = 0
+    scrollView.frame = CGRect.init(x: 0, y: 0, width: scrollView.frame.size.width, height: scrollView.contentSize.height)
+    
+    // 参数①：截屏区域  参数②：是否透明  参数③：清晰度
+   UIGraphicsBeginImageContextWithOptions(scrollView.contentSize, false, UIScreen.main.scale)
+    scrollView.layer.render(in: UIGraphicsGetCurrentContext()!)
+    image = UIGraphicsGetImageFromCurrentImageContext()!
+    // 重新设置原来的参数
+    scrollView.contentOffset = currentContentOffSet
+    scrollView.frame = currentFrame
+    
+    UIGraphicsEndImageContext();
+    
+    return image!;
+}
+func writeImageToAlbum(image:UIImage)
+{
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+}
+
+
+
+
+
+

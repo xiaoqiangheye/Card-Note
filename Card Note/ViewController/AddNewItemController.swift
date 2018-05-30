@@ -15,6 +15,5 @@ class AddNewItemController:UIViewController{
     override func viewDidLoad() {
         addSubCard = UIButton()
         addExample = UIButton()
-        
     }
 }

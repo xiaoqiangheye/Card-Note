@@ -16,58 +16,68 @@ class CardView: UIView{
     var card:Card!
     var label:UILabel = UILabel()
     var labelofDes:UILabel = UILabel()
+    var ifTranslated = false
+    weak var uimenu:UIMenuController!
     override init(frame: CGRect) {
         super.init(frame: frame)
        
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        print(action)
+        if action == #selector(translate) && !ifTranslated{
+            return true
+        }else if action == #selector(hideTranslate) && ifTranslated{
+            return true
+        }
+        return false
+    }
+    
+    @objc func translate(){
+        
+    }
+    
+    @objc func hideTranslate(){
+        
+    }
+    
+    @objc func menuController(_ sender:UILongPressGestureRecognizer){
+        if sender.state == .began{
+            if !ifTranslated{
+                self.becomeFirstResponder()
+                uimenu = UIMenuController.shared
+                uimenu.arrowDirection = .default
+                uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate))]
+                uimenu.setTargetRect(self.bounds, in: self)
+                uimenu.setMenuVisible(true, animated: true)
+            }else{
+                self.becomeFirstResponder()
+                uimenu = UIMenuController.shared
+                uimenu.arrowDirection = .default
+                uimenu.menuItems = [UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate))]
+                uimenu.setTargetRect(self.bounds, in: self)
+                uimenu.setMenuVisible(true, animated: true)
+            }
+        }
     }
     
     class ExaView:CardView,UITextViewDelegate{
         var textView = UITextView()
         var translateTextView = UITextView()
         var example:String = ""
-         var uimenu:UIMenuController!
-        var ifTranslated = false
-        @objc func hideTranslate(){
+        
+        @objc override func hideTranslate(){
             translateTextView.removeFromSuperview()
             textView.isHidden = false
             ifTranslated = false
         }
         
-        @objc func menuController(_ sender:UILongPressGestureRecognizer){
-            if sender.state == .began{
-                if !ifTranslated{
-            self.becomeFirstResponder()
-            uimenu = UIMenuController.shared
-            uimenu.arrowDirection = .default
-            uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(translate))]
-            uimenu.setTargetRect(self.bounds, in: self)
-            uimenu.setMenuVisible(true, animated: true)
-                }else{
-                    self.becomeFirstResponder()
-                    uimenu = UIMenuController.shared
-                    uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Cancel Translation", action: #selector(hideTranslate))]
-                    uimenu.setTargetRect(self.bounds, in: self)
-                    uimenu.setMenuVisible(true, animated: true)
-                }
-            }
-        }
-        
-        
-        override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-            if action == #selector(translate) && !ifTranslated{
-                return true
-            }else if action == #selector(hideTranslate) && ifTranslated{
-                return true
-            }
-            return false
-        }
-        
-        override var canBecomeFirstResponder: Bool {
-            return true
-        }
-        
-        @objc func translate(){
+
+        @objc override func translate(){
             translateTextView.textColor = .black
             translateTextView.frame = textView.frame
             translateTextView.isEditable = false
@@ -102,51 +112,17 @@ class CardView: UIView{
     class TextView:CardView,UITextViewDelegate{
         var textView = UITextView()
         var translateTextView = UITextView()
-        var ifTranslated = false
-        var uimenu:UIMenuController!
-        @objc func hideTranslate(){
+        
+      
+        @objc override func hideTranslate(){
             translateTextView.removeFromSuperview()
             textView.isHidden = false
             ifTranslated = false
         }
         
-        @objc func menuController(_ sender:UILongPressGestureRecognizer){
-            if sender.state == .began{
-                if !ifTranslated{
-             self.becomeFirstResponder()
-             uimenu = UIMenuController.shared
-             uimenu.arrowDirection = .default
-             uimenu.setTargetRect(self.bounds, in: self)
-             uimenu.setMenuVisible(true, animated: true)
-             uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(translate))]
-                }else{
-                   
-                        self.becomeFirstResponder()
-                        uimenu = UIMenuController.shared
-                        uimenu.arrowDirection = .default
-                        uimenu.menuItems = [UIMenuItem(title: "Cancel Translation", action: #selector(hideTranslate))]
-                        uimenu.setTargetRect(self.bounds, in: self)
-                        uimenu.setMenuVisible(true, animated: true)
-                    
-                }
-            }
-        }
+       
         
-        override var canBecomeFirstResponder: Bool {
-            return true
-        }
-        
-        override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-            print(action)
-            if action == #selector(translate) && !ifTranslated{
-                return true
-            }else if action == #selector(hideTranslate) && ifTranslated{
-                return true
-            }
-            return false
-        }
-        
-        @objc func translate(){
+        @objc override func translate(){
             translateTextView.textColor = .black
             translateTextView.frame.size = self.frame.size
             translateTextView.frame.origin = CGPoint(x: 0, y: 0)
@@ -219,6 +195,75 @@ class CardView: UIView{
     class SubCardView:CardView{
         var title = UITextView()
         var content = UITextView()
+        var translatedTitle = UITextView()
+        var translatedContent = UITextView()
+        @objc override func translate() {
+            translatedTitle.textColor = .black
+            translatedTitle.frame = title.frame
+            translatedTitle.backgroundColor = .clear
+            translatedTitle.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+            translatedTitle.textAlignment = .center
+            translatedContent.textColor = .black
+            translatedContent.frame = content.frame
+            translatedContent.backgroundColor = .clear
+            translatedContent.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
+            TranslationManager.translate(text: title.text) { (translate) in
+                if translate != nil{
+                    self.translatedTitle.text = translate
+                     self.translatedTitle.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(self.menuController(_:))))
+                    self.title.isHidden = true
+                    self.content.isHidden = true
+                    self.addSubview(self.translatedTitle)
+                    
+                }else{
+                    let view = MessageView.viewFromNib(layout: .cardView)
+                    // Theme message elements with the warning style.
+                    view.configureTheme(.warning)
+                    
+                    // Add a drop shadow.
+                    view.configureDropShadow()
+                    
+                    // Set message title, body, and icon. Here, we're overriding the default warning
+                    // image with an emoji character.
+                    
+                    view.configureContent(title: "Error", body: "Translation Went Wrong.", iconText: "")
+                    
+                    // Show the message.
+                    SwiftMessages.show(view: view)
+                }
+            }
+            TranslationManager.translate(text: (content.text)!) { (translate) in
+                if translate != nil{
+                    self.translatedContent.text = translate
+                     self.translatedContent.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(self.menuController(_:))))
+                    self.addSubview(self.translatedContent)
+                    self.ifTranslated = true
+                }else{
+                    let view = MessageView.viewFromNib(layout: .cardView)
+                    // Theme message elements with the warning style.
+                    view.configureTheme(.warning)
+                    
+                    // Add a drop shadow.
+                    view.configureDropShadow()
+                    
+                    // Set message title, body, and icon. Here, we're overriding the default warning
+                    // image with an emoji character.
+                    
+                    view.configureContent(title: "Error", body: "Translation Went Wrong.", iconText: "")
+                    
+                    // Show the message.
+                    SwiftMessages.show(view: view)
+                }
+            }
+        }
+        
+        @objc override func hideTranslate() {
+            translatedContent.removeFromSuperview()
+            translatedTitle.removeFromSuperview()
+            ifTranslated = false
+            self.title.isHidden = false
+            self.content.isHidden = false
+        }
     }
     
     class VoiceCardView:CardView{
@@ -345,7 +390,7 @@ class CardView: UIView{
         let title:String = card.getTitle()
         let label = UITextView(frame: CGRect(x:cardView.frame.width/8,y:0,width:cardView.bounds.width-cardView.frame.width/8,height:50))
         label.backgroundColor = .clear
-        label.text = title
+        label.attributedText = NSAttributedString(string: title)
         label.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
         label.isScrollEnabled = false
         //label.lineBreakMode = .byWordWrapping
@@ -367,9 +412,9 @@ class CardView: UIView{
          */
         
         let definition:String = card.getDefinition()
-        let labelOfDes = UITextView(frame: CGRect(x:cardView.frame.width/8 + 20,y:label.frame.height + 10,width:cardView.bounds.width-cardView.frame.width/8,height:cardView.bounds.height/2))
+        let labelOfDes = UITextView(frame: CGRect(x:cardView.frame.width/8 + 20,y:label.frame.height + 10,width:cardView.bounds.width-cardView.frame.width/8-20,height:cardView.bounds.height/2))
         labelOfDes.backgroundColor = .clear
-        labelOfDes.text = definition
+        labelOfDes.attributedText = NSAttributedString(string: definition)
         labelOfDes.font = UIFont(name: "ChalkboardSE-Light", size: 15)
      //   labelOfDes.numberOfLines = 4
        // labelOfDes.lineBreakMode = .byWordWrapping
@@ -381,6 +426,12 @@ class CardView: UIView{
         cardView.layer.shadowColor = UIColor.black.cgColor
         cardView.layer.shadowOffset = CGSize(width: 1, height: 1)
         cardView.layer.shadowOpacity = 0.8
+        
+        let longTapGesture = UILongPressGestureRecognizer()
+        longTapGesture.addTarget(cardView, action: #selector(cardView.menuController))
+        cardView.addGestureRecognizer(longTapGesture)
+        cardView.title.addGestureRecognizer(longTapGesture)
+        cardView.content.addGestureRecognizer(longTapGesture)
         return cardView
     }
     

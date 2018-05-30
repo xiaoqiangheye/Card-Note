@@ -22,6 +22,7 @@ class Constant{
             static let Audio:URL = url.appendingPathComponent("audio")
             static let Map:URL = url.appendingPathComponent("mapPic")
             static let Movie:URL = url.appendingPathComponent("movie")
+            static let temporary:URL = url.appendingPathComponent("temp")
         }
     }
     enum TextMode {

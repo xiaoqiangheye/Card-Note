@@ -10,10 +10,11 @@ import Foundation
 import UIKit
 import Spring
 import SCLAlertView
-class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate{
+class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate,UIDocumentInteractionControllerDelegate{
     @IBOutlet weak var addCardButton: UIButton!
     var scrollView:UIScrollView!
     var searchTextView:SearchBar = SearchBar()
+    var docController:UIDocumentInteractionController!
     @IBAction func addNewCard(_ sender:UIButton){
     self.performSegue(withIdentifier: "cardEditor", sender: CardEditor.type.add)
     }
@@ -36,8 +37,6 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     override func viewDidLoad() {
-       
-        
         //adjust distance
         let y:Int = UIDevice.current.Xdistance()
         //addCardButton.frame.origin.y = CGFloat(y)
@@ -244,11 +243,39 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         alertView.addButton("To Notes Library") {
             self.shareCard(card:cardView.card)
         }
-        alertView.addButton("To Other Apps") {
-            //Todo
+        alertView.addButton("Generate Picture") {
+        let storyBoard = UIStoryboard.init(name: "Main", bundle: nil)
+        let cardEditor = storyBoard.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
+            cardEditor.card = cardView.card
+            cardEditor.viewDidLoad()
+           let image = cutFullImageWithView(scrollView: cardEditor.scrollView)
+           let shareView = SCLAlertView()
+            shareView.addButton("To Other Apps", action: {
+                let imageData = UIImageJPEGRepresentation(image, 1)
+                do{
+                let id = UUID().uuidString + ".jpeg"
+                let url = Constant.Configuration.url.temporary.appendingPathComponent(id)
+                    try FileManager.default.createDirectory(at:Constant.Configuration.url.temporary, withIntermediateDirectories: true, attributes: nil)
+                    try imageData?.write(to: url)
+                    if let u:NSURL? = NSURL(fileURLWithPath: url.path) {
+                        self.docController = UIDocumentInteractionController.init(url: u as! URL)
+                        self.docController.uti = "public.jpeg"
+                        self.docController.delegate = self
+                        // controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+                        self.docController.presentOptionsMenu(from: CGRect.zero, in: self.view, animated: true)
+                    }
+                    
+                }catch let err{
+                    print(err.localizedDescription)
+                }
+            })
+            
+            shareView.addButton("To Album", action: {
+               ImageManager.writeImageToAlbum(image: image, completionhandler: nil)
+            })
+            shareView.showSuccess("Success", subTitle: "Now Let's share!")
         }
-        
-        let responder = alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
+         alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
     }
     
     func deleteButtonClicked(_ controllPanel:CardViewPanel) {

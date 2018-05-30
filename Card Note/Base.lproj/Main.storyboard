@@ -542,7 +542,7 @@
         <!--Item 2-->
         <scene sceneID="4c5-Az-bPM">
             <objects>
-                <viewController id="mU0-QR-a5V" customClass="CardEditor" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="cardEditor" id="mU0-QR-a5V" customClass="CardEditor" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="p2g-HL-l4q">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

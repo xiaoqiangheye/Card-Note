@@ -12,14 +12,17 @@ import SwiftyJSON
 import Font_Awesome_Swift
 import ChameleonFramework
 import Hero
-class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate{
+class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate,AttributedTextViewDelegate, UIPickerViewDelegate,UIPickerViewDataSource{
     //main components
     var cardTitle: UITextView! = UITextView()
     var tag: UITextView! = UITextView()
     var definition: UITextView! = UITextView()
     var descriptions: UITextView! = UITextView()
     var scrollView:UIScrollView = UIScrollView()
+    var cardColor:UIView!
     var cardBackGround = UIView()
+    var attributedView:AttributedTextView?
+    var pickerView:UIPickerView!
     @IBOutlet var doneButton: UIButton!
     @IBOutlet var addButton: UIButton!
     var color:UIColor = UIColor.red
@@ -50,10 +53,53 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     private var EditingSubCard:[CardEditorView] = [CardEditorView]()
     
     
+/** pickerViewDelegate
+  numberOfComponents
+  numberOfRows
+  title
+ */
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 2
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0{
+        return UIFont.familyNames.count
+        }else{
+        return 72
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0{
+        return UIFont.familyNames[row]
+        }else{
+        return String(row + 1)
+        }
+    }
+    
+    
+    //AttributedText
+    func selectFont()
+    {
+       self.view.addSubview(pickerView)
+        let pickerViewDone = UIButton(frame: CGRect(x: pickerView.frame.width - 100, y:30, width: 100, height: 30))
+        pickerViewDone.setTitle("Done", for: .normal)
+        pickerViewDone.setTitleColor(UIColor.black, for: .normal)
+        pickerViewDone.addTarget(self, action: #selector(getPickerViewValue), for: .touchDown)
+        self.view.addSubview(pickerViewDone)
+       
+    }
+    
+    //ActionSheet
     func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
         
     }
+
     
+    
+/**TextView
+ */
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.lengthOfBytes(using: .utf8) < 1{
             switch textView{
@@ -73,8 +119,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
        
         textView.backgroundColor = .clear
         UIView.animate(withDuration: 0.5, animations: {
-            self.scrollView.frame.origin.y = CGFloat(UIDevice.current.Xdistance())
+            self.scrollView.frame.origin.y = -50
         }, completion: nil)
+        attributedView?.removeFromSuperview()
     }
     
     
@@ -138,11 +185,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-        
+        if attributedView != nil{
+            attributedView = nil
+        }
         UIView.animate(withDuration: 0.5, animations: {
-           self.scrollView.frame.origin.y = CGFloat(UIDevice.current.Xdistance())
+           self.scrollView.frame.origin.y = -50
         }, completion: nil)
-        
+        attributedView?.removeFromSuperview()
         return true
     }
     
@@ -150,6 +199,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         selectedTextView = textView
         return true
     }
+    
+
     override func viewWillAppear(_ animated: Bool) {
         cardTitle.delegate = self
         tag.delegate = self
@@ -172,17 +223,16 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         self.hero.isEnabled = true
         self.view.hero.id = "batman"
         self.view.backgroundColor = .white
-        
-        cardTitle.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width*0.8, height: 50)
-        cardTitle.textColor = .black
+        cardColor = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 150))
+        cardTitle.frame = CGRect(x: 0, y: cardColor.frame.height - 50, width: self.view.bounds.width*0.8, height: 50)
+        cardTitle.textColor = .white
         cardTitle.backgroundColor = .clear
         cardTitle.center.x = self.view.bounds.width/2
         cardTitle.layer.cornerRadius = 10
         cardTitle.textAlignment = .center
         cardTitle.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
-        cardTitle.textColor = color
        
-        tag.frame = CGRect(x: 0, y: 50, width: self.view.bounds.width*0.8, height: 30)
+        tag.frame = CGRect(x: 0, y: cardTitle.frame.height + cardTitle.frame.origin.y + 20, width: self.view.bounds.width*0.8, height: 30)
         tag.font =  UIFont(name: "AmericanTypewriter", size: 15)
         tag.textColor = .black
         tag.backgroundColor = .clear
@@ -218,8 +268,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         descriptions.layer.cornerRadius = 10
         descriptions.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
         
-        cardBackGround.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height:  self.view.bounds.height - CGFloat(UIDevice.current.Xdistance()))
+        cardBackGround.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height:  self.view.bounds.height)
         cardBackGround.backgroundColor = .white
+        cardBackGround.addSubview(cardColor)
         cardBackGround.addSubview(cardTitle)
         cardBackGround.addSubview(tag)
         cardBackGround.addSubview(definition)
@@ -234,7 +285,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         cardBackGround.addGestureRecognizer(tapGesture)
         
         
-        scrollView.frame = CGRect(x: CGFloat(0), y: CGFloat(UIDevice.current.Xdistance()), width: self.view.bounds.width, height: self.view.bounds.height - CGFloat(UIDevice.current.Xdistance()) + 34)
+        scrollView.frame = CGRect(x: CGFloat(0), y: -50, width: self.view.bounds.width, height: self.view.bounds.height)
         scrollView.delegate = self
         scrollView.backgroundColor = .clear
         //scrollView.layer.cornerRadius = 15
@@ -257,6 +308,27 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         
         let centerDefault = NotificationCenter.default
         centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        
+         pickerView = UIPickerView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300))
+         pickerView.dataSource = self
+         pickerView.backgroundColor = UIColor.white
+         //将delegate设置成自己
+         pickerView.delegate = self
+         pickerView.selectRow(0, inComponent: 0, animated: true)
+    }
+    
+    @objc func getPickerViewValue(sender:UIButton){
+        pickerView.removeFromSuperview()
+        sender.removeFromSuperview()
+        if attributedView != nil{
+            
+            let row = pickerView.selectedRow(inComponent: 0)
+            attributedView?.setFont(fontName: UIFont.familyNames[row])
+            
+            let size = pickerView.selectedRow(inComponent: 1) + 1
+            attributedView?.setFontSize(size: CGFloat(size))
+        }
     }
     
     
@@ -272,10 +344,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         }
         
         if (selectedTextView != nil){
-           // let rect = selectedTextView?.convert((selectedTextView?.bounds)!, to: window)
-          // print(rect?.origin.y)
-            //print(UIScreen.main.bounds.height - (rect?.origin.y)! - (rect?.height)!)
-            //print(height)
+            //add the attributed view
+            attributedView = AttributedTextView(y: self.view.frame.height - height! - 30, textView: selectedTextView!)
+            attributedView?.delegate = self
+            self.view.addSubview(attributedView!)
+            
+            //adjust the offset of the scrollview
             var relativeHeight:CGFloat!
             if !(selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.ExaView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.SubCardView.self))!{
             relativeHeight = (selectedTextView?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedTextView?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
@@ -284,13 +358,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 
             }
             print(selectedTextView?.frame.origin.y)
-            //print((selectedTextView?.frame.origin.y)! - scrollView.contentOffset.y + (selectedTextView?.frame.height)!)
-            
             let heightDifference = relativeHeight - (self.view.frame.height - height!)
+            if heightDifference > 0{
             UIView.animate(withDuration: 0.5) {
                 self.scrollView.contentOffset.y += heightDifference
             }
-          
+            }
     }
  
     }
@@ -343,10 +416,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     func loadCard(card:Card){
         self.card = card
         cardTitle.text = card.getTitle()
-        cardTitle.textColor = card.getColor()
+        cardColor.backgroundColor = card.getColor()
         tag.text = card.getTag()
-        definition.text = card.getDefinition()
-        descriptions.text = card.getDescription()
+        definition.attributedText = NSAttributedString(string:card.getDefinition())
+        descriptions.attributedText = NSAttributedString(string:card.getDescription())
         color = card.getColor()
         cardBackGround.backgroundColor = .white
        // self.view.backgroundColor = color
@@ -359,7 +432,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             longTapGesture.addTarget(self, action: #selector(longTap))
             if card.isKind(of: ExampleCard.self){
                 let exaView = CardView.singleExampleView(card:card)
-                exaView.textView.text = (card as! ExampleCard).getExample()
+                var dic:NSDictionary?
+                exaView.textView.attributedText = try? NSAttributedString(data:(card as! ExampleCard).getExample().data(using: .utf8)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.rtf], documentAttributes:&dic)
+                print((card as! ExampleCard).getExample())
                 exaView.example = (card as! ExampleCard).getExample()
                 exaView.frame.origin.y = cumulatedHeight
                 exaView.textView.delegate = self
@@ -572,9 +647,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                             User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                         }
                     }else if card.isKind(of: CardView.ExaView.self){
-                        (card.card as! ExampleCard).setExample((card as! CardView.ExaView).textView.text)
+                        (card.card as! ExampleCard).setExample((card as! CardView.ExaView).textView.attributedText.string)
+                        print((card as! CardView.ExaView).textView.attributedText.string)
                     }else if card.isKind(of: CardView.TextView.self){
-                        (card.card as! TextCard).setText((card as! CardView.TextView).textView.text)
+                        (card.card as! TextCard).setText((card as! CardView.TextView).textView.attributedText.string)
                     }else if card.isKind(of: CardView.VoiceCardView.self){
                         let manager = FileManager.default
                         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -597,7 +673,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                           
                             User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                         }
-                    }
+                    }else if card.isKind(of: CardView.SubCardView.self){
+                        let sub = card.card
+                        let view = card as! CardView.SubCardView
+                        sub?.setTitle(view.title.attributedText.string)
+                        sub?.setDefinition(view.content.attributedText.string)
+                }
                 }
             }
             
@@ -605,7 +686,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let strNowTime = timeFormatter.string(from: date as Date) as String
-            let card = Card(title: cardTitle.text, tag: tag.text, description: descriptions.text, id: UUID().uuidString, definition: definition.text, color: color, cardType:Card.CardType.card.rawValue,modifytime:strNowTime)
+            let card = Card(title: cardTitle.text, tag: tag.text, description: descriptions.attributedText.string, id: UUID().uuidString, definition: definition.attributedText.string, color: color, cardType:Card.CardType.card.rawValue,modifytime:strNowTime)
             card.addChildNotes(childs)
             User.addCard(email: loggedemail, card: card, completionHandler: { (json:JSON?) in
                 if json != nil{
@@ -658,8 +739,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                     }
                     self.card?.setTitle(cardTitle.text)
                     self.card?.setColor(color)
-                    self.card?.setDefinition(definition.text)
-                    self.card?.setDescription(descriptions.text)
+                    self.card?.setDefinition(definition.attributedText.string)
+                    self.card?.setDescription(descriptions.attributedText.string)
                     self.card?.setTag(tag.text)
                     var childs = [Card]()
                     for card in self.subCards
@@ -676,9 +757,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
                         }else if card.isKind(of: CardView.ExaView.self){
-                           (card.card as! ExampleCard).setExample((card as! CardView.ExaView).textView.text)
+                            let data = try? (card as! CardView.ExaView).textView.attributedText.data(from: NSMakeRange(0, (card as! CardView.ExaView).textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                            let string = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+                            print(string)
+                            (card.card as! ExampleCard).setExample(string as! String)
                         }else if card.isKind(of: CardView.TextView.self){
-                            (card.card as! TextCard).setText((card as! CardView.TextView).textView.text)
+                            (card.card as! TextCard).setText((card as! CardView.TextView).textView.attributedText.string)
                         }else if card.isKind(of: CardView.VoiceCardView.self){
                             let manager = FileManager.default
                             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -704,8 +788,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         }else if card.isKind(of: CardView.SubCardView.self){
                              let sub = card.card
                              let view = card as! CardView.SubCardView
-                             sub?.setTitle(view.title.text)
-                             sub?.setDefinition(view.content.text)
+                             sub?.setTitle(view.title.attributedText.string)
+                             sub?.setDefinition(view.content.attributedText.string)
                         }
                     }
                   
