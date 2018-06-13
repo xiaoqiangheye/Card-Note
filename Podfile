@@ -8,7 +8,7 @@ pod 'Alamofire', '~> 4.7'
 pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
 pod 'Font-Awesome-Swift', '~> 1.7.2'
 pod 'QCloudCOSXML'
-pod ‘InMobiSDK’
+pod 'InMobiSDK'
 pod 'Spring', :git => 'https://github.com/MengTo/Spring.git'
 pod 'SwiftMessages'
 pod 'Hero', '~> 1.2.0'

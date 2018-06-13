@@ -19,7 +19,7 @@ class Card:NSObject,NSCoding{
     private var type:String
     private var modifyTime:String
     //private var examples:[String]
-    public var color:UIColor
+    public var color:UIColor?
     
     enum CardType:String{
         case card = "card"
@@ -27,6 +27,9 @@ class Card:NSObject,NSCoding{
         case example = "example"
         case picture = "picture"
         case text = "text"
+        case movie = "movie"
+        case orderedList = "OrderedList"
+        case nonorderedList = "nonOrderedList"
     }
     
     func getType()->String{
@@ -54,7 +57,7 @@ class Card:NSObject,NSCoding{
         self.descriptions = aDecoder.decodeObject(forKey: "description") as! String
         self.parentCard = aDecoder.decodeObject(forKey: "parentCard") as? Card
         self.childCards = aDecoder.decodeObject(forKey: "childCards") as! [Card]
-        self.color = aDecoder.decodeObject(forKey: "color") as! UIColor
+        self.color = aDecoder.decodeObject(forKey: "color") as? UIColor
         self.title = aDecoder.decodeObject(forKey: "title") as! String
         self.type = aDecoder.decodeObject(forKey: "type") as! String
         self.modifyTime = aDecoder.decodeObject(forKey: "modifytime") as! String
@@ -63,7 +66,7 @@ class Card:NSObject,NSCoding{
     }
     
     
-    init(title:String,tag:String,description:String,id:String,definition:String,color:UIColor, cardType:String, modifytime:String) {
+    init(title:String,tag:String,description:String,id:String,definition:String,color:UIColor?, cardType:String, modifytime:String) {
         self.title = title
         self.tag = tag
         self.descriptions = description
@@ -94,7 +97,7 @@ class Card:NSObject,NSCoding{
     func setDefinition(_ def:String){self.definition = def}
     
     func setColor(_ color:UIColor){self.color = color}
-    func getColor()->UIColor{return color}
+    func getColor()->UIColor{return color!}
     func removeChild(at:Int){childCards.remove(at: at)}
     
     func removeChild(byId:String){

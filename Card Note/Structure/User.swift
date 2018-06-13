@@ -15,12 +15,57 @@ class User:NSObject,URLSessionDelegate{
     private var username:String!
     private var password:String!
     private var email:String!
-    static var session:Session!
+  //  static var session:Session!
     init(username:String,password:String,email:String) {
         self.username = username
         self.password = password
         self.email = email
         
+    }
+    
+    static func QueryOfCard(keyWords:[String],completionHandler:@escaping (Bool,[Card]?)->()){
+        let url = NSURL.init(string: NSString.init(format: "https://%@/query.php","app.cardnotebook.com/cardnote") as String)
+        let request = NSMutableURLRequest.init(url: url! as URL)
+        request.httpMethod = "POST"
+        let keywordsString = JSON(keyWords).rawString()
+        let session = URLSession.shared
+        let bodyStr = NSString.init(format: "keywords=%@",keywordsString!)
+        request.httpBody = bodyStr.data(using: String.Encoding.utf8.rawValue)
+        let dataTask = session.dataTask(with: request as! URLRequest) { (data, response, error) in
+            if error != nil{
+                if data == nil{
+                    print("Fail to Access data")
+                    completionHandler(false, nil)
+                }else{
+                    let string = resultHandler(data: NSString(data: data!, encoding: String.Encoding.utf8.rawValue) as! String)
+                    let json = try? JSON(data: string.data(using: String.Encoding.utf8)!)
+                    if json != nil{
+                        if json!["ifSuccess"].boolValue{
+                            print("succees to share card")
+                            let array = json!["cards"].arrayValue
+                            var cardArray = [Card]()
+                            for item in array{
+                                let card = CardParser.JSONToCard(item.rawString()!)
+                                if card != nil{
+                                    cardArray.append(card!)
+                                }
+                            }
+                            completionHandler(true, cardArray)
+                        }else{
+                            print(json!["error"].stringValue)
+                            completionHandler(false, nil)
+                        }
+                    }else{
+                        print("Data Error")
+                        completionHandler(false, nil)
+                    }
+                }
+            }else{
+                print(error?.localizedDescription)
+                completionHandler(false, nil)
+            }
+        }
+        dataTask.resume()
     }
     
     static func uploadPhotoUsingQCloud(email:String,url:URL){
@@ -154,10 +199,10 @@ class User:NSObject,URLSessionDelegate{
         url?.appendPathComponent(loggedID)
         url?.appendPathComponent("movie")
          try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
-        url?.appendPathComponent(cardID + ".mp4")
+        url?.appendPathComponent(cardID + ".mov")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
-        request.object = "userMovie/" + email + "/" + cardID + ".mp4"
+        request.object = "userMovie/" + email + "/" + cardID + ".mov"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
             completionHandler(true,nil)
@@ -599,11 +644,11 @@ class User:NSObject,URLSessionDelegate{
     
     static func addCard(email:String,card:Card,completionHandler:@escaping (JSON?)->()){
         let cardData = CardParser.CardToJSON(card)
-        print("cardData" + cardData)
+        print("cardData" + cardData!)
         let url = NSURL.init(string: NSString.init(format: "https://%@/addCard.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
-        let bodyStr = NSString.init(format: "email=%@&card=%@",email,cardData)
+        let bodyStr = NSString.init(format: "email=%@&card=%@",email,cardData!)
         request.httpBody = bodyStr.data(using: String.Encoding.utf8.rawValue)
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest) { (data:Data?, response:URLResponse?, error:Error?) in
@@ -664,10 +709,11 @@ class User:NSObject,URLSessionDelegate{
     
     static func updateCard(card:Card,email:String,completionHandler:@escaping (JSON?)->()){
             let cardData = CardParser.CardToJSON(card)
+        print("prepare to update card \n" + cardData!)
             let url = NSURL.init(string: NSString.init(format: "https://%@/updateCard.php","app.cardnotebook.com/cardnote") as String)
             let request = NSMutableURLRequest.init(url: url! as URL)
             request.httpMethod = "POST"
-            let bodyStr = NSString.init(format: "email=%@&card=%@",email,cardData)
+        let bodyStr = NSString.init(format: "email=%@&card=%@",email,cardData!)
             request.httpBody = bodyStr.data(using: String.Encoding.utf8.rawValue)
             let session = URLSession.shared
             let dataTask = session.dataTask(with: request as URLRequest) { (data:Data?, response:URLResponse?, error:Error?) in

@@ -182,7 +182,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         
             var filterdCardList = [Card]()
             for card in cardList{
-                if colorConstaints.contains(card.color) && tagConstaints.contains(card.getTag()){
+                if colorConstaints.contains(card.color!) && tagConstaints.contains(card.getTag()){
                     filterdCardList.append(card)
                 }else if colorConstaints.isEmpty && tagConstaints.isEmpty{
                     filterdCardList.append(card)

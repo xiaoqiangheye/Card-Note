@@ -30,11 +30,8 @@
 		B605E11A208CB26C00F2C260 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E119208CB26B00F2C260 /* AdSupport.framework */; };
 		B605E11C208CB27200F2C260 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E11B208CB27200F2C260 /* JavaScriptCore.framework */; };
 		B605E11E208CB27C00F2C260 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E11D208CB27B00F2C260 /* libz.tbd */; };
-		B605E120208CB28500F2C260 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E11F208CB28400F2C260 /* libstdc++.6.0.9.tbd */; };
 		B605E122208CB29000F2C260 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E121208CB29000F2C260 /* libc++.tbd */; };
 		B60B995F209C8C23004BC2D4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B60B995E209C8C23004BC2D4 /* StoreKit.framework */; };
-		B60CBB0A20948AD700A07FC6 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B60CBAFD20948AAA00A07FC6 /* Alamofire.framework */; };
-		B60CBB0B20948AD700A07FC6 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B60CBAFD20948AAA00A07FC6 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B60F40DA2074CFE700196DD5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40D92074CFE700196DD5 /* CardView.swift */; };
 		B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40DB2074D0AE00196DD5 /* Constant.swift */; };
 		B60F40E12074EB2900196DD5 /* CardEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40E02074EB2900196DD5 /* CardEditor.swift */; };
@@ -53,6 +50,9 @@
 		B62EC98B20820168004EE3C0 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62EC98A20820168004EE3C0 /* User.swift */; };
 		B62EC9A5208207D5004EE3C0 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B62EC99820820761004EE3C0 /* SwiftyJSON.framework */; };
 		B62EC9A6208207D5004EE3C0 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B62EC99820820761004EE3C0 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B631B14D20CA4CB00026534F /* UsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B631B14C20CA4CB00026534F /* UsController.swift */; };
+		B6385A9620C65CDF00E022CB /* MovieCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6385A9520C65CDF00E022CB /* MovieCard.swift */; };
+		B6385AA720C65CF800E022CB /* ListCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6385AA620C65CF800E022CB /* ListCard.swift */; };
 		B64489D220A2FB0100ED3400 /* CardViewPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64489C220A2FB0100ED3400 /* CardViewPanelDelegate.swift */; };
 		B64489D420A41FCC00ED3400 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64489D320A41FCC00ED3400 /* ShareView.swift */; };
 		B64BADA5209C8BF600B9ED73 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B64BADA4209C8BF600B9ED73 /* CloudKit.framework */; };
@@ -60,18 +60,6 @@
 		B6613B0B207CD440001D117B /* CardEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0A207CD440001D117B /* CardEditorView.swift */; };
 		B6613B0D20803A59001D117B /* Constaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0C20803A59001D117B /* Constaint.swift */; };
 		B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0E2080404B001D117B /* SearchEngine.swift */; };
-		B677A4BE209B067700D2B17C /* DirectoryCreationOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4B4209B067700D2B17C /* DirectoryCreationOperation.swift */; };
-		B677A4BF209B067700D2B17C /* FileDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4B5209B067700D2B17C /* FileDownloadOperation.swift */; };
-		B677A4C0209B067700D2B17C /* FileUploadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4B6209B067700D2B17C /* FileUploadOperation.swift */; };
-		B677A4C1209B067700D2B17C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B677A4B7209B067700D2B17C /* Info.plist */; };
-		B677A4C2209B067700D2B17C /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4B8209B067700D2B17C /* Operation.swift */; };
-		B677A4C3209B067700D2B17C /* ReadStreamOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4B9209B067700D2B17C /* ReadStreamOperation.swift */; };
-		B677A4C4209B067700D2B17C /* ResourceListOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4BA209B067700D2B17C /* ResourceListOperation.swift */; };
-		B677A4C5209B067700D2B17C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4BB209B067700D2B17C /* Session.swift */; };
-		B677A4C6209B067700D2B17C /* StreamOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4BC209B067700D2B17C /* StreamOperation.swift */; };
-		B677A4C7209B067700D2B17C /* WriteStreamOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B677A4BD209B067700D2B17C /* WriteStreamOperation.swift */; };
-		B677A4F1209B132A00D2B17C /* RebekkaTouch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B677A4F0209B132000D2B17C /* RebekkaTouch.framework */; };
-		B677A4F2209B132A00D2B17C /* RebekkaTouch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B677A4F0209B132000D2B17C /* RebekkaTouch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B6791223208CE8AD00A417FD /* AMapFoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B679121B208CE8AD00A417FD /* AMapFoundationKit.framework */; };
 		B6791225208CE8B500A417FD /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6791224208CE8B500A417FD /* MAMapKit.framework */; };
 		B6791227208DFFF100A417FD /* PicCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6791226208DFFF100A417FD /* PicCard.swift */; };
@@ -96,8 +84,8 @@
 		B6BA3ADB2064AF4C00290BBB /* Card.xib in Resources */ = {isa = PBXBuildFile; fileRef = B6BA3ADA2064AF4C00290BBB /* Card.xib */; };
 		B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADCA20A18317008B6761 /* TapBarController.swift */; };
 		B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADDC20A196F8008B6761 /* FilterView.swift */; };
+		B6D53EB720C683590087ED38 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B6D53EB620C683590087ED38 /* libstdc++.6.0.9.tbd */; };
 		B6E505072077D49F003504D8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E505062077D49F003504D8 /* Extension.swift */; };
-		B6E8FA2E208F168E00A0B22B /* InMobiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */; };
 		B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */; };
 		B6E8FA32208F171A00A0B22B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA31208F171A00A0B22B /* WebKit.framework */; };
 		B6FDCEE620BAFD3400BEBD35 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FDCEE520BAFD3400BEBD35 /* ImageManager.swift */; };
@@ -105,62 +93,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B60CBAFC20948AAA00A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F8111E3319A95C8B0040E7D1;
-			remoteInfo = "Alamofire iOS";
-		};
-		B60CBAFE20948AAA00A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F8111E3E19A95C8B0040E7D1;
-			remoteInfo = "Alamofire iOS Tests";
-		};
-		B60CBB0020948AAA00A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4DD67C0B1A5C55C900ED2280;
-			remoteInfo = "Alamofire macOS";
-		};
-		B60CBB0220948AAA00A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F829C6B21A7A94F100A2CD59;
-			remoteInfo = "Alamofire macOS Tests";
-		};
-		B60CBB0420948AAA00A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4CF626EF1BA7CB3E0011A099;
-			remoteInfo = "Alamofire tvOS";
-		};
-		B60CBB0620948AAA00A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4CF626F81BA7CB3E0011A099;
-			remoteInfo = "Alamofire tvOS Tests";
-		};
-		B60CBB0820948AAA00A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E4202FE01B667AA100C997FB;
-			remoteInfo = "Alamofire watchOS";
-		};
-		B60CBB0C20948AD700A07FC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F8111E3219A95C8B0040E7D1;
-			remoteInfo = "Alamofire iOS";
-		};
 		B62EC99720820761004EE3C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
@@ -217,27 +149,6 @@
 			remoteGlobalIDString = 2E4FEFDA19575BE100351305;
 			remoteInfo = "SwiftyJSON iOS";
 		};
-		B677A4ED209B132000D2B17C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B677A4E8209B131F00D2B17C /* Rebekka.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 47FFC2831B09279200D3EDFE;
-			remoteInfo = Rebekka;
-		};
-		B677A4EF209B132000D2B17C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B677A4E8209B131F00D2B17C /* Rebekka.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 47FFC2DC1B09297E00D3EDFE;
-			remoteInfo = RebekkaTouch;
-		};
-		B677A4F3209B132A00D2B17C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B677A4E8209B131F00D2B17C /* Rebekka.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 47FFC2DB1B09297E00D3EDFE;
-			remoteInfo = RebekkaTouch;
-		};
 		B6BA3ABE2064AE5400290BBB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B6BA3A9E2064AE5300290BBB /* Project object */;
@@ -262,8 +173,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B62EC9A6208207D5004EE3C0 /* SwiftyJSON.framework in Embed Frameworks */,
-				B60CBB0B20948AD700A07FC6 /* Alamofire.framework in Embed Frameworks */,
-				B677A4F2209B132A00D2B17C /* RebekkaTouch.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -310,7 +219,6 @@
 		B605E11F208CB28400F2C260 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		B605E121208CB29000F2C260 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		B60B995E209C8C23004BC2D4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = "Card Note/Alamofire/Alamofire.xcodeproj"; sourceTree = "<group>"; };
 		B60F40D92074CFE700196DD5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		B60F40DB2074D0AE00196DD5 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		B60F40E02074EB2900196DD5 /* CardEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditor.swift; sourceTree = "<group>"; };
@@ -326,10 +234,14 @@
 		B61D68F820961BFB00B69009 /* libonline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libonline.a; sourceTree = "<group>"; };
 		B61D68FA20961C0600B69009 /* libbase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbase.a; sourceTree = "<group>"; };
 		B61D690C2096217E00B69009 /* TranslationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationManager.swift; sourceTree = "<group>"; };
+		B61FC8CF20C6824A00A9C651 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../iPhoneOS.sdk/usr/lib/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		B62EC9862081D59E004EE3C0 /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		B62EC9882081FF1A004EE3C0 /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		B62EC98A20820168004EE3C0 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyJSON.xcodeproj; path = "../../../Downloads/SwiftyJSON-master/SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
+		B631B14C20CA4CB00026534F /* UsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsController.swift; sourceTree = "<group>"; };
+		B6385A9520C65CDF00E022CB /* MovieCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCard.swift; sourceTree = "<group>"; };
+		B6385AA620C65CF800E022CB /* ListCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCard.swift; sourceTree = "<group>"; };
 		B64489C220A2FB0100ED3400 /* CardViewPanelDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewPanelDelegate.swift; sourceTree = "<group>"; };
 		B64489D320A41FCC00ED3400 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		B64BAD8B209C3FE200B9ED73 /* Card Note.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Card Note.entitlements"; sourceTree = "<group>"; };
@@ -338,17 +250,6 @@
 		B6613B0A207CD440001D117B /* CardEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditorView.swift; sourceTree = "<group>"; };
 		B6613B0C20803A59001D117B /* Constaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constaint.swift; sourceTree = "<group>"; };
 		B6613B0E2080404B001D117B /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
-		B677A4B4209B067700D2B17C /* DirectoryCreationOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryCreationOperation.swift; sourceTree = "<group>"; };
-		B677A4B5209B067700D2B17C /* FileDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadOperation.swift; sourceTree = "<group>"; };
-		B677A4B6209B067700D2B17C /* FileUploadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileUploadOperation.swift; sourceTree = "<group>"; };
-		B677A4B7209B067700D2B17C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B677A4B8209B067700D2B17C /* Operation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
-		B677A4B9209B067700D2B17C /* ReadStreamOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadStreamOperation.swift; sourceTree = "<group>"; };
-		B677A4BA209B067700D2B17C /* ResourceListOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceListOperation.swift; sourceTree = "<group>"; };
-		B677A4BB209B067700D2B17C /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		B677A4BC209B067700D2B17C /* StreamOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamOperation.swift; sourceTree = "<group>"; };
-		B677A4BD209B067700D2B17C /* WriteStreamOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteStreamOperation.swift; sourceTree = "<group>"; };
-		B677A4E8209B131F00D2B17C /* Rebekka.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Rebekka.xcodeproj; path = "../Visual HTML/Rebekka.xcodeproj"; sourceTree = "<group>"; };
 		B679121B208CE8AD00A417FD /* AMapFoundationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapFoundationKit.framework; sourceTree = "<group>"; };
 		B6791224208CE8B500A417FD /* MAMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MAMapKit.framework; sourceTree = "<group>"; };
 		B6791226208DFFF100A417FD /* PicCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicCard.swift; sourceTree = "<group>"; };
@@ -379,6 +280,7 @@
 		B6BA3ADA2064AF4C00290BBB /* Card.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Card.xib; sourceTree = "<group>"; };
 		B6BAADCA20A18317008B6761 /* TapBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapBarController.swift; sourceTree = "<group>"; };
 		B6BAADDC20A196F8008B6761 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		B6D53EB620C683590087ED38 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "Card Note/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		B6E505062077D49F003504D8 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = InMobiSDK.framework; sourceTree = "<group>"; };
 		B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
@@ -394,13 +296,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6D53EB720C683590087ED38 /* libstdc++.6.0.9.tbd in Frameworks */,
 				B6E8FA32208F171A00A0B22B /* WebKit.framework in Frameworks */,
 				B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */,
-				B677A4F1209B132A00D2B17C /* RebekkaTouch.framework in Frameworks */,
 				B605E122208CB29000F2C260 /* libc++.tbd in Frameworks */,
 				B6102988209839D100DA91BB /* AMapSearchKit.framework in Frameworks */,
-				B60CBB0A20948AD700A07FC6 /* Alamofire.framework in Frameworks */,
-				B605E120208CB28500F2C260 /* libstdc++.6.0.9.tbd in Frameworks */,
 				B6791223208CE8AD00A417FD /* AMapFoundationKit.framework in Frameworks */,
 				B605E11E208CB27C00F2C260 /* libz.tbd in Frameworks */,
 				B605E11C208CB27200F2C260 /* JavaScriptCore.framework in Frameworks */,
@@ -413,7 +313,6 @@
 				B605E114208CB25300F2C260 /* CoreTelephony.framework in Frameworks */,
 				B605E112208CB24A00F2C260 /* CoreLocation.framework in Frameworks */,
 				B605E110208CB24300F2C260 /* QuartzCore.framework in Frameworks */,
-				B6E8FA2E208F168E00A0B22B /* InMobiSDK.framework in Frameworks */,
 				B605E10E208CB23A00F2C260 /* CoreGraphics.framework in Frameworks */,
 				B605E10C208CB23000F2C260 /* Foundation.framework in Frameworks */,
 				B6791225208CE8B500A417FD /* MAMapKit.framework in Frameworks */,
@@ -453,6 +352,8 @@
 				B6791226208DFFF100A417FD /* PicCard.swift */,
 				B602B1532092041C00CD8A40 /* SharedCard.swift */,
 				B602B1552093232600CD8A40 /* VoiceCard.swift */,
+				B6385A9520C65CDF00E022CB /* MovieCard.swift */,
+				B6385AA620C65CF800E022CB /* ListCard.swift */,
 			);
 			path = Card;
 			sourceTree = "<group>";
@@ -460,6 +361,8 @@
 		B605E108208CB22700F2C260 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B61FC8CF20C6824A00A9C651 /* libstdc++.6.0.9.tbd */,
+				B6D53EB620C683590087ED38 /* libstdc++.6.0.9.tbd */,
 				B60B995E209C8C23004BC2D4 /* StoreKit.framework */,
 				B64BADA4209C8BF600B9ED73 /* CloudKit.framework */,
 				B6102979209839D000DA91BB /* AMapSearchKit.framework */,
@@ -486,20 +389,6 @@
 				CBECEEB608B44188F61CFEE6 /* Pods_Card_NoteUITests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		B60CBAF220948AAA00A07FC6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B60CBAFD20948AAA00A07FC6 /* Alamofire.framework */,
-				B60CBAFF20948AAA00A07FC6 /* Alamofire iOS Tests.xctest */,
-				B60CBB0120948AAA00A07FC6 /* Alamofire.framework */,
-				B60CBB0320948AAA00A07FC6 /* Alamofire macOS Tests.xctest */,
-				B60CBB0520948AAA00A07FC6 /* Alamofire.framework */,
-				B60CBB0720948AAA00A07FC6 /* Alamofire tvOS Tests.xctest */,
-				B60CBB0920948AAA00A07FC6 /* Alamofire.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		B60F40DD2074D5C100196DD5 /* View */ = {
@@ -539,6 +428,7 @@
 				B6A86DF32088D6E200F2C6EC /* AdViewController.swift */,
 				B6A86DF12088243200F2C6EC /* OrientationController.swift */,
 				B6BAADCA20A18317008B6761 /* TapBarController.swift */,
+				B631B14C20CA4CB00026534F /* UsController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -581,39 +471,9 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B677A4B3209B067700D2B17C /* Rebekka */ = {
-			isa = PBXGroup;
-			children = (
-				B677A4B4209B067700D2B17C /* DirectoryCreationOperation.swift */,
-				B677A4B5209B067700D2B17C /* FileDownloadOperation.swift */,
-				B677A4B6209B067700D2B17C /* FileUploadOperation.swift */,
-				B677A4B7209B067700D2B17C /* Info.plist */,
-				B677A4B8209B067700D2B17C /* Operation.swift */,
-				B677A4B9209B067700D2B17C /* ReadStreamOperation.swift */,
-				B677A4BA209B067700D2B17C /* ResourceListOperation.swift */,
-				B677A4BB209B067700D2B17C /* Session.swift */,
-				B677A4BC209B067700D2B17C /* StreamOperation.swift */,
-				B677A4BD209B067700D2B17C /* WriteStreamOperation.swift */,
-			);
-			name = Rebekka;
-			path = "../../rebekka3/rebekka-source/Rebekka";
-			sourceTree = "<group>";
-		};
-		B677A4E9209B131F00D2B17C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B677A4EE209B132000D2B17C /* Rebekka.framework */,
-				B677A4F0209B132000D2B17C /* RebekkaTouch.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		B6BA3A9D2064AE5300290BBB = {
 			isa = PBXGroup;
 			children = (
-				B677A4E8209B131F00D2B17C /* Rebekka.xcodeproj */,
-				B677A4B3209B067700D2B17C /* Rebekka */,
-				B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */,
 				B605E106208CB1F400F2C260 /* AMap.bundle */,
 				B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */,
 				B6BA3AA82064AE5300290BBB /* Card Note */,
@@ -708,8 +568,6 @@
 			);
 			dependencies = (
 				B62EC9A8208207D5004EE3C0 /* PBXTargetDependency */,
-				B60CBB0D20948AD700A07FC6 /* PBXTargetDependency */,
-				B677A4F4209B132A00D2B17C /* PBXTargetDependency */,
 			);
 			name = "Card Note";
 			productName = "Card Note";
@@ -804,14 +662,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = B60CBAF220948AAA00A07FC6 /* Products */;
-					ProjectRef = B60CBAF120948AAA00A07FC6 /* Alamofire.xcodeproj */;
-				},
-				{
-					ProductGroup = B677A4E9209B131F00D2B17C /* Products */;
-					ProjectRef = B677A4E8209B131F00D2B17C /* Rebekka.xcodeproj */;
-				},
-				{
 					ProductGroup = B62EC98D20820760004EE3C0 /* Products */;
 					ProjectRef = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
 				},
@@ -826,55 +676,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		B60CBAFD20948AAA00A07FC6 /* Alamofire.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Alamofire.framework;
-			remoteRef = B60CBAFC20948AAA00A07FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B60CBAFF20948AAA00A07FC6 /* Alamofire iOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Alamofire iOS Tests.xctest";
-			remoteRef = B60CBAFE20948AAA00A07FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B60CBB0120948AAA00A07FC6 /* Alamofire.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Alamofire.framework;
-			remoteRef = B60CBB0020948AAA00A07FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B60CBB0320948AAA00A07FC6 /* Alamofire macOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Alamofire macOS Tests.xctest";
-			remoteRef = B60CBB0220948AAA00A07FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B60CBB0520948AAA00A07FC6 /* Alamofire.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Alamofire.framework;
-			remoteRef = B60CBB0420948AAA00A07FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B60CBB0720948AAA00A07FC6 /* Alamofire tvOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Alamofire tvOS Tests.xctest";
-			remoteRef = B60CBB0620948AAA00A07FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B60CBB0920948AAA00A07FC6 /* Alamofire.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Alamofire.framework;
-			remoteRef = B60CBB0820948AAA00A07FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		B62EC99820820761004EE3C0 /* SwiftyJSON.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -924,20 +725,6 @@
 			remoteRef = B62EC9A320820761004EE3C0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B677A4EE209B132000D2B17C /* Rebekka.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Rebekka.framework;
-			remoteRef = B677A4ED209B132000D2B17C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B677A4F0209B132000D2B17C /* RebekkaTouch.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = RebekkaTouch.framework;
-			remoteRef = B677A4EF209B132000D2B17C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -951,7 +738,6 @@
 				B61029682096D53F00DA91BB /* VoiceView.xib in Resources */,
 				B6BA3AAF2064AE5300290BBB /* Main.storyboard in Resources */,
 				B6BA3ADB2064AF4C00290BBB /* Card.xib in Resources */,
-				B677A4C1209B067700D2B17C /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1068,11 +854,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B602B14B2091F6D900CD8A40 /* AMap.bundle in Sources */,
-				B677A4C6209B067700D2B17C /* StreamOperation.swift in Sources */,
 				B6BA3AAC2064AE5300290BBB /* ViewController.swift in Sources */,
 				B62EC9892081FF1A004EE3C0 /* UserViewController.swift in Sources */,
 				B64489D220A2FB0100ED3400 /* CardViewPanelDelegate.swift in Sources */,
-				B677A4C2209B067700D2B17C /* Operation.swift in Sources */,
 				B6A86DF62088F4EF00F2C6EC /* AlertView.swift in Sources */,
 				B6613B09207B80A1001D117B /* Palette.swift in Sources */,
 				B61D690D2096217E00B69009 /* TranslationManager.swift in Sources */,
@@ -1086,18 +870,18 @@
 				B605E0F3208CA90000F2C260 /* CardParser.swift in Sources */,
 				B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */,
 				B6BA3AAA2064AE5300290BBB /* AppDelegate.swift in Sources */,
-				B677A4C7209B067700D2B17C /* WriteStreamOperation.swift in Sources */,
+				B6385A9620C65CDF00E022CB /* MovieCard.swift in Sources */,
 				B6985A8E20BD7D460014A89B /* AttributedTextViewDelegate.swift in Sources */,
 				B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */,
+				B6385AA720C65CF800E022CB /* ListCard.swift in Sources */,
 				B6FF866420A1B9B8000D0B51 /* CardViewPanel.swift in Sources */,
 				B6155EBD208AEE840031F262 /* SearchBar.swift in Sources */,
 				B62EC98B20820168004EE3C0 /* User.swift in Sources */,
 				B602B1562093232600CD8A40 /* VoiceCard.swift in Sources */,
+				B631B14D20CA4CB00026534F /* UsController.swift in Sources */,
 				B6BA3AB22064AE5300290BBB /* Card_Note.xcdatamodeld in Sources */,
 				B64489D420A41FCC00ED3400 /* ShareView.swift in Sources */,
 				B6A86DF42088D6E200F2C6EC /* AdViewController.swift in Sources */,
-				B677A4BF209B067700D2B17C /* FileDownloadOperation.swift in Sources */,
-				B677A4C4209B067700D2B17C /* ResourceListOperation.swift in Sources */,
 				B605E0FF208CAAFF00F2C260 /* MapCard.swift in Sources */,
 				B62EC9872081D59E004EE3C0 /* UserView.swift in Sources */,
 				B6791227208DFFF100A417FD /* PicCard.swift in Sources */,
@@ -1106,16 +890,12 @@
 				B6102990209891DA00DA91BB /* LocationListViewDelegate.swift in Sources */,
 				B6E505072077D49F003504D8 /* Extension.swift in Sources */,
 				B6A86DE9208822DF00F2C6EC /* SignUpController.swift in Sources */,
-				B677A4C5209B067700D2B17C /* Session.swift in Sources */,
 				B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */,
 				B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */,
 				B605E0FC208CAADE00F2C260 /* ExampleCard.swift in Sources */,
 				B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */,
 				B610298E2098614C00DA91BB /* LocationListView.swift in Sources */,
-				B677A4BE209B067700D2B17C /* DirectoryCreationOperation.swift in Sources */,
-				B677A4C3209B067700D2B17C /* ReadStreamOperation.swift in Sources */,
 				B60F40DA2074CFE700196DD5 /* CardView.swift in Sources */,
-				B677A4C0209B067700D2B17C /* FileUploadOperation.swift in Sources */,
 				B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */,
 				B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */,
 				B6613B0D20803A59001D117B /* Constaint.swift in Sources */,
@@ -1143,20 +923,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B60CBB0D20948AD700A07FC6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Alamofire iOS";
-			targetProxy = B60CBB0C20948AD700A07FC6 /* PBXContainerItemProxy */;
-		};
 		B62EC9A8208207D5004EE3C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "SwiftyJSON iOS";
 			targetProxy = B62EC9A7208207D5004EE3C0 /* PBXContainerItemProxy */;
-		};
-		B677A4F4209B132A00D2B17C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = RebekkaTouch;
-			targetProxy = B677A4F3209B132A00D2B17C /* PBXContainerItemProxy */;
 		};
 		B6BA3ABF2064AE5400290BBB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1322,6 +1092,7 @@
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/Card\\ Note/**",
 					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/Card\\ Note",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1359,6 +1130,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/Card\\ Note",
 					"$(PROJECT_DIR)/Card\\ Note",
 				);
 				OTHER_LDFLAGS = (

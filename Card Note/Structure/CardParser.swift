@@ -23,8 +23,13 @@ class CardParser{
             let definition = json!["definition"].stringValue
             let description = json!["description"].stringValue
             let type = json!["type"].stringValue
-            let colorString = json!["color"].array
-            let color:UIColor = UIColor(red: CGFloat(colorString![0].float!), green: CGFloat(colorString![1].float!), blue: CGFloat(colorString![2].float!), alpha: CGFloat(colorString![3].float!))
+            let colorString = json!["color"].arrayValue
+            var color:UIColor?
+            if colorString.count >= 4{
+                color = UIColor(red: CGFloat(colorString[0].float!), green: CGFloat(colorString[1].float!), blue: CGFloat(colorString[2].float!), alpha: CGFloat(colorString[3].float!))
+            }else{
+            color = nil
+            }
             let modifytime = json!["time"].stringValue
             if type == "card"{
                 card = Card(title: title, tag: tag, description: description, id: id, definition: definition, color: color, cardType: type, modifytime: modifytime)
@@ -119,6 +124,13 @@ class CardParser{
                             //
                         }
                     }
+                }else if type == Card.CardType.movie.rawValue{
+                    card = MovieCard(id: id)
+                    User.downloadMovieUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                        if error != nil{
+                            //
+                        }
+                    }
                 }
             }
             
@@ -138,7 +150,7 @@ class CardParser{
         return card
     }
     
-    class func CardToJSON(_ card:Card)->String{
+    class func CardToJSON(_ card:Card)->String?{
      var string = "{"
         string.append("\"title\":" + "\"" + card.getTitle() + "\"" + ", ")
         string.append("\"tag\":" + "\"" + card.getTag() +  "\"" + ", ")
@@ -146,11 +158,13 @@ class CardParser{
         string.append("\"definition\":" + "\"" + card.getDefinition() + "\"" + ", ")
         string.append("\"description\":" + "\"" + card.getDescription() + "\"" + ", ")
         string.append("\"type\":" + "\"" + card.getType() + "\"" + ", ")
-        string.append("\"time\":" + "\"" + card.getTime() + "\"" + ", ")
+        string.append("\"time\":" + "\"" + card.getTime() + "\"")
         if card.getType() == "example"{
-            string.append("\"example\":" + "\"" + (card as! ExampleCard).getExample() + "\"" + ", ")
+            string.append(",")
+            string.append("\"example\":" + "\"" + (card as! ExampleCard).getExample() + "\"")
         }else if card.getType() == "text"{
-            string.append("\"text\":" + "\"" + (card as! TextCard).getText() + "\"" + ", ")
+            string.append(",")
+            string.append("\"text\":" + "\"" + (card as! TextCard).getText() + "\"")
         }else if card.getType() == "picture"{
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -163,28 +177,36 @@ class CardParser{
                 //User.uploadImageWithAF(email: loggedemail, image: im!, cardID: card.getId())
             }
         }else if card.getType() == "voice"{
+            string.append(",")
             let voiceCard = (card as! VoiceCard)
             let state = voiceCard.voiceManager?.state.rawValue
-            string.append("\"state\":" + "\"" + state! + "\"" + ", ")
+            string.append("\"state\":" + "\"" + state! + "\"")
         }else if card.getType() == "map"{
+            string.append(",")
             let mapCard = (card as! MapCard)
             string.append("\"formalAddress\":" + "\"" + mapCard.formalAddress + "\"" + ", ")
             string.append("\"neighbourAddress\":" + "\"" + mapCard.neibourAddress + "\"" + ", ")
             string.append("\"longitude\":" + "\"" + "\(mapCard.longitude!)" + "\"" + ", ")
-            string.append("\"latitude\":" + "\"" + "\(mapCard.latitude!)" + "\"" + ", ")
+            string.append("\"latitude\":" + "\"" + "\(mapCard.latitude!)" + "\"")
+        }else if card.getType() == Card.CardType.movie.rawValue{
+            // do nothing
         }
+        else if card.getType() == Card.CardType.card.rawValue{
+        string.append(",")
         //string.append("\"color\":" + card.getColor() + ", ")
         var r = CGFloat(0)
         var g = CGFloat(0)
         var b = CGFloat(0)
         var a = CGFloat(0)
         card.getColor().getRed(&r, green: &g, blue: &b, alpha: &a)
-        string.append("\"color\":" + "[\(r),\(g),\(b),\(a)]" + "")
+        string.append("\"color\":" + "[\(r),\(g),\(b),\(a)]")
+        }
+        
         if card.ifHasChild(){
          string.append(",")
          string.append("\"subcard\":[" )
         for card in card.getChilds(){
-            string.append(CardToJSON(card))
+            string.append(CardToJSON(card)!)
             string.append(",")
         }
             string.removeLast()
@@ -193,7 +215,12 @@ class CardParser{
         
         string.append("}")
        // for card.getChilds()
-        return string
+        let json = JSON(string)
+        if json != nil{
+        return json.rawString()
+        }else{
+        return nil
+        }
      }
  
 }

@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 import SCLAlertView
 import SwiftMessages
+import Font_Awesome_Swift
+import AVFoundation
+import AVKit
 
 class CardView: UIView{
     weak var delegate:CardViewDelegate?
@@ -99,7 +102,7 @@ class CardView: UIView{
                     
                     // Set message title, body, and icon. Here, we're overriding the default warning
                     // image with an emoji character.
-                    
+                    view.button?.removeFromSuperview()
                     view.configureContent(title: "Error", body: "Translation Went Wrong.", iconText: "")
                     
                     // Show the message.
@@ -143,7 +146,7 @@ class CardView: UIView{
                     
                     // Set message title, body, and icon. Here, we're overriding the default warning
                     // image with an emoji character.
-                  
+                    view.button?.removeFromSuperview()
                     view.configureContent(title: "Error", body: "Translation Went Wrong.", iconText: "")
                     
                     // Show the message.
@@ -321,6 +324,43 @@ class CardView: UIView{
         }
     }
     
+    class ListView:CardView{
+        
+    }
+    
+    
+    class MovieView:CardView{
+        var url:URL?
+        var player:AVPlayer?
+        var playerLayer:AVPlayerLayer?
+        var progressBar:UIProgressView?
+        var state:State = State.readyToPlay
+        enum State{
+            case playing
+            case readyToPlay
+            case pause
+        }
+        
+       @objc func playerDidFinishPlaying(){
+            state = .readyToPlay
+        }
+        
+        @objc func play(sender:UIButton){
+        do{
+            player?.play()
+            state = .playing
+            sender.isHidden = true
+        }catch let error{
+            print(error.localizedDescription)
+        }
+        }
+        
+        @objc func pause(){
+            player?.pause()
+            state = .pause
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -494,6 +534,9 @@ class CardView: UIView{
         view.textView.layer.cornerRadius = 20
         view.textView.isScrollEnabled = false
         view.textView.attributedText = NSAttributedString(string: string)
+        if string == ""{
+            view.textView.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
+        }
         let constrainSize = CGSize(width:view.textView.frame.size.width,height:CGFloat(MAXFLOAT))
         var size = view.textView.sizeThatFits(constrainSize)
         
@@ -681,4 +724,34 @@ class CardView: UIView{
         view.addSubview(view.image)
         return view
     }
+    
+    class func getSingleMovieView(card:MovieCard)->MovieView{
+       let view = MovieView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.6))
+        view.center.x = UIScreen.main.bounds.width/2
+        view.url = URL(fileURLWithPath: card.path)
+        print("path:\(card.path)")
+        view.player = AVPlayer(url: view.url!)
+        
+        view.playerLayer = AVPlayerLayer(player: view.player)
+        view.playerLayer?.frame = view.bounds
+        view.card = card
+        view.layer.addSublayer(view.playerLayer!)
+        let playerItem = AVPlayerItem(url: view.url!)
+        NotificationCenter.default.addObserver(view,
+                                               selector: #selector(view.playerDidFinishPlaying),
+                                               name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                                               object: playerItem)
+        let playerButton = UIButton(frame:CGRect(x: 0, y: 0, width: 50, height: 50))
+        playerButton.setFAIcon(icon: FAType.FAPlayCircle, forState: .normal)
+        playerButton.setTitleColor(.black, for: .normal)
+        playerButton.addTarget(view, action: #selector(view.play), for: .touchDown)
+        playerButton.center.x = view.frame.width/2
+        playerButton.center.y = view.frame.height/2
+        
+        view.addSubview(playerButton)
+        
+        return view
+    }
+    
+    
 }

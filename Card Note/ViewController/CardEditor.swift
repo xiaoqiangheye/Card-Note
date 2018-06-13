@@ -12,6 +12,8 @@ import SwiftyJSON
 import Font_Awesome_Swift
 import ChameleonFramework
 import Hero
+import MobileCoreServices
+
 class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate,AttributedTextViewDelegate, UIPickerViewDelegate,UIPickerViewDataSource{
     //main components
     var cardTitle: UITextView! = UITextView()
@@ -23,6 +25,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     var cardBackGround = UIView()
     var attributedView:AttributedTextView?
     var pickerView:UIPickerView!
+    var pickerColorView:UIView!
     @IBOutlet var doneButton: UIButton!
     @IBOutlet var addButton: UIButton!
     var color:UIColor = UIColor.red
@@ -38,6 +41,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     var addText:UIView = UIView()
     var addVoiceView:UIView = UIView()
     var addMapView = UIView()
+    var addMovieView = UIView()
     var addButtonList = [UIView]()
     ///////////////////////////////
     var cumulatedheight:Int = 0
@@ -59,30 +63,43 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
   title
  */
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 2
+        return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        /* deprecated font
         if component == 0{
         return UIFont.familyNames.count
         }else{
         return 72
         }
+      */
+        return 72
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        /*deprecated
         if component == 0{
         return UIFont.familyNames[row]
         }else{
         return String(row + 1)
         }
+        */
+        return String(row + 1)
     }
     
     
     //AttributedText
     func selectFont()
     {
-       self.view.addSubview(pickerView)
+        if Int((attributedView?.font?.pointSize)!) >= 1{
+        pickerView.selectRow(Int((attributedView?.font?.pointSize)!) - 1, inComponent: 0, animated: true)
+        }else{
+        pickerView.selectRow(0, inComponent: 0, animated: true)
+        }
+        pickerColorView.backgroundColor = attributedView?.fontColor == nil ? UIColor.black : attributedView?.fontColor
+        self.view.addSubview(pickerColorView)
+        self.view.addSubview(pickerView)
         let pickerViewDone = UIButton(frame: CGRect(x: pickerView.frame.width - 100, y:30, width: 100, height: 30))
         pickerViewDone.setTitle("Done", for: .normal)
         pickerViewDone.setTitleColor(UIColor.black, for: .normal)
@@ -122,6 +139,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             self.scrollView.frame.origin.y = -50
         }, completion: nil)
         attributedView?.removeFromSuperview()
+        attributedView = nil
     }
     
     
@@ -185,13 +203,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-        if attributedView != nil{
-            attributedView = nil
-        }
         UIView.animate(withDuration: 0.5, animations: {
            self.scrollView.frame.origin.y = -50
         }, completion: nil)
         attributedView?.removeFromSuperview()
+        attributedView = nil
         return true
     }
     
@@ -277,12 +293,18 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         cardBackGround.addSubview(descriptions)
         cardBackGround.addSubview(definitionLabel)
         cardBackGround.addSubview(descriptionLabel)
+        let endEditingGesture = UITapGestureRecognizer()
+        endEditingGesture.numberOfTapsRequired = 1
+        endEditingGesture.numberOfTouchesRequired = 1
+        endEditingGesture.addTarget(self, action: #selector(endEditing))
+        cardBackGround.addGestureRecognizer(endEditingGesture)
+        
        // cardBackGround.layer.cornerRadius = 15
         let tapGesture = UITapGestureRecognizer()
         tapGesture.numberOfTapsRequired = 1
         tapGesture.numberOfTouchesRequired = 1
-        tapGesture.addTarget(self, action: #selector(showPalette))
-        cardBackGround.addGestureRecognizer(tapGesture)
+        tapGesture.addTarget(self, action: #selector(showPalette(_:)))
+        cardColor.addGestureRecognizer(tapGesture)
         
         
         scrollView.frame = CGRect(x: CGFloat(0), y: -50, width: self.view.bounds.width, height: self.view.bounds.height)
@@ -310,24 +332,35 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         
         
-         pickerView = UIPickerView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300))
+         pickerView = UIPickerView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width/2, height: 300))
          pickerView.dataSource = self
          pickerView.backgroundColor = UIColor.white
          //将delegate设置成自己
          pickerView.delegate = self
          pickerView.selectRow(0, inComponent: 0, animated: true)
+        
+         pickerColorView = UIView(frame: CGRect(x: UIScreen.main.bounds.width/2, y: 0, width: UIScreen.main.bounds.width/2, height: 300))
+        let showPalette = UITapGestureRecognizer(target: self, action: #selector(showPalette(_:)))
+        showPalette.numberOfTapsRequired = 1
+        showPalette.numberOfTouchesRequired = 1
+        pickerColorView.addGestureRecognizer(showPalette)
     }
     
     @objc func getPickerViewValue(sender:UIButton){
         pickerView.removeFromSuperview()
+        pickerColorView.removeFromSuperview()
         sender.removeFromSuperview()
+        ifPaletteShowed = false
         if attributedView != nil{
-            
+           /*deprecated
             let row = pickerView.selectedRow(inComponent: 0)
             attributedView?.setFont(fontName: UIFont.familyNames[row])
-            
-            let size = pickerView.selectedRow(inComponent: 1) + 1
+            */
+            let size = pickerView.selectedRow(inComponent: 0) + 1
             attributedView?.setFontSize(size: CGFloat(size))
+            
+            let color = pickerColorView.backgroundColor
+            attributedView?.setFontColor(color: color!)
         }
     }
     
@@ -345,10 +378,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         
         if (selectedTextView != nil){
             //add the attributed view
+            if attributedView != nil && attributedView?.superview != nil{
+                attributedView?.removeFromSuperview()
+            }
             attributedView = AttributedTextView(y: self.view.frame.height - height! - 30, textView: selectedTextView!)
             attributedView?.delegate = self
             self.view.addSubview(attributedView!)
-            
             //adjust the offset of the scrollview
             var relativeHeight:CGFloat!
             if !(selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.ExaView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.SubCardView.self))!{
@@ -373,11 +408,14 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         case save = "save"
     }
     
-    @objc func showPalette(_ sender:UIGestureRecognizer){
+    @objc func endEditing(){
         self.view.endEditing(true)
+    }
+    
+    @objc func showPalette(_ sender:UIGestureRecognizer){
         if !ifPaletteShowed{
         //let location = sender.location(in: cardBackGround)
-        let location = sender.location(in: cardBackGround)
+        let location = sender.location(in:sender.view)
         let palette = Palette(frame: CGRect(x: location.x, y: location.y, width: 150, height: 150))
         palette.center = location
         var colors:[UIColor] = [UIColor]()
@@ -387,12 +425,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         colors.append(Constant.Color.江戸紫)
         colors.append(Constant.Color.花季色)
         palette.addColors(colors)
-        palette.parentView = cardBackGround
+        palette.parentView = sender.view
         palette.viewController = self
-        self.cardBackGround.addSubview(palette)
+        sender.view?.addSubview(palette)
         ifPaletteShowed = true
         }else{
-            for subView in cardBackGround.subviews{
+            for subView in (sender.view?.subviews)!{
                 if subView.isKind(of: Palette.self){
                 subView.removeFromSuperview()
                 ifPaletteShowed = false
@@ -433,7 +471,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             if card.isKind(of: ExampleCard.self){
                 let exaView = CardView.singleExampleView(card:card)
                 var dic:NSDictionary?
-                exaView.textView.attributedText = try? NSAttributedString(data:(card as! ExampleCard).getExample().data(using: .utf8)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.rtf], documentAttributes:&dic)
+                exaView.textView.attributedText = try? NSAttributedString(data:(card as! ExampleCard).getExample().data(using: .utf8)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes:&dic)
                 print((card as! ExampleCard).getExample())
                 exaView.example = (card as! ExampleCard).getExample()
                 exaView.frame.origin.y = cumulatedHeight
@@ -518,6 +556,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 cumulatedHeight += mapCardView.frame.height + 20
                 cardBackGround.addSubview(mapCardView)
                 subCards.append(mapCardView)
+            }else if card.isKind(of: MovieCard.self){
+                let movieCard = card as! MovieCard
+                let movieCardView = CardView.getSingleMovieView(card: movieCard)
+                movieCardView.frame.origin.y = cumulatedHeight
+                 cumulatedHeight += movieCardView.frame.height + 20
+                cardBackGround.addSubview(movieCardView)
+                subCards.append(movieCardView)
             }
             else{
          let cardView = CardView.getSubCardView(card)
@@ -669,9 +714,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         url?.appendPathComponent("mapPic")
                         url?.appendPathComponent(card.card.getId() + ".jpg")
                         if manager.fileExists(atPath: (url?.path)!){
-                            let image = UIImage(contentsOfFile: (url?.path)!)
-                          
                             User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
+                        }
+                        else if card.isKind(of: CardView.MovieView.self){
+                            if manager.fileExists(atPath:((card.card as! MovieCard).path)){
+                                User.uploadMovieUsingQCloud(email: loggedemail, url: url!)
+                            }
                         }
                     }else if card.isKind(of: CardView.SubCardView.self){
                         let sub = card.card
@@ -757,7 +805,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
                         }else if card.isKind(of: CardView.ExaView.self){
-                            let data = try? (card as! CardView.ExaView).textView.attributedText.data(from: NSMakeRange(0, (card as! CardView.ExaView).textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                            let data = try? (card as! CardView.ExaView).textView.attributedText.data(from: NSMakeRange(0, (card as! CardView.ExaView).textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.html])
                             let string = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
                             print(string)
                             (card.card as! ExampleCard).setExample(string as! String)
@@ -784,6 +832,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                            
                                // User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
+                            }
+                            else if card.isKind(of: CardView.MovieView.self){
+                                if manager.fileExists(atPath:((card.card as! MovieCard).path)){
+                                    User.uploadMovieUsingQCloud(email: loggedemail, url: url!)
+                                }
                             }
                         }else if card.isKind(of: CardView.SubCardView.self){
                              let sub = card.card
@@ -883,14 +936,23 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             addMapGesture.numberOfTouchesRequired = 1
             addMapGesture.addTarget(self, action: #selector(addMap))
             addMapView.addGestureRecognizer(addMapGesture)
-      
+            
+            addMovieView = createButtonWithLabel(title: "Video", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50), icon: .FAVideoCamera)
+            let addVideoGesture = UITapGestureRecognizer()
+            addVideoGesture.numberOfTapsRequired = 1
+            addVideoGesture.numberOfTouchesRequired = 1
+            addVideoGesture.addTarget(self, action: #selector(addVideo))
+            addMovieView.addGestureRecognizer(addVideoGesture)
+            
         addButtonList.append(addSubCard)
         addButtonList.append(addExa)
         addButtonList.append(addPicCard)
         addButtonList.append(addText)
         addButtonList.append(addVoiceView)
         addButtonList.append(addMapView)
-            for addButton in addButtonList{
+        addButtonList.append(addMovieView)
+            
+        for addButton in addButtonList{
                 self.view.addSubview(addButton)
             }
         UIView.beginAnimations(nil, context: nil)
@@ -931,6 +993,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             self.picTureAction = "addPic"
             cameraPicker.delegate = self
             cameraPicker.sourceType = .savedPhotosAlbum
+             cameraPicker.mediaTypes = [kUTTypeImage as! String]
             //在需要的地方present出来
             self.present(cameraPicker, animated: true, completion: nil)
         }
@@ -939,6 +1002,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             self.picTureAction = "addPic"
             cameraPicker.delegate = self
             cameraPicker.sourceType = .camera
+            cameraPicker.mediaTypes = [kUTTypeImage as! String]
              self.present(cameraPicker, animated: true, completion: nil)
         }
         alertSheet.addAction(cancelAction)
@@ -978,10 +1042,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         //获得照片
+       
+        if picTureAction == "addPic"{
         print("get Photo")
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        if picTureAction == "addPic"{
-            
         let piccard = PicCard(image)
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -1009,6 +1073,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
           scrollView.contentSize.height = picView.frame.origin.y + picView.frame.height + 20
             cardBackGround.frame.size.height = picView.frame.origin.y + picView.frame.height + 20
         }else if picTureAction == "updatePic"{
+            let image = info[UIImagePickerControllerOriginalImage] as! UIImage
             if selectedPictureView != nil{
                 selectedPictureView?.image.image = image
                 (selectedPictureView?.card as! PicCard).pic = image
@@ -1019,6 +1084,26 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 let data = UIImageJPEGRepresentation(((selectedPictureView)?.image.image)!,0.5)
                 try? data?.write(to: url!)
             }
+        }else if picTureAction == "addVideo"{
+            let videoURL = info[UIImagePickerControllerMediaURL] as! URL
+            print("videoURl:\(videoURL)")
+            let id = UUID().uuidString
+            try? FileManager.default.createDirectory(at: URL(fileURLWithPath: Constant.Configuration.url.Movie.path), withIntermediateDirectories: true, attributes: nil)
+            try? FileManager.default.copyItem(at: videoURL, to: URL(fileURLWithPath: Constant.Configuration.url.Movie.appendingPathComponent(id + ".mov").path))
+            let movieCard = MovieCard(id: id)
+           // movieCard.path = videoURL.path
+            let movieView = CardView.getSingleMovieView(card: movieCard)
+            if subCards.count > 0{
+                movieView.frame.origin.y = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
+                
+            }else{
+                movieView.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
+            }
+            subCards.append(movieView)
+            cardBackGround.addSubview(movieView)
+            scrollView.contentSize.height = movieView.frame.origin.y + movieView.frame.height + 20
+            cardBackGround.frame.size.height = movieView.frame.origin.y + movieView.frame.height + 20
+            
         }
          self.dismiss(animated: true, completion: nil)
     }
@@ -1105,7 +1190,31 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     @objc func addVideo(){
-        
+        let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
+            print("choose form album")
+            let cameraPicker = UIImagePickerController()
+            self.picTureAction = "addVideo"
+            cameraPicker.delegate = self
+            cameraPicker.sourceType = .savedPhotosAlbum
+            cameraPicker.mediaTypes = [kUTTypeMovie as! String]
+           
+            //在需要的地方present出来
+            self.present(cameraPicker, animated: true, completion: nil)
+        }
+        let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (action) in
+            let cameraPicker = UIImagePickerController()
+            self.picTureAction = "addVideo"
+            cameraPicker.delegate = self
+            cameraPicker.sourceType = .camera
+            cameraPicker.mediaTypes = [kUTTypeMovie as! String]
+            self.present(cameraPicker, animated: true, completion: nil)
+        }
+        alertSheet.addAction(cancelAction)
+        alertSheet.addAction(fromalbum)
+        alertSheet.addAction(takePhoto)
+        self.present(alertSheet, animated: true, completion: nil)
     }
     
     @objc func addVoice(){
