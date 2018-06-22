@@ -47,7 +47,9 @@ class AdViewController:UIViewController{
                         print("fail to add")
                     }
                     }
+                    
                     User.getUserCards(email: loggedemail, completionHandler: { (json:JSON?) in
+                        
                         if json != nil{
                             let carddata = json!["card"].arrayValue
                             //get cards from the dataBase
@@ -116,7 +118,6 @@ class AdViewController:UIViewController{
                                 
                                 //add rest InterNetCard to local
                                 cardCopiedList?.append(contentsOf:cardArray)
-                                
                                 let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardCopiedList)
                                 do{
                                     try datawrite.write(to: url!)
@@ -136,10 +137,16 @@ class AdViewController:UIViewController{
                                 }
                             }
                     }
+                        
+ 
+                        
                         DispatchQueue.main.async {
                         self.performSegue(withIdentifier: "main", sender: nil)
                         }
+                        
+                     
                     })
+ 
                     
                 }
                 }else{

@@ -14,8 +14,10 @@ import ChameleonFramework
 import Hero
 import MobileCoreServices
 
-class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate,AttributedTextViewDelegate, UIPickerViewDelegate,UIPickerViewDataSource{
+class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate,AttributedTextViewDelegate, UIPickerViewDelegate,UIPickerViewDataSource,CardEditorDelegate{
     //main components
+    weak var delegate:CardEditorDelegate?
+    var isSubCard:Bool = false
     var cardTitle: UITextView! = UITextView()
     var tag: UITextView! = UITextView()
     var definition: UITextView! = UITextView()
@@ -200,6 +202,29 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
        textView.backgroundColor = UIColor.clear
       //textView.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
        selectedTextView = textView
+        if textView.superview != nil{
+            if (textView.superview?.isKind(of: CardView.ExaView.self))!{
+                let view = textView.superview as! CardView.ExaView
+        let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+            var url = Constant.Configuration.url.attributedText
+            url.appendPathComponent(view.card.getId() + ".rtf")
+                do{
+                try data?.write(to: url)
+                }catch let error{
+                    print(error.localizedDescription)
+                }
+            }else if (textView.superview?.isKind(of: CardView.TextView.self))!{
+                 let view = textView.superview as! CardView.TextView
+                let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                var url = Constant.Configuration.url.attributedText
+                url.appendPathComponent(view.card.getId() + ".rtf")
+                do{
+                    try data?.write(to: url)
+                }catch let error{
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -381,9 +406,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             if attributedView != nil && attributedView?.superview != nil{
                 attributedView?.removeFromSuperview()
             }
+             if (selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && (selectedTextView?.superview?.isKind(of: CardView.ExaView.self))!{
             attributedView = AttributedTextView(y: self.view.frame.height - height! - 30, textView: selectedTextView!)
             attributedView?.delegate = self
             self.view.addSubview(attributedView!)
+            }
             //adjust the offset of the scrollview
             var relativeHeight:CGFloat!
             if !(selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.ExaView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.SubCardView.self))!{
@@ -447,8 +474,18 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         }
     }
     
-    func deleteButtonClicked() {
+    func deleteButtonClicked(view:CardView) {
+        var index = 0
+        view.removeFromSuperview()
+        for card in subCards{
+            if card.card.getId() == view.card.getId(){
+                subCards.remove(at: index)
+                break
+            }
+            index += 1
+        }
         
+        reLoad()
     }
     
     func loadCard(card:Card){
@@ -471,9 +508,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             if card.isKind(of: ExampleCard.self){
                 let exaView = CardView.singleExampleView(card:card)
                 var dic:NSDictionary?
-                exaView.textView.attributedText = try? NSAttributedString(data:(card as! ExampleCard).getExample().data(using: .utf8)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes:&dic)
+                exaView.textView.attributedText = (card as! ExampleCard).getExample()
                 print((card as! ExampleCard).getExample())
-                exaView.example = (card as! ExampleCard).getExample()
                 exaView.frame.origin.y = cumulatedHeight
                 exaView.textView.delegate = self
                 exaView.delegate = self
@@ -508,15 +544,15 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 tapGesture.addTarget(self, action: #selector(updatePic))
                 picCard.addGestureRecognizer(tapGesture)
             }else if card.isKind(of: TextCard.self){
-                let text = (card as! TextCard).getText()
-                let textCard = CardView.getSingleTextView(string: text)
-                textCard.delegate = self
-                textCard.frame.origin.y = cumulatedHeight
-                textCard.textView.delegate = self
-                textCard.addSubview(textCard.textView)
-                cumulatedHeight += textCard.frame.height + 20
-                cardBackGround.addSubview(textCard)
-                subCards.append(textCard)
+                let textCard = (card as! TextCard)
+                let textCardView = CardView.getSingleTextView(card:textCard)
+                textCardView.delegate = self
+                textCardView.frame.origin.y = cumulatedHeight
+                textCardView.textView.delegate = self
+                textCardView.addSubview(textCardView.textView)
+                cumulatedHeight += textCardView.frame.height + 20
+                cardBackGround.addSubview(textCardView)
+                subCards.append(textCardView)
             }else if card.isKind(of: VoiceCard.self){
                 let voiceCard = card as! VoiceCard
                 let voiceCardView = CardView.getSingleVoiceView(card: voiceCard)
@@ -559,6 +595,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             }else if card.isKind(of: MovieCard.self){
                 let movieCard = card as! MovieCard
                 let movieCardView = CardView.getSingleMovieView(card: movieCard)
+                movieCardView.delegate = self
                 movieCardView.frame.origin.y = cumulatedHeight
                  cumulatedHeight += movieCardView.frame.height + 20
                 cardBackGround.addSubview(movieCardView)
@@ -595,15 +632,16 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         definition.text = card?.getDefinition()
         cardTitle.text = card?.getTitle()
         tag.text = card?.getTag()
-        cardTitle.textColor = card?.getColor()
-        
+        cardColor.backgroundColor = card?.getColor()
         for subview in cardBackGround.subviews{
-            if subview.isKind(of: CardView.self) || subview.isKind(of: CardView.ExaView.self){
+            if subview.isKind(of: CardView.self){
                 subview.removeFromSuperview()
             }
         }
         var cumulatedHeight = descriptions.frame.origin.y + descriptions.frame.height + 20
         for card in subCards{
+            card.frame.origin.y = cumulatedHeight
+            cumulatedHeight += card.frame.height + 20
             cardBackGround.addSubview(card)
             cardBackGround.frame.size.height = card.frame.origin.y + card.frame.height + 20
         }
@@ -684,18 +722,49 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
                         url?.appendPathComponent(loggedID)
                         url?.appendPathComponent(card.card.getId() + ".jpg")
-                        if manager.fileExists(atPath: (url?.path)!){
-                            let image = UIImage(data: try! NSData(contentsOf: url!) as Data)!
-                           // User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
+                        if manager.fileExists(atPath: (url?.path)!){                           // User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
                            // User.uploadPhotoUsingFTP(url: url!)
                             //deprecated above
                             User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                         }
                     }else if card.isKind(of: CardView.ExaView.self){
+                        /**deprecated in 6.13
                         (card.card as! ExampleCard).setExample((card as! CardView.ExaView).textView.attributedText.string)
                         print((card as! CardView.ExaView).textView.attributedText.string)
+                        */
+                        
+                        /**updated in 6.13
+                        */
+                        let view = card as! CardView.TextView
+                        let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                        var url = Constant.Configuration.url.attributedText
+                        url.appendPathComponent(view.card.getId() + ".rtf")
+                        do{
+                            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+                            try data?.write(to: url)
+                        }catch let error{
+                            print(error.localizedDescription)
+                        }
+                        User.uploadAttrUsingQCloud(url:url)
                     }else if card.isKind(of: CardView.TextView.self){
+                        /**deprecated in 6.13
                         (card.card as! TextCard).setText((card as! CardView.TextView).textView.attributedText.string)
+                        */
+                        
+                        /**updated in 6.13
+                         */
+                        let view = card as! CardView.TextView
+                        let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                        var url = Constant.Configuration.url.attributedText
+                        url.appendPathComponent(view.card.getId() + ".rtf")
+                        do{
+                            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+                            try data?.write(to: url)
+                        }catch let error{
+                            print(error.localizedDescription)
+                        }
+                        User.uploadAttrUsingQCloud(url:url)
+ 
                     }else if card.isKind(of: CardView.VoiceCardView.self){
                         let manager = FileManager.default
                         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -703,8 +772,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         url?.appendPathComponent("audio")
                         url?.appendPathComponent(card.card.getId() + ".wav")
                         if manager.fileExists(atPath: (url?.path)!){
-                            let data = NSData(contentsOfFile: (url?.path)!)
-                           
                             User.uploadAudioUsingQCloud(email: loggedemail, url: url!)
                         }
                     }else if card.isKind(of: CardView.MapCardView.self){
@@ -718,6 +785,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         }
                         else if card.isKind(of: CardView.MovieView.self){
                             if manager.fileExists(atPath:((card.card as! MovieCard).path)){
+                                
                                 User.uploadMovieUsingQCloud(email: loggedemail, url: url!)
                             }
                         }
@@ -736,6 +804,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             let strNowTime = timeFormatter.string(from: date as Date) as String
             let card = Card(title: cardTitle.text, tag: tag.text, description: descriptions.attributedText.string, id: UUID().uuidString, definition: definition.attributedText.string, color: color, cardType:Card.CardType.card.rawValue,modifytime:strNowTime)
             card.addChildNotes(childs)
+            
+             if !isSubCard{
             User.addCard(email: loggedemail, card: card, completionHandler: { (json:JSON?) in
                 if json != nil{
                     if json!["ifSuccess"].boolValue{
@@ -760,6 +830,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                     print("fail to add")
                 }
             }
+            }
             
         }else if self.type == CardEditor.type.save{
             let manager = FileManager.default
@@ -768,23 +839,14 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             url?.appendPathComponent(loggedID)
             url?.appendPathComponent("card.txt")
             let data = try! Data(contentsOf: url!)
-            let string = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-            print(data)
-            
+         
             if let dateRead = try? Data.init(contentsOf: url!){
                 var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
                 if cardList == nil{
                     cardList = [Card]()
                 }
                 if card != nil{
-                    var index = 0
-                    for card in cardList!{
-                        if card.getId() != self.card?.getId(){
-                        index += 1
-                        }else{
-                            break
-                        }
-                    }
+                    
                     self.card?.setTitle(cardTitle.text)
                     self.card?.setColor(color)
                     self.card?.setDefinition(definition.attributedText.string)
@@ -805,12 +867,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
                         }else if card.isKind(of: CardView.ExaView.self){
-                            let data = try? (card as! CardView.ExaView).textView.attributedText.data(from: NSMakeRange(0, (card as! CardView.ExaView).textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.html])
-                            let string = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                            print(string)
-                            (card.card as! ExampleCard).setExample(string as! String)
+                            var url = Constant.Configuration.url.attributedText
+                            url.appendPathComponent(card.card.getId() + ".rtf")
+                            User.uploadAttrUsingQCloud(url:url)
                         }else if card.isKind(of: CardView.TextView.self){
-                            (card.card as! TextCard).setText((card as! CardView.TextView).textView.attributedText.string)
+                            var url = Constant.Configuration.url.attributedText
+                            url.appendPathComponent(card.card.getId() + ".rtf")
+                            User.uploadAttrUsingQCloud(url:url)
                         }else if card.isKind(of: CardView.VoiceCardView.self){
                             let manager = FileManager.default
                             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -833,11 +896,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                                // User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
                                User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
                             }
-                            else if card.isKind(of: CardView.MovieView.self){
-                                if manager.fileExists(atPath:((card.card as! MovieCard).path)){
-                                    User.uploadMovieUsingQCloud(email: loggedemail, url: url!)
+                        }else if card.isKind(of: CardView.MovieView.self){
+                                var url = Constant.Configuration.url.Movie
+                                url.appendPathComponent(card.card.getId() + ".mov")
+                                if manager.fileExists(atPath:url.path){
+                                    User.uploadMovieUsingQCloud(email: loggedemail, url: url)
                                 }
-                            }
+                            
                         }else if card.isKind(of: CardView.SubCardView.self){
                              let sub = card.card
                              let view = card as! CardView.SubCardView
@@ -853,6 +918,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                     timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                     let strNowTime = timeFormatter.string(from: date as Date) as String
                     self.card?.updateTime(strNowTime)
+                    
+                     if !isSubCard{
                     User.updateCard(card: (self.card)!, email: loggedemail, completionHandler: { (json:JSON?) in
                         if json != nil{
                         if json!["ifSuccess"].boolValue {
@@ -860,18 +927,47 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                         }
                         }
                     })
-                    cardList![index] = self.card!
+                    
+                    var index = 0
+                    for card in cardList!{
+                        if card.getId() != self.card?.getId(){
+                            index += 1
+                        }else{
+                            break
+                        }
+                    }
+                    
+                        cardList![index] = card!
                     let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
                     do{
                         try datawrite.write(to: url!)
                     }catch{
                         print("fail to add")
                     }
+                    }
                 }
            }
        }
+            if !isSubCard{
         self.dismiss(animated: true, completion: nil)
+            }else{
+                self.dismiss(animated: true) {
+                    if self.delegate != nil{
+                        self.delegate?.saveSubCards!(card:self.card!)
+                    }
+                }
+            }
+            
         }
+    }
+    
+    func saveSubCards(card: Card) {
+        
+        for subView in subCards{
+            subView.removeFromSuperview()
+        }
+        subCards.removeAll()
+        loadCard(card: self.card!)
     }
     
     
@@ -984,7 +1080,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     
     
     @objc func addPic(){
-        
         let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
@@ -1113,7 +1208,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let strNowTime = timeFormatter.string(from: date as Date) as String
-        let card = Card(title: "title", tag: "", description: "", id: UUID().uuidString, definition: "", color: color, cardType: Card.CardType.card.rawValue, modifytime:strNowTime)
+        let card = Card(title: "title", tag: "", description: "", id: UUID().uuidString, definition: "", color: self.card?.getColor(), cardType: Card.CardType.card.rawValue, modifytime:strNowTime)
         let cardView = CardView.getSubCardView(card)
         cardView.layer.shadowOpacity = 0.5
         cardView.layer.shadowColor = UIColor.black.cgColor
@@ -1137,6 +1232,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     @objc func performCardEditor(_ sender:UITapGestureRecognizer){
+        /**deprecated temporarily in 6.15
     let card = (sender.view as! CardView.SubCardView).card
     let cardEditorView = CardEditorView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height - CGFloat(UIDevice.current.Xdistance() - UIDevice.current.BottomDistance())))
         cardEditorView.loadCard(card!)
@@ -1150,6 +1246,15 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         cardEditorView.descriptions.delegate = self
         cardEditorView.classification.delegate = self
         EditingSubCard.append(cardEditorView)
+        */
+        let card = (sender.view as! CardView).card
+        let story = UIStoryboard(name: "Main", bundle: nil)
+        let vc = story.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
+        vc.card = card
+        vc.isSubCard = true
+        vc.delegate = self
+        vc.type = CardEditor.type.save
+        self.present(vc, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -1158,8 +1263,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     @objc func addExample(){
-        let exampleCard = ExampleCard(example: "")
-        var exaView = CardView.singleExampleView(card:exampleCard)
+        let exampleCard = ExampleCard()
+        let exaView = CardView.singleExampleView(card:exampleCard)
          exaView.textView.delegate = self
         if subCards.count < 1{
             exaView.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
@@ -1174,7 +1279,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     @objc func addTextView(){
-        let textView = CardView.getSingleTextView(string: "")
+        let textCard = TextCard()
+        let textView = CardView.getSingleTextView(card:textCard)
         textView.textView.delegate = self
         textView.addSubview(textView.textView)
         if subCards.count < 1{
@@ -1304,3 +1410,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         }
     }
 }
+
+
+

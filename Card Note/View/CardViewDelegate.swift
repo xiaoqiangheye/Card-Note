@@ -10,5 +10,6 @@ import Foundation
 
 @objc protocol CardViewDelegate:NSObjectProtocol{
     @objc optional func deleteButtonClicked()
+    @objc optional func deleteButtonClicked(view:CardView)
     @objc optional func shareButtonCllicked()
 }

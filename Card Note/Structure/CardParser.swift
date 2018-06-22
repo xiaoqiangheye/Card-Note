@@ -34,13 +34,31 @@ class CardParser{
             if type == "card"{
                 card = Card(title: title, tag: tag, description: description, id: id, definition: definition, color: color, cardType: type, modifytime: modifytime)
             }else if type == "example"{
-                let example = json!["example"].stringValue
-                card = ExampleCard(example: example)
+                card = ExampleCard(id: id)
                 card.updateTime(modifytime)
+                let manager = FileManager.default
+                var url = Constant.Configuration.url.attributedText
+                url.appendPathComponent(card.getId() + ".rtf")
+                if !manager.fileExists(atPath: url.path){
+                    User.downloadAttrUsingQCloud(cardID: card.getId()) { (bool, error) in
+                        if error == nil{
+                            print("get attr successfully.")
+                        }
+                    }
+                }
             }else if type == "text"{
-                let text = json!["text"].stringValue
-                card = TextCard(text: text)
+                card = TextCard(id: id)
                 card.updateTime(modifytime)
+                  let manager = FileManager.default
+                var url = Constant.Configuration.url.attributedText
+                url.appendPathComponent(card.getId() + ".rtf")
+                if !manager.fileExists(atPath: url.path){
+                    User.downloadAttrUsingQCloud(cardID: card.getId()) { (bool, error) in
+                        if error == nil{
+                            print("get attr successfully.")
+                        }
+                    }
+                }
             }else if type == "picture"{
                 let manager = FileManager.default
                 var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -124,7 +142,8 @@ class CardParser{
                             //
                         }
                     }
-                }else if type == Card.CardType.movie.rawValue{
+                }
+                }else if type == "movie"{
                     card = MovieCard(id: id)
                     User.downloadMovieUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
                         if error != nil{
@@ -132,7 +151,7 @@ class CardParser{
                         }
                     }
                 }
-            }
+            
             
             
             
@@ -140,6 +159,7 @@ class CardParser{
             if subCardsArray != nil{
             var subcards:[Card] = [Card]()
             for subcard in subCardsArray!{
+                let string = subcard.rawString()!
                 let card = JSONToCard(subcard.rawString()!)
                 subcards.append(card!)
             }
@@ -160,11 +180,9 @@ class CardParser{
         string.append("\"type\":" + "\"" + card.getType() + "\"" + ", ")
         string.append("\"time\":" + "\"" + card.getTime() + "\"")
         if card.getType() == "example"{
-            string.append(",")
-            string.append("\"example\":" + "\"" + (card as! ExampleCard).getExample() + "\"")
+           //do nothing
         }else if card.getType() == "text"{
-            string.append(",")
-            string.append("\"text\":" + "\"" + (card as! TextCard).getText() + "\"")
+           //do nothing
         }else if card.getType() == "picture"{
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first

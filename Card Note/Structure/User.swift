@@ -10,6 +10,9 @@ import Foundation
 import SwiftyJSON
 import UIKit
 import Alamofire
+import AMapFoundationKit
+import QCloudCore
+import QCloudCOSXML
 
 class User:NSObject,URLSessionDelegate{
     private var username:String!
@@ -68,6 +71,23 @@ class User:NSObject,URLSessionDelegate{
         dataTask.resume()
     }
     
+    static func uploadAttrUsingQCloud(url:URL){
+        let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
+        print("userText/"  + loggedemail + "/" + url.lastPathComponent)
+        put.object =  "userText/"  + loggedemail + "/" + url.lastPathComponent
+        put.bucket = "cardnote-1253464939"
+        put.body = NSURL(fileURLWithPath: url.path)
+        put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
+            NSLog("upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+        }
+        
+        put.setFinish { (result, error) in
+            print("finish Upload")
+        }
+        QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
+        
+    }
+    
     static func uploadPhotoUsingQCloud(email:String,url:URL){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         print("userImage/"  + email + "/" + url.lastPathComponent)
@@ -84,6 +104,7 @@ class User:NSObject,URLSessionDelegate{
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
 
     }
+
     
     static func uploadAudioUsingQCloud(email:String,url:URL){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
@@ -102,7 +123,7 @@ class User:NSObject,URLSessionDelegate{
     
     static func uploadMovieUsingQCloud(email:String,url:URL){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
-        put.object = "userMobie/"  + email + "/" + url.lastPathComponent
+        put.object = "userMovie/"  + email + "/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
         put.body = NSURL(fileURLWithPath: url.path)
         put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
@@ -193,19 +214,19 @@ class User:NSObject,URLSessionDelegate{
     }
     
     static func downloadMovieUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+        
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-        url?.appendPathComponent("movie")
-         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
-        url?.appendPathComponent(cardID + ".mov")
+       var url = Constant.Configuration.url.Movie
+         try? manager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        url.appendPathComponent(cardID + ".mov")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
         request.object = "userMovie/" + email + "/" + cardID + ".mov"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
             completionHandler(true,nil)
+                
             print("download successfully, Object ID\(outputObject)")
             }else{
             completionHandler(false,error)
@@ -216,6 +237,31 @@ class User:NSObject,URLSessionDelegate{
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
     }
+    
+    static func downloadAttrUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+        let request = QCloudGetObjectRequest()
+        let manager = FileManager.default
+        var url = Constant.Configuration.url.attributedText
+        try? manager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        url.appendPathComponent(cardID + ".rtf")
+        request.downloadingURL = url
+        request.bucket = "cardnote-1253464939"
+        request.object = "userMovie/" + loggedemail + "/" + cardID + ".rtf"
+        request.finishBlock = {(outputObject,error) in
+            if error == nil{
+                completionHandler(true,nil)
+                print("download successfully, Object ID\(outputObject)")
+            }else{
+                completionHandler(false,error)
+            }
+        }
+        request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
+            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+        }
+        QCloudCOSXMLService.defaultCOSXML().getObject(request)
+    }
+    
+   
     
     
     func alamofireCertificateConfig(){

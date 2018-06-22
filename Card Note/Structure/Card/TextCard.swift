@@ -11,31 +11,53 @@ import Foundation
 
 
 class TextCard:Card{
-    var text:String
-    init(text:String) {
-        self.text = text
+    init() {
         let date = NSDate()
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let strNowTime = timeFormatter.string(from: date as Date) as String
-        super.init(title: "", tag: "", description: "", id: "", definition: "", color: .orange, cardType: CardType.text.rawValue,modifytime:strNowTime)
+        super.init(title: "", tag: "", description: "", id: UUID().uuidString, definition: "", color: nil, cardType: CardType.text.rawValue,modifytime:strNowTime)
     }
     
-    func getText()->String{
-        return self.text
+    init(id:String){
+    super.init(title: "", tag: "", description: "", id: id, definition: "", color: nil, cardType: CardType.text.rawValue, modifytime: "")
     }
     
-    func setText(_ text:String){
-        self.text = text
+    func getText()->NSAttributedString?{
+        var url = Constant.Configuration.url.attributedText
+        url.appendPathComponent(self.getId() + ".rtf")
+        do{
+        let data = try Data(contentsOf: url)
+            var ducumentAttribute:NSDictionary?
+            let attr = try NSAttributedString(data: data, options: [ NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: &ducumentAttribute)
+        return attr
+        }catch let error{
+            print(error.localizedDescription)
+        return nil
+        }
     }
+    
+    func setText(attr:NSAttributedString){
+        var url = Constant.Configuration.url.attributedText
+        url.appendPathComponent(self.getId() + ".rtf")
+        let range = NSRange(location: 0, length: attr.length)
+        do{
+        let data = try attr.data(from: range, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+            try data.write(to: url)
+        }catch let error{
+        print(error.localizedDescription)
+        }
+        
+    }
+    
+  
     required init?(coder aDecoder: NSCoder) {
-        self.text = aDecoder.decodeObject(forKey: "text") as! String
         super.init(coder: aDecoder)
        // fatalError("init(coder:) has not been implemented")
     }
     
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
-        aCoder.encode(text, forKey: "text")
+
     }
 }

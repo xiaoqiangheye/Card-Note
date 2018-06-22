@@ -1,11 +1,17 @@
 PODS:
   - Alamofire (4.7.2)
+  - AMap2DMap (5.6.0):
+    - AMapFoundation (~> 1.4)
+  - AMapFoundation (1.5.0)
+  - AMapLocation (2.6.0):
+    - AMapFoundation (~> 1.4)
+  - AMapSearch (6.1.0):
+    - AMapFoundation (~> 1.4)
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
   - Font-Awesome-Swift (1.7.2)
   - Hero (1.2.0)
-  - InMobiSDK (7.1.1)
   - QCloudCore (5.4.3)
   - QCloudCOSXML (5.4.3):
     - QCloudCore (= 5.4.3)
@@ -18,10 +24,12 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
+  - AMap2DMap
+  - AMapLocation
+  - AMapSearch
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
   - Font-Awesome-Swift (~> 1.7.2)
   - Hero (~> 1.2.0)
-  - InMobiSDK
   - QCloudCOSXML
   - SCLAlertView
   - Spring (from `https://github.com/MengTo/Spring.git`)
@@ -30,9 +38,12 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
+    - AMap2DMap
+    - AMapFoundation
+    - AMapLocation
+    - AMapSearch
     - Font-Awesome-Swift
     - Hero
-    - InMobiSDK
     - QCloudCore
     - QCloudCOSXML
     - SCLAlertView
@@ -54,16 +65,19 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
+  AMap2DMap: cf0bfd6ae97951b55cc061903b814f924ba6c221
+  AMapFoundation: 04fc43736ed63bed15d502e20f74ded399991f1e
+  AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
+  AMapSearch: e3f96bd0681abe70abba303709a1a05625a8f76c
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   Font-Awesome-Swift: 83ab9db365379ee6025167cec67bdc5d3226a811
   Hero: 33dadf2cd1c98af71e213dcbc2902e6e03622a4e
-  InMobiSDK: 8306ff9c9a966b4a43dd957f57b407a1a9ab7ba5
   QCloudCore: 91bff302e250f7f0066bcca8d9e5c3f3b75e9f78
   QCloudCOSXML: 45d66cd7ceb4ad64d4411f882996b77356ebbb76
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   Spring: 3c7666eccefdeb87140008dc81043f89f8dbb787
   SwiftMessages: d81f48c1f8b6bc1dbebdfffe11226f0344f937ca
 
-PODFILE CHECKSUM: 9541668bbd6f31db7f52652701356c67f63d6879
+PODFILE CHECKSUM: b811c7145f9621b30489fc7c1d76aee6174bc81f
 
 COCOAPODS: 1.5.0

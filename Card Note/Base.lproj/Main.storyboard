@@ -107,7 +107,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="854" y="1380"/>
+            <point key="canvasLocation" x="722" y="1598"/>
         </scene>
         <!--Sign Up Controller-->
         <scene sceneID="YZK-wt-cFB">
@@ -181,7 +181,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="88h-jA-Mix" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1805.5999999999999" y="1739.2803598200901"/>
+            <point key="canvasLocation" x="1806" y="2165"/>
         </scene>
         <!--Sign Up Controller-->
         <scene sceneID="Pd0-vK-lO3">
@@ -386,98 +386,18 @@
                     <view key="view" contentMode="scaleToFill" id="yEu-Ac-1Qr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LAk-xm-3i9">
-                                <rect key="frame" x="143" y="559" width="88" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <state key="normal" title="Log Out">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="logout:" destination="ady-hy-OCl" eventType="touchUpInside" id="WAC-cU-hMP"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0A-EQ-Isw">
-                                <rect key="frame" x="61" y="36" width="252" height="62"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Jf-dg-lkZ">
-                                <rect key="frame" x="164" y="182" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="收藏">
-                                    <color key="titleColor" red="0.037683219929999998" green="0.054774979479999999" blue="0.042318798540000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RXb-2M-ERw">
-                                <rect key="frame" x="48" y="182" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="关注">
-                                    <color key="titleColor" red="0.037683219929999998" green="0.054774979479999999" blue="0.042318798540000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oUo-cS-vKq">
-                                <rect key="frame" x="284" y="182" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="分支">
-                                    <color key="titleColor" red="0.037683219929999998" green="0.054774979479999999" blue="0.042318798540000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eeC-gQ-fVJ">
-                                <rect key="frame" x="143" y="512" width="88" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.32647210362023438" green="0.54709550737461876" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Setting">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Rd-Sx-Gap">
-                                <rect key="frame" x="48" y="299" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="资料">
-                                    <color key="titleColor" red="0.037683219929999998" green="0.054774979479999999" blue="0.042318798540000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XA1-JX-F0j">
-                                <rect key="frame" x="164" y="299" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="VIP">
-                                    <color key="titleColor" red="0.037683219929999998" green="0.054774979479999999" blue="0.042318798540000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J9Q-Wc-80W">
-                                <rect key="frame" x="284" y="299" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="银币">
-                                    <color key="titleColor" red="0.037683219929999998" green="0.054774979479999999" blue="0.042318798540000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="wcU-fX-7ml"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Me" id="zg4-NQ-538"/>
                     <connections>
-                        <outlet property="branch" destination="oUo-cS-vKq" id="4RL-Ga-41E"/>
-                        <outlet property="collect" destination="RXb-2M-ERw" id="xKM-6Q-yZX"/>
-                        <outlet property="like" destination="7Jf-dg-lkZ" id="kZR-0V-BFq"/>
-                        <outlet property="userLabel" destination="v0A-EQ-Isw" id="bgV-Q0-aFF"/>
                         <segue destination="uNp-dM-Zz8" kind="presentation" identifier="login" modalTransitionStyle="flipHorizontal" id="bnS-Y1-Ljq"/>
+                        <segue destination="mq9-4y-N2o" kind="showDetail" identifier="accountSetting" id="KmH-7c-jzB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Tg-S2-WVi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1806" y="128"/>
+            <point key="canvasLocation" x="1806" y="761"/>
         </scene>
         <!--Sign Up Controller-->
         <scene sceneID="vdt-tz-v7Q">
@@ -537,7 +457,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PhY-cB-vL0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1806" y="1084"/>
+            <point key="canvasLocation" x="1806" y="1486"/>
         </scene>
         <!--Item 2-->
         <scene sceneID="4c5-Az-bPM">
@@ -591,7 +511,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3yC-CN-eFz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3102" y="22"/>
+            <point key="canvasLocation" x="1806" y="-27"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="7Og-yE-v3y">
+            <objects>
+                <viewController storyboardIdentifier="favorite" id="mq9-4y-N2o" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Bys-xP-UDk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="T0q-3Y-QL1"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xb3-nm-0JD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3030" y="761"/>
         </scene>
         <!--Mine-->
         <scene sceneID="Ppe-nB-4hY">
@@ -634,7 +569,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="Qu0-bc-r3N" kind="relationship" relationship="viewControllers" id="sY1-hk-oIs"/>
-                        <segue destination="57d-JP-CTW" kind="relationship" relationship="viewControllers" id="UzW-bu-Xrg"/>
                         <segue destination="ady-hy-OCl" kind="relationship" relationship="viewControllers" id="CgN-qO-NkK"/>
                     </connections>
                 </tabBarController>

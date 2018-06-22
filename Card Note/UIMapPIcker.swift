@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import AMapFoundationKit
 
 class UIMapPicker:UIViewController,MAMapViewDelegate, AMapSearchDelegate, UITextFieldDelegate, LocationListViewDelegate{
     var mapView:MAMapView = MAMapView()

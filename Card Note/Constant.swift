@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class Constant{
-    
     struct Configuration{
         static let version = 1.0
         struct url {
@@ -23,6 +22,7 @@ class Constant{
             static let Map:URL = url.appendingPathComponent("mapPic")
             static let Movie:URL = url.appendingPathComponent("movie")
             static let temporary:URL = url.appendingPathComponent("temp")
+            static let attributedText = url.appendingPathComponent("attr")
         }
     }
     enum TextMode {

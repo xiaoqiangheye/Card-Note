@@ -10,7 +10,6 @@
 		28788993A11B70793DD30336 /* Pods_Card_NoteUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBECEEB608B44188F61CFEE6 /* Pods_Card_NoteUITests.framework */; };
 		47495A0D87442A8C39A95B6F /* Pods_Card_Note.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC3FFE3C7B0DB43D6B8966D /* Pods_Card_Note.framework */; };
 		AF6650BF4C280AB47837768B /* Pods_Card_NoteTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCB930C37325DE33FEA805C /* Pods_Card_NoteTests.framework */; };
-		B602B14B2091F6D900CD8A40 /* AMap.bundle in Sources */ = {isa = PBXBuildFile; fileRef = B605E106208CB1F400F2C260 /* AMap.bundle */; };
 		B602B1542092041C00CD8A40 /* SharedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1532092041C00CD8A40 /* SharedCard.swift */; };
 		B602B1562093232600CD8A40 /* VoiceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1552093232600CD8A40 /* VoiceCard.swift */; };
 		B602B1582093244300CD8A40 /* RecordManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1572093244300CD8A40 /* RecordManager.swift */; };
@@ -18,7 +17,6 @@
 		B605E0FC208CAADE00F2C260 /* ExampleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B605E0FB208CAADE00F2C260 /* ExampleCard.swift */; };
 		B605E0FF208CAAFF00F2C260 /* MapCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B605E0FE208CAAFF00F2C260 /* MapCard.swift */; };
 		B605E101208CAB0D00F2C260 /* TextCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B605E100208CAB0D00F2C260 /* TextCard.swift */; };
-		B605E107208CB1F500F2C260 /* AMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B605E106208CB1F400F2C260 /* AMap.bundle */; };
 		B605E10A208CB22900F2C260 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E109208CB22800F2C260 /* UIKit.framework */; };
 		B605E10C208CB23000F2C260 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E10B208CB23000F2C260 /* Foundation.framework */; };
 		B605E10E208CB23A00F2C260 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E10D208CB23900F2C260 /* CoreGraphics.framework */; };
@@ -30,13 +28,12 @@
 		B605E11A208CB26C00F2C260 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E119208CB26B00F2C260 /* AdSupport.framework */; };
 		B605E11C208CB27200F2C260 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E11B208CB27200F2C260 /* JavaScriptCore.framework */; };
 		B605E11E208CB27C00F2C260 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E11D208CB27B00F2C260 /* libz.tbd */; };
-		B605E122208CB29000F2C260 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E121208CB29000F2C260 /* libc++.tbd */; };
 		B60B995F209C8C23004BC2D4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B60B995E209C8C23004BC2D4 /* StoreKit.framework */; };
+		B60EA14B20DC1EC000E10915 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B61FC8CF20C6824A00A9C651 /* libstdc++.6.0.9.tbd */; };
 		B60F40DA2074CFE700196DD5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40D92074CFE700196DD5 /* CardView.swift */; };
 		B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40DB2074D0AE00196DD5 /* Constant.swift */; };
 		B60F40E12074EB2900196DD5 /* CardEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40E02074EB2900196DD5 /* CardEditor.swift */; };
 		B61029682096D53F00DA91BB /* VoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B61029672096D53F00DA91BB /* VoiceView.xib */; };
-		B6102988209839D100DA91BB /* AMapSearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6102979209839D000DA91BB /* AMapSearchKit.framework */; };
 		B610298A20983D4C00DA91BB /* UIMapPIcker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610298920983D4C00DA91BB /* UIMapPIcker.swift */; };
 		B610298C209840CE00DA91BB /* UIMapPickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610298B209840CE00DA91BB /* UIMapPickerDelegate.swift */; };
 		B610298E2098614C00DA91BB /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610298D2098614C00DA91BB /* LocationListView.swift */; };
@@ -60,8 +57,6 @@
 		B6613B0B207CD440001D117B /* CardEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0A207CD440001D117B /* CardEditorView.swift */; };
 		B6613B0D20803A59001D117B /* Constaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0C20803A59001D117B /* Constaint.swift */; };
 		B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0E2080404B001D117B /* SearchEngine.swift */; };
-		B6791223208CE8AD00A417FD /* AMapFoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B679121B208CE8AD00A417FD /* AMapFoundationKit.framework */; };
-		B6791225208CE8B500A417FD /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6791224208CE8B500A417FD /* MAMapKit.framework */; };
 		B6791227208DFFF100A417FD /* PicCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6791226208DFFF100A417FD /* PicCard.swift */; };
 		B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */; };
 		B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */; };
@@ -84,10 +79,10 @@
 		B6BA3ADB2064AF4C00290BBB /* Card.xib in Resources */ = {isa = PBXBuildFile; fileRef = B6BA3ADA2064AF4C00290BBB /* Card.xib */; };
 		B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADCA20A18317008B6761 /* TapBarController.swift */; };
 		B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADDC20A196F8008B6761 /* FilterView.swift */; };
-		B6D53EB720C683590087ED38 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B6D53EB620C683590087ED38 /* libstdc++.6.0.9.tbd */; };
 		B6E505072077D49F003504D8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E505062077D49F003504D8 /* Extension.swift */; };
 		B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */; };
 		B6E8FA32208F171A00A0B22B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E8FA31208F171A00A0B22B /* WebKit.framework */; };
+		B6EC1F3E20D3AAFB00E04C4F /* CardEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6EC1F3D20D3AAFB00E04C4F /* CardEditorDelegate.swift */; };
 		B6FDCEE620BAFD3400BEBD35 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FDCEE520BAFD3400BEBD35 /* ImageManager.swift */; };
 		B6FF866420A1B9B8000D0B51 /* CardViewPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FF866320A1B9B8000D0B51 /* CardViewPanel.swift */; };
 /* End PBXBuildFile section */
@@ -204,7 +199,6 @@
 		B605E0FB208CAADE00F2C260 /* ExampleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCard.swift; sourceTree = "<group>"; };
 		B605E0FE208CAAFF00F2C260 /* MapCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCard.swift; sourceTree = "<group>"; };
 		B605E100208CAB0D00F2C260 /* TextCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCard.swift; sourceTree = "<group>"; };
-		B605E106208CB1F400F2C260 /* AMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AMap.bundle; sourceTree = "<group>"; };
 		B605E109208CB22800F2C260 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B605E10B208CB23000F2C260 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B605E10D208CB23900F2C260 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -216,14 +210,11 @@
 		B605E119208CB26B00F2C260 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		B605E11B208CB27200F2C260 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		B605E11D208CB27B00F2C260 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		B605E11F208CB28400F2C260 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
-		B605E121208CB29000F2C260 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		B60B995E209C8C23004BC2D4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		B60F40D92074CFE700196DD5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		B60F40DB2074D0AE00196DD5 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		B60F40E02074EB2900196DD5 /* CardEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditor.swift; sourceTree = "<group>"; };
 		B61029672096D53F00DA91BB /* VoiceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VoiceView.xib; sourceTree = "<group>"; };
-		B6102979209839D000DA91BB /* AMapSearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapSearchKit.framework; sourceTree = "<group>"; };
 		B610298920983D4C00DA91BB /* UIMapPIcker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIMapPIcker.swift; path = "Card Note/UIMapPIcker.swift"; sourceTree = SOURCE_ROOT; };
 		B610298B209840CE00DA91BB /* UIMapPickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIMapPickerDelegate.swift; sourceTree = "<group>"; };
 		B610298D2098614C00DA91BB /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
@@ -250,8 +241,6 @@
 		B6613B0A207CD440001D117B /* CardEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditorView.swift; sourceTree = "<group>"; };
 		B6613B0C20803A59001D117B /* Constaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constaint.swift; sourceTree = "<group>"; };
 		B6613B0E2080404B001D117B /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
-		B679121B208CE8AD00A417FD /* AMapFoundationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AMapFoundationKit.framework; sourceTree = "<group>"; };
-		B6791224208CE8B500A417FD /* MAMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MAMapKit.framework; sourceTree = "<group>"; };
 		B6791226208DFFF100A417FD /* PicCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicCard.swift; sourceTree = "<group>"; };
 		B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewItemController.swift; sourceTree = "<group>"; };
 		B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
@@ -280,11 +269,10 @@
 		B6BA3ADA2064AF4C00290BBB /* Card.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Card.xib; sourceTree = "<group>"; };
 		B6BAADCA20A18317008B6761 /* TapBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapBarController.swift; sourceTree = "<group>"; };
 		B6BAADDC20A196F8008B6761 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
-		B6D53EB620C683590087ED38 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "Card Note/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		B6E505062077D49F003504D8 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
-		B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = InMobiSDK.framework; sourceTree = "<group>"; };
 		B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		B6E8FA31208F171A00A0B22B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		B6EC1F3D20D3AAFB00E04C4F /* CardEditorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditorDelegate.swift; sourceTree = "<group>"; };
 		B6FDCEE520BAFD3400BEBD35 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		B6FF866320A1B9B8000D0B51 /* CardViewPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewPanel.swift; sourceTree = "<group>"; };
 		CBECEEB608B44188F61CFEE6 /* Pods_Card_NoteUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Card_NoteUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -296,12 +284,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6D53EB720C683590087ED38 /* libstdc++.6.0.9.tbd in Frameworks */,
+				B60EA14B20DC1EC000E10915 /* libstdc++.6.0.9.tbd in Frameworks */,
 				B6E8FA32208F171A00A0B22B /* WebKit.framework in Frameworks */,
 				B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */,
-				B605E122208CB29000F2C260 /* libc++.tbd in Frameworks */,
-				B6102988209839D100DA91BB /* AMapSearchKit.framework in Frameworks */,
-				B6791223208CE8AD00A417FD /* AMapFoundationKit.framework in Frameworks */,
 				B605E11E208CB27C00F2C260 /* libz.tbd in Frameworks */,
 				B605E11C208CB27200F2C260 /* JavaScriptCore.framework in Frameworks */,
 				B64BADA5209C8BF600B9ED73 /* CloudKit.framework in Frameworks */,
@@ -315,7 +300,6 @@
 				B605E110208CB24300F2C260 /* QuartzCore.framework in Frameworks */,
 				B605E10E208CB23A00F2C260 /* CoreGraphics.framework in Frameworks */,
 				B605E10C208CB23000F2C260 /* Foundation.framework in Frameworks */,
-				B6791225208CE8B500A417FD /* MAMapKit.framework in Frameworks */,
 				B605E10A208CB22900F2C260 /* UIKit.framework in Frameworks */,
 				B61D68F920961BFB00B69009 /* libonline.a in Frameworks */,
 				B62EC9A5208207D5004EE3C0 /* SwiftyJSON.framework in Frameworks */,
@@ -352,8 +336,8 @@
 				B6791226208DFFF100A417FD /* PicCard.swift */,
 				B602B1532092041C00CD8A40 /* SharedCard.swift */,
 				B602B1552093232600CD8A40 /* VoiceCard.swift */,
-				B6385A9520C65CDF00E022CB /* MovieCard.swift */,
 				B6385AA620C65CF800E022CB /* ListCard.swift */,
+				B6385A9520C65CDF00E022CB /* MovieCard.swift */,
 			);
 			path = Card;
 			sourceTree = "<group>";
@@ -362,17 +346,10 @@
 			isa = PBXGroup;
 			children = (
 				B61FC8CF20C6824A00A9C651 /* libstdc++.6.0.9.tbd */,
-				B6D53EB620C683590087ED38 /* libstdc++.6.0.9.tbd */,
 				B60B995E209C8C23004BC2D4 /* StoreKit.framework */,
 				B64BADA4209C8BF600B9ED73 /* CloudKit.framework */,
-				B6102979209839D000DA91BB /* AMapSearchKit.framework */,
 				B6E8FA31208F171A00A0B22B /* WebKit.framework */,
 				B6E8FA2F208F170B00A0B22B /* libsqlite3.0.tbd */,
-				B6E8FA2D208F168E00A0B22B /* InMobiSDK.framework */,
-				B6791224208CE8B500A417FD /* MAMapKit.framework */,
-				B679121B208CE8AD00A417FD /* AMapFoundationKit.framework */,
-				B605E121208CB29000F2C260 /* libc++.tbd */,
-				B605E11F208CB28400F2C260 /* libstdc++.6.0.9.tbd */,
 				B605E11D208CB27B00F2C260 /* libz.tbd */,
 				B605E11B208CB27200F2C260 /* JavaScriptCore.framework */,
 				B605E119208CB26B00F2C260 /* AdSupport.framework */,
@@ -421,6 +398,7 @@
 				B610298920983D4C00DA91BB /* UIMapPIcker.swift */,
 				B6BA3AAB2064AE5300290BBB /* ViewController.swift */,
 				B60F40E02074EB2900196DD5 /* CardEditor.swift */,
+				B6EC1F3D20D3AAFB00E04C4F /* CardEditorDelegate.swift */,
 				B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */,
 				B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */,
 				B62EC9882081FF1A004EE3C0 /* UserViewController.swift */,
@@ -474,7 +452,6 @@
 		B6BA3A9D2064AE5300290BBB = {
 			isa = PBXGroup;
 			children = (
-				B605E106208CB1F400F2C260 /* AMap.bundle */,
 				B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */,
 				B6BA3AA82064AE5300290BBB /* Card Note */,
 				B6BA3AC02064AE5400290BBB /* Card NoteTests */,
@@ -563,6 +540,7 @@
 				B62EC9AC208207D5004EE3C0 /* Embed Frameworks */,
 				B62EC9AD208207D5004EE3C0 /* Embed PlugIns */,
 				1FADB81C2D77E765AE62397A /* [CP] Embed Pods Frameworks */,
+				28EDA217DDE5DE0EAD67059B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -732,7 +710,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B605E107208CB1F500F2C260 /* AMap.bundle in Resources */,
 				B6BA3AB72064AE5300290BBB /* LaunchScreen.storyboard in Resources */,
 				B6BA3AB42064AE5300290BBB /* Assets.xcassets in Resources */,
 				B61029682096D53F00DA91BB /* VoiceView.xib in Resources */,
@@ -790,6 +767,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Card Note/Pods-Card Note-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		28EDA217DDE5DE0EAD67059B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Card Note/Pods-Card Note-resources.sh",
+				"${PODS_ROOT}/AMap2DMap/MAMapKit.framework/AMap.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Card Note/Pods-Card Note-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		59FF2A3C7B178C8183EC74A4 /* [CP] Check Pods Manifest.lock */ = {
@@ -853,7 +848,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B602B14B2091F6D900CD8A40 /* AMap.bundle in Sources */,
 				B6BA3AAC2064AE5300290BBB /* ViewController.swift in Sources */,
 				B62EC9892081FF1A004EE3C0 /* UserViewController.swift in Sources */,
 				B64489D220A2FB0100ED3400 /* CardViewPanelDelegate.swift in Sources */,
@@ -894,6 +888,7 @@
 				B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */,
 				B605E0FC208CAADE00F2C260 /* ExampleCard.swift in Sources */,
 				B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */,
+				B6EC1F3E20D3AAFB00E04C4F /* CardEditorDelegate.swift in Sources */,
 				B610298E2098614C00DA91BB /* LocationListView.swift in Sources */,
 				B60F40DA2074CFE700196DD5 /* CardView.swift in Sources */,
 				B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */,
@@ -1087,16 +1082,22 @@
 				);
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/Card\\ Note";
 				INFOPLIST_FILE = "Card Note/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/Card\\ Note/**",
 					"$(PROJECT_DIR)/**",
 					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)/Card\\ Note",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Blueberry.CardNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1104,6 +1105,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Card Note/bridge.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -1127,15 +1129,21 @@
 				);
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/Card\\ Note";
 				INFOPLIST_FILE = "Card Note/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Card\\ Note",
 					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)/Card\\ Note",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.Blueberry.CardNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1143,6 +1151,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Card Note/bridge.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Release;
 		};

@@ -34,6 +34,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadCard()
+        
     }
     
     override func viewDidLoad() {

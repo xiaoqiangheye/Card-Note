@@ -17,8 +17,8 @@ class TapBarController:UITabBarController{
        // self.tabBar.items![0].setFAIcon(icon: FAType.FAWindowRestore)
        // self.tabBar.items![1].setFAIcon(icon: FAType.FAUsers)
         self.tabBar.items![0].setFAIcon(icon: .FAWindowRestore, size: nil, orientation: .up, textColor: .black, backgroundColor: .clear, selectedTextColor: .red, selectedBackgroundColor: .clear)
-        self.tabBar.items![1].setFAIcon(icon: .FAUsers, size: nil, orientation: .up, textColor: .black, backgroundColor: .clear, selectedTextColor: .red, selectedBackgroundColor: .clear)
-        self.tabBar.items![2].setFAIcon(icon: FAType.FAUser, size: nil, orientation: .up, textColor: .black, backgroundColor:.clear, selectedTextColor: UIColor.red, selectedBackgroundColor: .clear)
+       // self.tabBar.items![1].setFAIcon(icon: .FAUsers, size: nil, orientation: .up, textColor: .black, backgroundColor: .clear, selectedTextColor: .red, selectedBackgroundColor: .clear)
+        self.tabBar.items![1].setFAIcon(icon: FAType.FAUser, size: nil, orientation: .up, textColor: .black, backgroundColor:.clear, selectedTextColor: UIColor.red, selectedBackgroundColor: .clear)
     
         
     }

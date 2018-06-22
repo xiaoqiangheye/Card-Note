@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 import AMapFoundationKit
+import QCloudCore
+import QCloudCOSXML
 
 var ifloggedin = false
 var loggedusername = ""
@@ -21,7 +23,6 @@ var signUpUsername = ""
 var signUpAuthCode = ""
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
-    
     func signature(with fileds: QCloudSignatureFields!, request: QCloudBizHTTPRequest!, urlRequest urlRequst: NSMutableURLRequest!, compelete continueBlock: QCloudHTTPAuthentationContinueBlock!) {
         let credential = QCloudCredential()
         credential.secretID = "AKIDCRdjfPSdQAkAORR6f3FSYVGrJnAZvyWx"
@@ -33,6 +34,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
     
     
     var window: UIWindow?
+    
+    func createDirectory(){
+        let array = [Constant.Configuration.url.attributedText,Constant.Configuration.url.Audio,Constant.Configuration.url.Card,Constant.Configuration.url.Map,Constant.Configuration.url.Movie,Constant.Configuration.url.PicCard]
+        for url in array{
+            if !FileManager.default.fileExists(atPath: url.path){
+                do{
+                try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+                }catch let error{
+                 print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
       let configuration = QCloudServiceConfiguration()
@@ -41,18 +56,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
         let endpoint = QCloudCOSXMLEndPoint()
         endpoint.regionName = "ap-chengdu"
         configuration.endpoint = endpoint
-        
         QCloudCOSXMLService.registerDefaultCOSXML(with: configuration)
         QCloudCOSTransferMangerService.registerDefaultCOSTransferManger(with: configuration)
-        
         AMapServices.shared().apiKey = "cd1079b6f89a637f97e367d5b2baa101"
+        createDirectory()
         let ifLauched = UserDefaults.standard.bool(forKey: "ifLauched")
         if !ifLauched{
         UserDefaults.standard.set(true, forKey: Constant.Key.ifLauched)
         var tags = [String]()
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
         let manager = FileManager.default
-       
         }else
         {
             let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)

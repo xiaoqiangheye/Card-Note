@@ -87,8 +87,22 @@ class Card:NSObject,NSCoding{
     func setTitle(_ title:String){self.title = title}
     func getDescription()->String{return descriptions}
     func setDescription(_ des:String){self.descriptions = des}
-    func setChilds(_ childs:[Card]){self.childCards = childs}
+    func setChilds(_ childs:[Card]){
+        for child in childs{
+            child.parentCard = self
+        }
+         self.childCards = childs
+    }
     func getChilds()->[Card]{return childCards}
+    func getChild(by id:String)->Card?{
+        for child in childCards
+        {
+            if child.getId() == id{
+                return child
+            }
+        }
+        return nil
+    }
     func getParentCard()->Card{return parentCard!}
     
     func getId()->String{return id}
@@ -124,9 +138,7 @@ class Card:NSObject,NSCoding{
     }
     */
     
-    func addExample(_ string:String){
-        self.childCards.append(ExampleCard(example: string))
-    }
+    
     
    
     
