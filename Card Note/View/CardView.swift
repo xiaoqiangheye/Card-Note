@@ -862,7 +862,6 @@ class CardView: UIView{
         let title = UITextField(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 50))
         title.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
         title.textColor = .black
-        
         return view
     }
     

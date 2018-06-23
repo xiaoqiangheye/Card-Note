@@ -54,7 +54,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         }
         
         class func getSingleSettingCard(title:String, action: (SettingCard)->())->SettingCard{
-            let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.64))
+            let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.48))
             view.backgroundColor = UIColor.flatWhite
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
             label.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
@@ -63,7 +63,6 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             label.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2)
             label.textAlignment = .center
             view.addSubview(label)
-            
             action(view)
             return view
         }
@@ -86,9 +85,22 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     }
     
     override func viewDidLoad() {
+      
+        
+        /**
+         scrollView
+         */
+        scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: self.view.bounds.height))
+        scrollView.delegate = self
+        scrollView.contentSize.width = UIScreen.main.bounds.width
+        scrollView.contentSize.height = 0
+        scrollView.isScrollEnabled = true
+        scrollView.backgroundColor = UIColor.flatBlue
+        self.view.addSubview(scrollView)
+        
         /**
          nameCard: username and email
-        */
+         */
         nameCard = SettingCard.getSingleNameCard()
         let tapGesture = UITapGestureRecognizer()
         if !ifloggedin{
@@ -97,18 +109,8 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             tapGesture.addTarget(self, action: #selector(accountSetting))
         }
         nameCard.addGestureRecognizer(tapGesture)
-        self.view.addSubview(nameCard)
-        
-        /**
-         scrollView
-         */
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: nameCard.frame.height, width: UIScreen.main.bounds.width, height: self.view.bounds.height - nameCard.frame.height))
-        scrollView.delegate = self
-        scrollView.contentSize.width = UIScreen.main.bounds.width
-        scrollView.contentSize.height = 0
-        scrollView.isScrollEnabled = true
-        
-        self.view.addSubview(scrollView)
+        self.scrollView.addSubview(nameCard)
+        self.scrollView.contentSize.height += nameCard.frame.height + 20
         
         /**
          language: language Setting
@@ -117,7 +119,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(languageSetting))
         })
-        language.frame.origin.y = 20
+        language.frame.origin.y = nameCard.frame.height + 20
         language.center.x = scrollView.bounds.width/2
         self.scrollView.addSubview(language)
         self.scrollView.contentSize.height += language.frame.height + 20
