@@ -9,13 +9,10 @@
 import Foundation
 import SwiftMessages
 class ImageManager:NSObject{
-    
     static func writeImageToAlbum(image:UIImage, completionhandler:((Bool)->())?)
     {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
     }
-    
-    
     @objc static func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer)
     {
         if let e = error as NSError?

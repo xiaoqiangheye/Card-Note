@@ -12,4 +12,8 @@ import Foundation
     @objc optional func deleteButtonClicked()
     @objc optional func deleteButtonClicked(view:CardView)
     @objc optional func shareButtonCllicked()
+    @objc optional func cardView(commentShowed picView:CardView.PicView)
+    @objc optional func cardView(commentHide picView:CardView.PicView)
+    @objc optional func cardView(up view:CardView)
+    @objc optional func cardView(down view:CardView)
 }

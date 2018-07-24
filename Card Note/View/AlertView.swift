@@ -8,40 +8,25 @@
 
 import Foundation
 import UIKit
-
+import SwiftMessages
 class AlertView:UIView{
     static var currentView:AlertView?
-    
-    @objc func dismiss(_ sender:UIButton){
-        sender.superview?.removeFromSuperview()
-    }
-    
     class func show(_ target: UIView,alert:String){
-        var targetView:UIView = target
-        while targetView.superview != nil{
-            targetView = targetView.superview!
-        }
+        let view = MessageView.viewFromNib(layout: .cardView)
+        // Theme message elements with the warning style.
+        view.configureTheme(.error)
         
-        let alertView = AlertView()
-        alertView.backgroundColor = .white
-        alertView.frame.size = CGSize(width:UIScreen.main.bounds.width,height:100)
-        alertView.center = CGPoint(x: UIScreen.main.bounds.width/2, y: UIScreen.main.bounds.height/2)
-        let label = UILabel()
-        label.frame.size = CGSize(width:UIScreen.main.bounds.width,height:30)
-        label.center = CGPoint(x: alertView.frame.width/2, y: alertView.frame.height/2)
-        label.text = alert
-        label.textColor = .red
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        alertView.addSubview(label)
-        let exitButton = UIButton()
-        exitButton.setTitle("X", for: .normal)
-        exitButton.setTitleColor(.gray, for: .normal)
-        exitButton.frame.size = CGSize(width:30,height:30)
-        exitButton.addTarget(alertView, action: #selector(dismiss), for: .touchDown)
-        alertView.addSubview(exitButton)
-        targetView.addSubview(alertView)
-        currentView = alertView
+        // Add a drop shadow.
+        view.configureDropShadow()
+        
+        view.button?.removeFromSuperview()
+        // Set message title, body, and icon. Here, we're overriding the default warning
+        // image with an emoji character.
+        
+        view.configureContent(title: "Error", body: alert, iconText: "")
+        
+        // Show the message.
+        SwiftMessages.show(view: target)
     }
     
    

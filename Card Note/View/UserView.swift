@@ -112,7 +112,7 @@ class UserView:UIView
     }
     
     @objc static func verification(_ sender:UIButton){
-        User.verification(email: (sender.superview as! UserView).email.text!, username: (sender.superview as! UserView).username.text!, password: (sender.superview as! UserView).password.text!,completionhandler: {(_ json:JSON?)->Void in
+        User.verification(email: (sender.superview as! UserView).email.text!, username: (sender.superview as! UserView).username.text!,completionhandler: {(_ json:JSON?)->Void in
             
             
         })

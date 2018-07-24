@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 import SwiftyJSON
+import Font_Awesome_Swift
+import Hero
 class SignUpController:UIViewController,UITextFieldDelegate{
     var former = ""
     @IBOutlet weak var email: UITextField!
@@ -22,23 +24,51 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         addBottomLine(authCode)
         addBottomLine(identifyPassword)
         addBottomLine(username)
+        
+        //self gesture
+        
+        
+        
+        //resgister KeyBoard Notification
+        let centerDefault = NotificationCenter.default
+        centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        //decoration of button
         for view in self.view.subviews{
             if view.isKind(of: UIButton.self){
                 view.frame.size = CGSize(width: UIScreen.main.bounds.width/2, height: 40)
-                addRadiusFrame(view)
+               // addRadiusFrame(view)
                 view.center.x = UIScreen.main.bounds.width/2
-                (view as! UIButton).setTitleColor(.white, for: .normal)
             }
         }
         
         //add exist view
         if former != "ad" && former != "login"{
         let existButton = UIButton()
-        existButton.setTitle("<-", for: UIControlState.normal)
+        existButton.setFAIcon(icon: FAType.FAChevronCircleLeft, iconSize: 30, forState: .normal)
         existButton.setTitleColor(.white, for: .normal)
         existButton.frame = CGRect(x: 50, y: UIDevice.current.Xdistance() + 10, width: 50, height: 50)
         existButton.addTarget(self, action: #selector(exit), for: .touchDown)
         self.view.addSubview(existButton)
+        }
+    }
+    
+    @objc func keyboardWillShow(aNotification: NSNotification){
+        print("keyBoardShow")
+        let userinfo: NSDictionary = aNotification.userInfo! as NSDictionary
+        let nsValue = userinfo.object(forKey: UIKeyboardFrameEndUserInfoKey)
+        let keyboardRec = (nsValue as AnyObject).cgRectValue
+        let height = keyboardRec?.size.height
+        guard let window = UIApplication.shared.keyWindow else {
+            return
+        }
+        for view in self.view.subviews{
+            if view.isKind(of: UIButton.self) && view.frame.origin.y + view.frame.height > self.view.frame.height - height!{
+    UIView.setAnimationCurve(UIViewAnimationCurve.easeOut)
+                UIView.animate(withDuration: 0.5) {
+                    view.frame.origin.y = self.view.frame.height - height! - view.frame.height
+                }
+            }
         }
     }
     
@@ -83,6 +113,21 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                         loggedID = (json!["userInfo"].dictionary!["id"]?.stringValue)!
                         loggedemail = (json!["userInfo"].dictionary!["email"]?.stringValue)!
                         loggedusername = (json!["userInfo"].dictionary!["username"]?.stringValue)!
+                        let manager = FileManager.default
+                        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+                        url?.appendPathComponent(loggedID)
+                        url?.appendPathComponent("card.txt")
+                        if !manager.fileExists(atPath: (url?.path)!){
+                            try? manager.createDirectory(atPath: (url?.deletingLastPathComponent().path)!, withIntermediateDirectories: true, attributes: nil)
+                            if !manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil){print("false to create Directory")}
+                            let cardList = [Card]()
+                            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
+                            do{
+                                try datawrite.write(to: url!)
+                            }catch{
+                                print("fail to add")
+                            }
+                        }
                         User.getUserCards(email: loggedemail, completionHandler: { (json:JSON?) in
                             if json != nil{
                                 let carddata = json!["card"].arrayValue
@@ -102,17 +147,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                                 url?.appendPathComponent(loggedID)
                                 url?.appendPathComponent("card.txt")
                                 
-                                if !manager.fileExists(atPath: (url?.path)!){
-                                    try? manager.createDirectory(atPath: (url?.deletingLastPathComponent().path)!, withIntermediateDirectories: true, attributes: nil)
-                                    if !manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil){print("false to create Directory")}
-                                    let cardList = [Card]()
-                                    let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
-                                    do{
-                                        try datawrite.write(to: url!)
-                                    }catch{
-                                        print("fail to add")
-                                    }
-                                }
+                                
                                 let data = try! Data(contentsOf: url!)
                                 if let dateRead = try? Data.init(contentsOf: url!){
                                     var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
@@ -193,7 +228,11 @@ class SignUpController:UIViewController,UITextFieldDelegate{
     }
     
     @IBAction func toLoginController(_ sender: UIButton) {
-        performSegue(withIdentifier: "login", sender: "main")
+       let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyBoard.instantiateViewController(withIdentifier: "login")
+        self.present(vc, animated: true, completion: nil)
+        
+        
     }
     
     @IBAction func toSignUpController(_ sender: Any) {
@@ -207,7 +246,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         if isValid && username.text != nil{
             signUpEmail = email.text!
             signUpUsername = username.text!
-            User.verification(email:signUpEmail, username: signUpUsername, password: "", completionhandler: {
+            User.verification(email:signUpEmail, username: signUpUsername, completionhandler: {
                 (json:JSON?)->Void in
                 if json != nil{
                     let ifSuccess = json!["ifSuccess"].boolValue
@@ -272,6 +311,33 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                     if json != nil{
                     let ifSuccess = json!["ifSuccess"].boolValue
                         if ifSuccess{
+                            User.login(email: signUpEmail, password: password!, completionHandler: { (json:JSON?) in
+                                if json != nil{
+                                    let ifSuccess = json!["ifSuccess"].boolValue
+                                    if ifSuccess{
+                                        print("login successful")
+                                        UserDefaults.standard.set(json!["token"].stringValue, forKey: "userToken")
+                                        loggedID = (json!["userInfo"].dictionary!["id"]?.stringValue)!
+                                        loggedemail = (json!["userInfo"].dictionary!["email"]?.stringValue)!
+                                        loggedusername = (json!["userInfo"].dictionary!["username"]?.stringValue)!
+                                        let manager = FileManager.default
+                                        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+                                        url?.appendPathComponent(loggedID)
+                                        url?.appendPathComponent("card.txt")
+                                        if !manager.fileExists(atPath: (url?.path)!){
+                                            try? manager.createDirectory(atPath: (url?.deletingLastPathComponent().path)!, withIntermediateDirectories: true, attributes: nil)
+                                            if !manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil){print("false to create Directory")}
+                                            let cardList = [Card]()
+                                            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
+                                            do{
+                                                try datawrite.write(to: url!)
+                                            }catch{
+                                                print("fail to add")
+                                            }
+                                         }
+                                    }
+                                }
+                                })
                             self.performSegue(withIdentifier: "completion", sender: "password")
                         }else{
                             let error = json!["error"].stringValue

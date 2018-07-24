@@ -11,6 +11,7 @@ import CoreData
 import AMapFoundationKit
 import QCloudCore
 import QCloudCOSXML
+import SwiftyStoreKit
 
 var ifloggedin = false
 var loggedusername = ""
@@ -48,6 +49,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
         }
     }
     
+    func isUpdateFirstLaunch() -> Bool {
+        //获取版本号
+        let app_version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String
+        
+        //上次存储的版本号
+        let save_version = UserDefaults.standard.object(forKey: "isFirstIntobs") as? String
+        
+        /*方法1：
+         if save_version == nil || !(app_version == save_version) {
+         UserDefaults.standard.setValue(app_version, forKey: "isFirst")
+         UserDefaults.standard.synchronize()
+         return true
+         } else {
+         return false
+         }*/
+        
+        //方法2：
+        if app_version == save_version {
+            return false
+        } else if save_version != nil{
+            UserDefaults.standard.setValue(app_version, forKey: "isFirstIntobs")
+            UserDefaults.standard.synchronize()
+            return true
+        } else{
+            UserDefaults.standard.setValue(app_version, forKey: "isFirstIntobs")
+            UserDefaults.standard.synchronize()
+            return false
+        }
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
       let configuration = QCloudServiceConfiguration()
@@ -58,20 +89,68 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
         configuration.endpoint = endpoint
         QCloudCOSXMLService.registerDefaultCOSXML(with: configuration)
         QCloudCOSTransferMangerService.registerDefaultCOSTransferManger(with: configuration)
+        
+        
+        //called complete transactions
+        SwiftyStoreKit.completeTransactions { (purchase) in
+            
+        }
+        
+        //map setting
         AMapServices.shared().apiKey = "cd1079b6f89a637f97e367d5b2baa101"
+        
+        //directory setting
         createDirectory()
+        
+        //if lauchedsetting
         let ifLauched = UserDefaults.standard.bool(forKey: "ifLauched")
+        let ifUpdateFirstLauch = isUpdateFirstLaunch()
+        if ifUpdateFirstLauch{
+            //add some settings
+        }
+        
         if !ifLauched{
         UserDefaults.standard.set(true, forKey: Constant.Key.ifLauched)
-        var tags = [String]()
+            let tags = [String]()
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
-        let manager = FileManager.default
+            //other setting
+            //auto sync opened
+            UserDefaults.standard.set(true, forKey: "auto-sync")
+            //auto sync if Wifi presents
+            UserDefaults.standard.set(true, forKey: "auto-sync-if-wifi-presents")
+            //password enabled to unLock the note book
+            UserDefaults.standard.set(true, forKey: "key-to-unlock")
+            //account Plan
+            UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue,forKey: "accountPlan")
+           // PurchaseManager.restore()
         }else
         {
             let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)
             if tags == nil{
-                var tags = [String]()
+                let tags = [String]()
                 UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
+            }
+            if UserDefaults.standard.string(forKey: "accountPlan") != "basic"{
+                PurchaseManager.verifySubscriptions(types: PurchaseManager.products)
+            }else{
+                UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue,forKey: "accountPlan")
+                   UserDefaults.standard.synchronize()
+                Constant.Configuration.AccountPlan = Constant.AccountPlan.basic.rawValue
+            }
+        }
+        
+        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
+            for purchase in purchases {
+                switch purchase.transaction.transactionState {
+                case .purchased, .restored:
+                    if purchase.needsFinishTransaction {
+                        // Deliver content from server, then:
+                        SwiftyStoreKit.finishTransaction(purchase.transaction)
+                    }
+                // Unlock content
+                case .failed, .purchasing, .deferred:
+                    break // do nothing
+                }
             }
         }
         return true

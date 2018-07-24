@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+
+
 extension String {
     //返回第一次出现的指定子字符串在此字符串中的索引
     //（如果backwards参数设置为true，则返回最后出现的位置）
@@ -107,9 +109,22 @@ func cutFullImageWithView(scrollView:UIScrollView) -> UIImage
     
     return image!;
 }
+
+
 func writeImageToAlbum(image:UIImage)
 {
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+}
+
+
+func isPremium()->Bool{
+    if Constant.Configuration.AccountPlan == Constant.AccountPlan.basic.rawValue || Constant.Configuration.AccountPlan == ""{
+        return false
+    }else if Constant.Configuration.AccountPlan == Constant.AccountPlan.premium.rawValue{
+        return true
+    }else{
+        return false
+    }
 }
 
 

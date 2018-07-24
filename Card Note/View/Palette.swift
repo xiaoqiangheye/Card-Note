@@ -55,11 +55,7 @@ class Palette: UIView{
         if parentView != nil{
             parentView?.backgroundColor = selectedColor
         }
-        if viewController != nil{
-            if (viewController?.isKind(of: CardEditor.self))!{
-                (viewController as! CardEditor).color = selectedColor!
-            }
-        }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

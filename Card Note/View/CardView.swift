@@ -13,6 +13,7 @@ import SwiftMessages
 import Font_Awesome_Swift
 import AVFoundation
 import AVKit
+import Speech
 
 class CardView: UIView{
     weak var delegate:CardViewDelegate?
@@ -21,6 +22,8 @@ class CardView: UIView{
     var labelofDes:UILabel = UILabel()
     var ifTranslated = false
     weak var uimenu:UIMenuController!
+    var deleteButton:UIButton!
+    var isEditMode = false
     override init(frame: CGRect) {
         super.init(frame: frame)
        
@@ -56,23 +59,46 @@ class CardView: UIView{
         }
     }
     
+    @objc func up(){
+        if delegate != nil{
+            delegate?.cardView!(up: self)
+        }
+    }
+    
+    @objc func down(){
+        if delegate != nil{
+            delegate?.cardView!(down: self)
+        }
+    }
+    
+    
     @objc func menuController(_ sender:UILongPressGestureRecognizer){
         if sender.state == .began{
-            if !ifTranslated{
                 self.becomeFirstResponder()
                 uimenu = UIMenuController.shared
                 uimenu.arrowDirection = .default
-                uimenu.menuItems = [UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
+                uimenu.menuItems = [UIMenuItem(title: "Down", action: #selector(self.down)),UIMenuItem(title: "Up", action: #selector(self.up))]
                 uimenu.setTargetRect(self.bounds, in: self)
                 uimenu.setMenuVisible(true, animated: true)
-            }else{
-                self.becomeFirstResponder()
-                uimenu = UIMenuController.shared
-                uimenu.arrowDirection = .default
-                uimenu.menuItems = [UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
-                uimenu.setTargetRect(self.bounds, in: self)
-                uimenu.setMenuVisible(true, animated: true)
-            }
+        }
+    }
+    
+    @objc func editMode(){
+        if !isEditMode{
+        deleteButton = UIButton(frame: CGRect(x: self.frame.width-50, y: 0, width: 50, height: 50))
+        deleteButton.setFAIcon(icon: .FAMinusCircle, iconSize: 30, forState: .normal)
+        deleteButton.setTitleColor(.red, for: .normal)
+        deleteButton.addTarget(self, action: #selector(deleteCard), for: .touchDown)
+        self.addSubview(deleteButton)
+        isEditMode = true
+        }
+    }
+    
+    @objc func observeMode(){
+        if isEditMode{
+        deleteButton.removeFromSuperview()
+        deleteButton = nil
+        isEditMode = false
         }
     }
     
@@ -81,8 +107,17 @@ class CardView: UIView{
         var translateTextView = UITextView()
         var example:String = ""
         
+        @objc override func observeMode(){
+           super.observeMode()
+           self.textView.isEditable = false
+        }
+        
+        @objc override func editMode() {
+            super.editMode()
+            self.textView.isEditable = true
+        }
+        
         @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
-           
                 if sender.state == .began{
                     if !ifTranslated{
                         self.becomeFirstResponder()
@@ -146,21 +181,30 @@ class CardView: UIView{
         var textView = UITextView()
         var translateTextView = UITextView()
         
+        @objc override func observeMode(){
+            super.observeMode()
+            self.textView.isEditable = false
+        }
+        
+        @objc override func editMode() {
+            super.editMode()
+            self.textView.isEditable = true
+        }
+        
         @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
-            
             if sender.state == .began{
                 if !ifTranslated{
                     self.becomeFirstResponder()
                     uimenu = UIMenuController.shared
                     uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
+                    uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate))]
                     uimenu.setTargetRect(self.bounds, in: self)
                     uimenu.setMenuVisible(true, animated: true)
                 }else{
                     self.becomeFirstResponder()
                     uimenu = UIMenuController.shared
                     uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
+                    uimenu.menuItems = [UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate))]
                     uimenu.setTargetRect(self.bounds, in: self)
                     uimenu.setMenuVisible(true, animated: true)
                 }
@@ -209,6 +253,63 @@ class CardView: UIView{
     
     class PicView:CardView{
         var image:UIImageView = UIImageView()
+        var commentView:UITextField = UITextField()
+        var ifCommentShowed = false
+        
+        @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
+            if sender.state == .began{
+                if !ifCommentShowed{
+                    self.becomeFirstResponder()
+                    uimenu = UIMenuController.shared
+                    uimenu.arrowDirection = .default
+                    uimenu.menuItems = [UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Footnote", action: #selector(self.addComment))]
+                    uimenu.setTargetRect(self.bounds, in: self)
+                    uimenu.setMenuVisible(true, animated: true)
+                }else{
+                    self.becomeFirstResponder()
+                    uimenu = UIMenuController.shared
+                    uimenu.arrowDirection = .default
+                    uimenu.menuItems = [UIMenuItem(title: "Hide FootNote", action: #selector(self.hideComment)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
+                    uimenu.setTargetRect(self.bounds, in: self)
+                    uimenu.setMenuVisible(true, animated: true)
+                }
+            }
+            
+        }
+        
+        override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+            if (action == #selector(self.deleteCard)){
+                return true
+            }else if(action == #selector(self.addComment)){
+                return true
+            }else if (action == #selector(self.hideComment)){
+                return true
+            }else{
+                return false
+            }
+        }
+        
+        
+        
+        @objc func addComment(){
+            ifCommentShowed = true
+            self.frame.size.height += 20
+            commentView.isHidden = false
+            if delegate != nil{
+                delegate?.cardView!(commentShowed: self)
+            }
+            
+        }
+        
+        @objc func hideComment(){
+            ifCommentShowed = false
+            self.frame.size.height -= 20
+            commentView.isHidden = true
+            if delegate != nil{
+                delegate?.cardView!(commentHide: self)
+            }
+        }
+        
         func loadPic(){
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -344,17 +445,79 @@ class CardView: UIView{
         }
     }
     
-    class VoiceCardView:CardView{
+    class VoiceCardView:CardView,SFSpeechRecognizerDelegate{
         var controllerButton = UIButton()
         var timerLable = UILabel()
         var progressBar = UIProgressView(progressViewStyle: .default)
         var timer:Timer?
         var time:Int = 0
+        var recognizer:SFSpeechRecognizer!
+        var recognitionTextView: UITextView!
+        var conversionButton:UIButton!
         
-        func ocr(){
+        
+        @objc func requestForAuth(){
+            SFSpeechRecognizer.requestAuthorization { (authStatus) in  //4
+                var isButtonEnabled = false
+                switch authStatus {  //5
+                case .authorized:
+                    isButtonEnabled = true
+                    
+                case .denied:
+                    isButtonEnabled = false
+                    print("User denied access to speech recognition")
+                    
+                case .restricted:
+                    isButtonEnabled = false
+                    print("Speech recognition restricted on this device")
+                    
+                case .notDetermined:
+                    isButtonEnabled = false
+                    print("Speech recognition not yet authorized")
+                }
+                DispatchQueue.main.async {
+                    self.conversionButton.isEnabled = isButtonEnabled
+                }
+            }
             
         }
         
+        @objc func recognizeFile() {
+            let url = Constant.Configuration.url.Audio.appendingPathComponent((self.card as! VoiceCard).getId() + ".wav")
+            requestForAuth()
+            if !recognizer.isAvailable{
+                //AlertView.show(self.superview!, alert: "Recognizer is currently not available, Please try to restart the software.")
+                return
+            }
+            let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: url.path))
+            recognizer.recognitionTask(with: request) { (result, error) in
+                guard let result = result else {
+                    //failed
+                    print(error?.localizedDescription)
+                    //AlertView.show(self.superview!, alert: "Failed to recognize the speech, please check the internet.")
+                    return
+                }
+                if result.isFinal {
+                    // Print the speech that has been recognized so far
+                    print("Speech in the file is \(result.bestTranscription.formattedString)")
+                    DispatchQueue.main.async{
+                    self.recognitionTextView = UITextView(frame: CGRect(x: 0, y: self.frame.origin.y + self.frame.height, width: self.frame.width, height:0))
+                    self.recognitionTextView.isEditable = false
+                    self.recognitionTextView.textColor = .black
+                    self.recognitionTextView.text = result.bestTranscription.formattedString
+                    self.recognitionTextView.font = UIFont.systemFont(ofSize: 18)
+                    self.recognitionTextView.frame.size.height = self.recognitionTextView.contentSize.height
+                    self.addSubview(self.recognitionTextView)
+                    self.frame.size.height += self.recognitionTextView.frame.height
+                    }
+                }
+            }
+        }
+        
+        @objc func hideSpeechTextView(){
+        recognitionTextView.removeFromSuperview()
+        self.frame.size.height -= self.recognitionTextView.frame.height
+        }
     }
     
     class MapCardView:CardView{
@@ -546,8 +709,6 @@ class CardView: UIView{
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(cardView, action: #selector(cardView.menuController))
         cardView.addGestureRecognizer(longTapGesture)
-        cardView.title.addGestureRecognizer(longTapGesture)
-        cardView.content.addGestureRecognizer(longTapGesture)
         return cardView
     }
     
@@ -582,8 +743,6 @@ class CardView: UIView{
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
-        view.textView.addGestureRecognizer(longTapGesture)
-        
         /*
         let translateButton = UIButton()
         translateButton.frame = CGRect(x: view.frame.width - 100, y: view.frame.height - 50, width: 100, height: 50)
@@ -612,6 +771,7 @@ class CardView: UIView{
         view.textView.attributedText = card.getText() == nil ? NSAttributedString(string: "") : card.getText()
         if card.getText() == nil || card.getText()?.string == ""{
             view.textView.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
+            view.textView.typingAttributes = [NSAttributedStringKey.font.rawValue:UIFont.systemFont(ofSize: 20),NSAttributedStringKey.foregroundColor.rawValue:UIColor.black]
         }
         let constrainSize = CGSize(width:view.textView.frame.size.width,height:CGFloat(MAXFLOAT))
         let size = view.textView.sizeThatFits(constrainSize)
@@ -630,8 +790,6 @@ class CardView: UIView{
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
-        view.textView.addGestureRecognizer(longTapGesture)
-        
         /*
         let translateButton = UIButton()
         translateButton.frame = CGRect(x: 200, y:0, width: 50, height: 50)
@@ -663,6 +821,26 @@ class CardView: UIView{
         view.image.alpha = 1
         view.addSubview(view.image)
         
+        
+        view.image.layer.shadowColor = UIColor.black.cgColor
+        view.image.layer.shadowOffset = CGSize(width: 1, height: 1)
+        view.image.layer.shadowOpacity = 0.8
+        view.commentView.frame = CGRect(x: 0, y: view.image.frame.height, width:  UIScreen.main.bounds.width * 0.8, height: 40)
+        view.commentView.backgroundColor = .clear
+        view.commentView.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+        view.commentView.textColor = .black
+        view.commentView.text = pic.getDefinition()
+        view.commentView.textAlignment  = .center
+        
+        view.addSubview(view.commentView)
+        
+        if pic.getDefinition() == ""{
+            view.commentView.isHidden = true
+            view.ifCommentShowed = false
+        }else{
+            view.frame.size.height += 20
+            view.ifCommentShowed = true
+        }
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
@@ -753,11 +931,11 @@ class CardView: UIView{
     
         view.frame = CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height:100)
         view.center.x = UIScreen.main.bounds.width/2
-        view.controllerButton.frame = CGRect(x:0, y:0, width: 100, height:100)
+        view.controllerButton.frame = CGRect(x:30, y:0, width: 30, height:30)
         if card.voiceManager?.state == .willRecord || card.voiceManager?.state == .recording{
-        view.controllerButton.setFAIcon(icon: .FAMicrophone, forState: .normal)
+        view.controllerButton.setFAIcon(icon: .FAMicrophone, iconSize: 20, forState: .normal)
         }else{
-        view.controllerButton.setFAIcon(icon: .FAPlayCircle, forState: .normal)
+        view.controllerButton.setFAIcon(icon: .FAPlayCircle, iconSize: 20, forState: .normal)
         }
        // view.controllerButton.setTitle("录音", for: UIControlState.normal)
         view.controllerButton.setTitleColor(.black, for: UIControlState.normal)
@@ -772,14 +950,21 @@ class CardView: UIView{
         view.progressBar.frame = CGRect(x: 80, y: 0, width: view.frame.width - 75 - 80, height: 50)
         view.progressBar.center.y = view.frame.height/2
         view.progressBar.progress = 0
+        
+        view.conversionButton = UIButton(frame: CGRect(x: 0, y: 80, width: 20, height: 20))
+        view.conversionButton.setFAIcon(icon: .FAGlobe, iconSize: 20, forState: .normal)
+        view.conversionButton.setTitleColor(.black, for: .normal)
+        view.conversionButton.addTarget(view, action: #selector(view.recognizeFile), for: .touchDown)
+        view.recognizer = SFSpeechRecognizer()
+        
+        
+        view.addSubview(view.conversionButton)
         view.addSubview(view.controllerButton)
         view.addSubview(view.timerLable)
         view.addSubview(view.progressBar)
-        
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
-        
         return view
     }
     
@@ -823,7 +1008,6 @@ class CardView: UIView{
     
     class func getSingleMovieView(card:MovieCard)->MovieView{
        let view = MovieView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.6))
-     
         view.center.x = UIScreen.main.bounds.width/2
         let url = Constant.Configuration.url.Movie.absoluteURL.appendingPathComponent(card.getId() + ".mov")
         view.url = url

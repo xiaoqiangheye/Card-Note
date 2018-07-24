@@ -11,24 +11,24 @@ import UIKit
 
 
 class VoiceCard:Card{
-    var voicepath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+    var voicepath = Constant.Configuration.url.Audio.absoluteString
     var voiceManager:RecordManager?
     init(id:String) {
         super.init(title: "", tag: "", description: "", id: id, definition: "", color: UIColor.white, cardType: "voice", modifytime: "")
-        voicepath?.append(loggedID + "/audio" + "/\(id).wav")
+        voicepath.append(contentsOf: "/\(id).wav")
         voiceManager = RecordManager(userID: loggedID, fileName: "\(id).wav")
     }
     
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
-        aCoder.encode(voicepath, forKey: "voicePath")
+       // aCoder.encode(voicepath, forKey: "voicePath")
         aCoder.encode(voiceManager?.state.rawValue, forKey: "state")
     }
     
    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.voicepath = aDecoder.decodeObject(forKey: "voicePath") as? String
+      //  self.voicepath = (aDecoder.decodeObject(forKey: "voicePath") as? String)!
         self.voiceManager = RecordManager(userID: loggedID, fileName: "\(self.getId()).wav")
         let state = aDecoder.decodeObject(forKey: "state") as? String
         if state != nil{

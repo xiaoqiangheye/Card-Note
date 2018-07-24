@@ -177,7 +177,7 @@ class UIMapPicker:UIViewController,MAMapViewDelegate, AMapSearchDelegate, UIText
       //  let screenshotImage = self.mapView.takeSnapshot(in:CGRect(x: <#T##CGFloat#>, y: <#T##CGFloat#>, width: , height: <#T##CGFloat#>))
         self.dismiss(animated: true) {
             if self.delegate != nil{
-                self.delegate?.UIMapDidSelected(image:image!,poi:self.poi!,formalAddress:self.formalAddress)
+                self.delegate?.UIMapDidSelected!(image:image!,poi:self.poi!,formalAddress:self.formalAddress)
             }
         }
     }

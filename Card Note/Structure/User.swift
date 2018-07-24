@@ -72,6 +72,7 @@ class User:NSObject,URLSessionDelegate{
     }
     
     static func uploadAttrUsingQCloud(url:URL){
+        if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         print("userText/"  + loggedemail + "/" + url.lastPathComponent)
         put.object =  "userText/"  + loggedemail + "/" + url.lastPathComponent
@@ -85,10 +86,11 @@ class User:NSObject,URLSessionDelegate{
             print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
-        
+        }
     }
     
     static func uploadPhotoUsingQCloud(email:String,url:URL){
+         if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         print("userImage/"  + email + "/" + url.lastPathComponent)
         put.object =  "userImage/"  + email + "/" + url.lastPathComponent
@@ -102,11 +104,12 @@ class User:NSObject,URLSessionDelegate{
              print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
-
+        }
     }
 
     
     static func uploadAudioUsingQCloud(email:String,url:URL){
+         if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         put.object = "userAudio/"  + email + "/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
@@ -119,9 +122,11 @@ class User:NSObject,URLSessionDelegate{
             print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
+        }
     }
     
     static func uploadMovieUsingQCloud(email:String,url:URL){
+         if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         put.object = "userMovie/"  + email + "/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
@@ -134,12 +139,14 @@ class User:NSObject,URLSessionDelegate{
             print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
+        }
     }
     
     
     
     
     static func downloadPhotosUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -161,9 +168,11 @@ class User:NSObject,URLSessionDelegate{
              NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
         QCloudCOSXMLService.defaultCOSXML().getObject(request)
+        }
     }
     
     static func downloadMapUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -186,9 +195,11 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
+        }
     }
     
     static func downloadAudioUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -211,10 +222,11 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
+        }
     }
     
     static func downloadMovieUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
-        
+         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
        var url = Constant.Configuration.url.Movie
@@ -236,9 +248,11 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
+        }
     }
     
     static func downloadAttrUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = Constant.Configuration.url.attributedText
@@ -246,7 +260,7 @@ class User:NSObject,URLSessionDelegate{
         url.appendPathComponent(cardID + ".rtf")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
-        request.object = "userMovie/" + loggedemail + "/" + cardID + ".rtf"
+        request.object = "userText/" + loggedemail + "/" + cardID + ".rtf"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
                 completionHandler(true,nil)
@@ -259,6 +273,7 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
         QCloudCOSXMLService.defaultCOSXML().getObject(request)
+        }
     }
     
    
@@ -354,7 +369,10 @@ class User:NSObject,URLSessionDelegate{
     }
     
     
-    
+    /**
+     @deprecate
+     get image from the sever
+ */
     static func getImage(email:String,cardID:String,completionHandler:@escaping (UIImage?)->()){
         let url = NSURL.init(string: NSString.init(format: "https://%@/getPhoto.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
@@ -393,6 +411,11 @@ class User:NSObject,URLSessionDelegate{
         dataTask.resume()
     }
     
+    /**
+   @deprecated
+   get Audio from Sever
+     
+ */
     static func getAudio(email:String,cardID:String,completionHandler:@escaping (String?)->()){
         let url = NSURL.init(string: NSString.init(format: "https://%@/getPhoto.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
@@ -432,6 +455,9 @@ class User:NSObject,URLSessionDelegate{
     }
     
     
+    /** deprecated
+     upload Audio with AF NetWorking
+ */
     static func uploadAudioWithAF(email:String,filePath:String,cardID:String){
         let data = NSData(contentsOfFile: filePath)
         print("音频长度：\(data?.length)")
@@ -463,6 +489,10 @@ class User:NSObject,URLSessionDelegate{
         }
     }
     
+    
+    /** deprecated
+     upload Image with AF NetWorking
+     */
     static func uploadImageWithAF(email:String,image:UIImage,cardID:String){
         let imageData = UIImageJPEGRepresentation(image, 0.5)
         Alamofire.upload(
@@ -501,7 +531,9 @@ class User:NSObject,URLSessionDelegate{
     }
     
     
-    
+    /** deprecated
+     upload Image with AF NetWorking
+     */
     static func upLoadImage(email:String,pic:PicCard){
         let url = NSURL.init(string: NSString.init(format: "https://%@/uploadPhoto.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
@@ -534,7 +566,9 @@ class User:NSObject,URLSessionDelegate{
         dataTask.resume()
     }
 
-    
+    /**
+     get Server Time
+     */
     static func getTime(completionHandler:@escaping (String?)->()){
         let url = NSURL.init(string: NSString.init(format: "https://%@/getTime.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
@@ -555,6 +589,7 @@ class User:NSObject,URLSessionDelegate{
     }
     
     static func getUserCards(email:String,completionHandler:@escaping (JSON?)->()){
+        if isPremium(){
         let url = NSURL.init(string: NSString.init(format: "https://%@/getCards.php","app.cardnotebook.com/cardnote") as String)
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
@@ -603,6 +638,9 @@ class User:NSObject,URLSessionDelegate{
             }
         }
         dataTask.resume()
+        }else{
+            completionHandler(nil)
+        }
     }
     
     static func login(email:String, password:String, completionHandler:@escaping (JSON?)->()){
@@ -651,7 +689,7 @@ class User:NSObject,URLSessionDelegate{
         })
     }
     
-    static func verification(email:String, username:String, password:String, completionhandler:@escaping (JSON)->()){
+    static func verification(email:String, username:String, completionhandler:@escaping (JSON)->()){
         let url = NSURL.init(string: NSString.init(format: "http://%@/verification.php","47.95.205.243/cardnote") as String)
         var authCode = ""
         for _ in 0...5{
@@ -659,7 +697,7 @@ class User:NSObject,URLSessionDelegate{
         }
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
-        let bodyStr = NSString.init(format: "email=%@&password=%@&username=%@&code=%@&language=%@",email,password,username,authCode,"english")
+        let bodyStr = NSString.init(format: "email=%@&username=%@&code=%@&language=%@",email,username,authCode,"english")
         print(bodyStr)
         request.httpBody = bodyStr.data(using: String.Encoding.utf8.rawValue)
         NSURLConnection.sendAsynchronousRequest(request as URLRequest, queue: OperationQueue.init(), completionHandler: {(response: URLResponse?, data: Data?, connectionError: Error?)-> Void in
@@ -689,6 +727,7 @@ class User:NSObject,URLSessionDelegate{
     
     
     static func addCard(email:String,card:Card,completionHandler:@escaping (JSON?)->()){
+        if isPremium(){
         let cardData = CardParser.CardToJSON(card)
         print("cardData" + cardData!)
         let url = NSURL.init(string: NSString.init(format: "https://%@/addCard.php","app.cardnotebook.com/cardnote") as String)
@@ -739,6 +778,7 @@ class User:NSObject,URLSessionDelegate{
             }
         }
         dataTask.resume()
+        }
     }
     
     static func resultHandler(data:String)->String{
@@ -754,6 +794,7 @@ class User:NSObject,URLSessionDelegate{
     }
     
     static func updateCard(card:Card,email:String,completionHandler:@escaping (JSON?)->()){
+        if isPremium(){
             let cardData = CardParser.CardToJSON(card)
         print("prepare to update card \n" + cardData!)
             let url = NSURL.init(string: NSString.init(format: "https://%@/updateCard.php","app.cardnotebook.com/cardnote") as String)
@@ -803,6 +844,7 @@ class User:NSObject,URLSessionDelegate{
                 }
             }
             dataTask.resume()
+        }
     }
     
     static func verifyEmail(auth:String, completionHandler:@escaping (JSON?)->()){
@@ -875,6 +917,10 @@ class User:NSObject,URLSessionDelegate{
                     let success = json!["ifSuccess"].boolValue
                     if success{
                         print("Sign Up Success")
+                        
+                        loggedemail = email
+                        ifloggedin = true
+                        loggedusername = username
                     }else{
                         let error = json!["error"].stringValue
                         print(error)
@@ -890,7 +936,6 @@ class User:NSObject,URLSessionDelegate{
         }
     
     static func loginWithToken(completionHandler:@escaping (JSON?)->()){
-        
         if UserDefaults.standard.string(forKey: "userToken") != ""{
             let url = NSURL.init(string: NSString.init(format: "https://%@/loginwithtoken.php","app.cardnotebook.com/cardnote") as String)
             let request = NSMutableURLRequest.init(url: url! as URL)

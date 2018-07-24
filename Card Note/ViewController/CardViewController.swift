@@ -10,10 +10,14 @@ import Foundation
 import UIKit
 import Spring
 import SCLAlertView
+import SwiftyJSON
+import SwiftMessages
+import Font_Awesome_Swift
 class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate,UIDocumentInteractionControllerDelegate{
     @IBOutlet weak var addCardButton: UIButton!
     var scrollView:UIScrollView!
     var searchTextView:SearchBar = SearchBar()
+    var slideView:UIView!
     var docController:UIDocumentInteractionController!
     @IBAction func addNewCard(_ sender:UIButton){
     self.performSegue(withIdentifier: "cardEditor", sender: CardEditor.type.add)
@@ -38,6 +42,31 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     override func viewDidLoad() {
+        addCardButton.setFAIcon(icon: .FAPlusCircle, iconSize: 50, forState: .normal)
+        addCardButton.setTitleColor(.black, for: .normal)
+        if UserDefaults.standard.bool(forKey: "auto-sync") && isPremium(){
+            sync { (ifSuccess, error) in
+                if ifSuccess{
+                   
+                }else{
+                    let view = MessageView.viewFromNib(layout: .cardView)
+                    // Theme message elements with the warning style.
+                    view.configureTheme(.error)
+                    
+                    // Add a drop shadow.
+                    view.configureDropShadow()
+                    
+                    view.button?.removeFromSuperview()
+                    // Set message title, body, and icon. Here, we're overriding the default warning
+                    // image with an emoji character.
+                    
+                    view.configureContent(title: "Error", body: "Sync failed.", iconText: "")
+                    
+                    // Show the message.
+                    SwiftMessages.show(view: view)
+                }
+            }
+        }
         //adjust distance
         let y:Int = UIDevice.current.Xdistance()
         //addCardButton.frame.origin.y = CGFloat(y)
@@ -49,10 +78,19 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         self.view.bringSubview(toFront: searchTextView)
         searchTextView.searchTextView.addTarget(self, action: #selector(textViewChange), for: .allEditingEvents)
         searchTextView.searchTextView.delegate = self
+        //slideView
+        slideView = UIView(frame: CGRect(x: 0, y: searchTextView.frame.height + searchTextView.frame.origin.y, width: UIScreen.main.bounds.width, height: 50))
+        slideView.backgroundColor = .white
+        
+       // slideView.layer.shadowRadius = 1
+        //slideView.layer.shadowColor = UIColor.black.cgColor
+        //slideView.layer.shadowOpacity = 0.5
+       
         //filter Button
         let filterButton = UIButton()
-        filterButton.frame = CGRect(x: 40, y: searchTextView.frame.height + searchTextView.frame.origin.y + 10, width: 60, height: 30)
-        
+        filterButton.frame = CGRect(x: 40, y: 10, width: 60, height: 30)
+        slideView.addSubview(filterButton)
+        self.view.addSubview(slideView)
         let string = NSAttributedString(string: "Filter", attributes: [NSAttributedStringKey.font:UIFont(name: "AmericanTypewriter", size: 14)])
         print(string)
         filterButton.setAttributedTitle(string, for: .normal)
@@ -62,18 +100,51 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         filterButton.layer.shadowOffset = CGSize(width: 1, height: 1)
         filterButton.layer.shadowColor = UIColor.black.cgColor
         filterButton.layer.shadowOpacity = 0.5
-        self.view.addSubview(filterButton)
         
         scrollView = UIScrollView()
         scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         scrollView.isScrollEnabled = true
-        scrollView.frame = CGRect(x: 0, y: filterButton.frame.origin.y + filterButton.frame.height + 10, width: self.view.bounds.width, height: self.view.bounds.height-(filterButton.frame.origin.y + filterButton.frame.height + 10))
+        scrollView.frame = CGRect(x: 0, y: searchTextView.frame.origin.y + searchTextView.frame.height + 20, width: self.view.bounds.width, height: self.view.bounds.height-(slideView.frame.origin.y + slideView.frame.height + 10))
         scrollView.contentSize = CGSize(width:self.view.bounds.width,height:10)
         self.view.addSubview(scrollView)
-        
         self.view.bringSubview(toFront: addCardButton)
-        
+        self.view.bringSubview(toFront: slideView)
+        self.view.bringSubview(toFront: searchTextView)
+    }
+    
+    @objc func slide(gesture: UIPanGestureRecognizer){
+    let translation = gesture.translation(in: self.view)
+        if (slideView.center.y + translation.y) >= searchTextView.frame.height + searchTextView.frame.origin.y - 50 && (slideView.center.y + translation.y) <= searchTextView.frame.origin.y + searchTextView.frame.height{
+   // gesture.view?.center.x += translation.x
+          slideView.center.y += translation.y
+        }
+        gesture.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
+    }
+    
+    var lastScrollViewContentOffY:CGFloat = 0
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        lastScrollViewContentOffY = scrollView.contentOffset.y
+    
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if lastScrollViewContentOffY - scrollView.contentOffset.y > -50 && lastScrollViewContentOffY - scrollView.contentOffset.y < 0{
+            UIView.animate(withDuration: 0.5) {
+                self.slideView.frame.origin.y = self.searchTextView.frame.height + self.searchTextView.frame.origin.y - 50
+            }
+        }else if lastScrollViewContentOffY - scrollView.contentOffset.y > 50{
+            UIView.animate(withDuration: 0.5) {
+                self.slideView.frame.origin.y = self.searchTextView.frame.height + self.searchTextView.frame.origin.y
+            }
+        }else if lastScrollViewContentOffY - scrollView.contentOffset.y < -50{
+            UIView.animate(withDuration: 0.5) {
+                self.slideView.frame.origin.y = self.searchTextView.frame.height + self.searchTextView.frame.origin.y - 50
+            }
+        }else if lastScrollViewContentOffY - scrollView.contentOffset.y < 50  && lastScrollViewContentOffY - scrollView.contentOffset.y > 0{
+            UIView.animate(withDuration: 0.5) {
+                self.slideView.frame.origin.y = self.searchTextView.frame.height + self.searchTextView.frame.origin.y
+            }
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -125,7 +196,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     func loadCard(){
-          scrollView.contentSize = CGSize(width:self.view.bounds.width,height:10)
+        scrollView.contentSize = CGSize(width:self.view.bounds.width,height:50)
         for subview in scrollView.subviews{
             subview.removeFromSuperview()
         }
@@ -140,7 +211,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 cardList = [Card]()
             }
             
-            var cumulatedY = 10
+            var cumulatedY = 50
             for card in cardList!{
                 var cardView:CardView = CardView.getSingleCardView(card:card)
                 cardView.frame.origin.y = CGFloat(cumulatedY)
@@ -159,6 +230,129 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 scrollView.contentSize = CGSize(width: self.view.bounds.width, height: scrollView.contentSize.height + cardView.bounds.height + 10)
             }
             
+        }
+    }
+    
+    func sync(completionHandler:@escaping (Bool,String?)->()){
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent(loggedID)
+        url?.appendPathComponent("card.txt")
+        if !manager.fileExists(atPath: (url?.path)!){
+            try? manager.createDirectory(atPath: (url?.deletingLastPathComponent().path)!, withIntermediateDirectories: true, attributes: nil)
+            manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil)
+            let cardList = [Card]()
+            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
+            do{
+                try datawrite.write(to: url!)
+            }catch{
+                print("fail to add")
+            }
+        }
+        
+        var ifSuccessArray = [Bool]()
+        User.getUserCards(email: loggedemail, completionHandler: { (json:JSON?) in
+            if json != nil{
+                if !json!["ifSuccess"].boolValue{
+                    ifSuccessArray.append(false)
+                }else{
+                    ifSuccessArray.append(true)
+                    let carddata = json!["card"].arrayValue
+                    //get cards from the dataBase
+                    var cardArray:[Card] = [Card]()
+                    for cardJSON in carddata{
+                        print("card" + cardJSON.rawString()!)
+                        let card = CardParser.JSONToCard(cardJSON.rawString()!)
+                        if card != nil{
+                            cardArray.append(card!)
+                        }
+                    }
+                    //get local cards
+                    let manager = FileManager.default
+                    var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+                    url?.appendPathComponent(loggedID)
+                    url?.appendPathComponent("card.txt")
+                    if let dateRead = try? Data.init(contentsOf: url!){
+                        var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
+                        var cardCopiedList = cardList
+                        if cardList == nil{
+                            cardList = [Card]()
+                        }
+                        var i = 0
+                        for interNetCard in cardArray{
+                            var j = 0
+                            var removed:Bool = false
+                            for localCard in cardList!{
+                                
+                                if interNetCard.getId() == localCard.getId(){
+                                    let formatter = DateFormatter()
+                                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                    let dateIn = formatter.date(from: interNetCard.getTime())
+                                    let datelo = formatter.date(from: localCard.getTime())
+                                    let result:ComparisonResult = (dateIn?.compare(datelo!))!
+                                    if result == ComparisonResult.orderedDescending{
+                                        //update the localCard if Internet is more recent
+                                        cardCopiedList![j] = interNetCard
+                                    }else if result == ComparisonResult.orderedAscending{
+                                        //update the internetCard if local is more recent
+                                        User.updateCard(card: localCard, email: loggedemail, completionHandler: { (json:JSON?) in
+                                            if json != nil{
+                                                let ifSuccess = json!["ifSuccess"].boolValue
+                                                if ifSuccess{
+                                                    print("Success to update card")
+                                                    ifSuccessArray.append(true)
+                                                }else{
+                                                    ifSuccessArray.append(false)
+                                                }
+                                            }
+                                            
+                                        })
+                                    }
+                                    cardArray.remove(at: i)
+                                    cardList?.remove(at: j)
+                                    removed = true
+                                }
+                                if !removed{
+                                    j+=1
+                                }
+                            }
+                            if !removed{
+                                i+=1
+                            }
+                        }
+                        
+                        //add rest InterNetCard to local
+                        cardCopiedList?.append(contentsOf:cardArray)
+                        let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardCopiedList!)
+                        do{
+                            try datawrite.write(to: url!)
+                        }catch{
+                            print("fail to add")
+                             ifSuccessArray.append(false)
+                        }
+                        //add local Card to InterNet
+                        for card in cardList!{
+                            User.addCard(email: loggedemail, card: card, completionHandler: { (json:JSON?) in
+                                if json != nil{
+                                    let ifSuccess = json!["ifSuccess"].boolValue
+                                    if ifSuccess{
+                                        print("Sync Success")
+                                         ifSuccessArray.append(true)
+                                    }else{
+                                        let error = json!["error"].stringValue
+                                        ifSuccessArray.append(false)
+                                  }
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        })
+        if ifSuccessArray.contains(false){
+            completionHandler(false, "")
+        }else{
+             completionHandler(true, "")
         }
     }
     

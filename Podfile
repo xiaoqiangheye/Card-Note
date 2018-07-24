@@ -15,6 +15,10 @@ pod 'SCLAlertView'
 pod 'AMap2DMap'
 pod 'AMapSearch'
 pod 'AMapLocation'
+pod 'RAMPaperSwitch'
+pod 'SwiftyStoreKit'
+pod 'Mapbox-iOS-SDK', '~> 4.2'
+pod 'MapboxGeocoder.swift', '~> 0.9'
   # Pods for Card Note
 
 

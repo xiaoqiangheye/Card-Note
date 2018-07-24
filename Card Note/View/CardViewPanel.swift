@@ -14,7 +14,6 @@ class CardViewPanel:SpringView{
     weak var delegate:CardViewPanelDelegate?
     var controlledView:UIView?
     
-   
     @objc func deleteButtonClicked(_ sender:UIButton){
         let panel = sender.superview as! CardViewPanel
         if panel.delegate != nil{

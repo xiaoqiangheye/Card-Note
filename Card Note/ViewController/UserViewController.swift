@@ -18,7 +18,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     class SettingCard:UIView{
         class func getSingleNameCard()->SettingCard{
             let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width * 0.8))
-            view.backgroundColor = UIColor.flatBlue
+            view.backgroundColor = UIColor.white
             
             let portrait = UIImageView(frame: CGRect(x: 0, y: view.bounds.height/4, width: 100, height: 100))
             portrait.setFAIconWithName(icon: .FAUserCircle, textColor: UIColor.lightGray)
@@ -29,13 +29,13 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             username.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
             username.center.x =  view.bounds.width/2
             view.addSubview(username)
-            username.textColor = .white
+            username.textColor = .black
             username.textAlignment = .center
             
             let userEmail = UILabel(frame: CGRect(x: 0, y: view.bounds.height/4*3, width: UIScreen.main.bounds.width, height: 50))
             userEmail.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
             userEmail.center.x = view.bounds.width/2
-            userEmail.textColor = .white
+            userEmail.textColor = .black
             userEmail.textAlignment = .center
             view.addSubview(userEmail)
             
@@ -54,11 +54,28 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         }
         
         class func getSingleSettingCard(title:String, action: (SettingCard)->())->SettingCard{
-            let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.48))
-            view.backgroundColor = UIColor.flatWhite
+            let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 200))
+            view.backgroundColor = UIColor.randomFlat
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
             label.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
-            label.textColor = .black
+            label.textColor = UIColor.init(contrastingBlackOrWhiteColorOn: view.backgroundColor!, isFlat: true)
+            label.text = title
+            label.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2)
+            label.textAlignment = .center
+            view.addSubview(label)
+            action(view)
+            return view
+        }
+        
+        class func getSingleSettingCard(color:UIColor,title:String, action: (SettingCard)->())->SettingCard{
+            let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 100))
+            view.layer.shadowColor = UIColor.black.cgColor
+            view.layer.shadowOffset = CGSize(width: 1, height: 1)
+            view.layer.shadowOpacity = 0.8
+            view.backgroundColor = color
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
+            label.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
+            label.textColor = UIColor.init(contrastingBlackOrWhiteColorOn: view.backgroundColor!, isFlat: true)
             label.text = title
             label.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2)
             label.textAlignment = .center
@@ -86,7 +103,6 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     
     override func viewDidLoad() {
       
-        
         /**
          scrollView
          */
@@ -95,7 +111,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         scrollView.contentSize.width = UIScreen.main.bounds.width
         scrollView.contentSize.height = 0
         scrollView.isScrollEnabled = true
-        scrollView.backgroundColor = UIColor.flatBlue
+        scrollView.backgroundColor = UIColor.clear
         self.view.addSubview(scrollView)
         
         /**
@@ -110,28 +126,32 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         }
         nameCard.addGestureRecognizer(tapGesture)
         self.scrollView.addSubview(nameCard)
-        self.scrollView.contentSize.height += nameCard.frame.height + 20
+        self.scrollView.contentSize.height += nameCard.frame.height
         
         /**
          language: language Setting
          */
-        language = SettingCard.getSingleSettingCard(title: "Language", action: { (settingCard) in
+        language = SettingCard.getSingleSettingCard(color: UIColor.white,title: "Language", action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(languageSetting))
+            settingCard.addGestureRecognizer(tapGesture)
         })
-        language.frame.origin.y = nameCard.frame.height + 20
+        language.frame.origin.y = nameCard.frame.height
         language.center.x = scrollView.bounds.width/2
         self.scrollView.addSubview(language)
-        self.scrollView.contentSize.height += language.frame.height + 20
+        self.scrollView.contentSize.height += language.frame.height
         
         
         /**
          sync
          */
-        sync = SettingCard.getSingleSettingCard(title: "Sync", action: { (settingCard) in
+        sync = SettingCard.getSingleSettingCard(color:UIColor.white,title: "Sync", action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(syncSetting))
+            settingCard.addGestureRecognizer(tapGesture)
+    
         })
+        
         sync.frame.origin.y = language.frame.origin.y + language.frame.height + 20
         sync.center.x = scrollView.bounds.width/2
         self.scrollView.addSubview(sync)
@@ -140,26 +160,58 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
          account
          */
-        account = SettingCard.getSingleSettingCard(title: "Account Plan", action: { (settingCard) in
+        account = SettingCard.getSingleSettingCard(color: UIColor.white,title: "Account Plan", action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(accountPlans))
+            settingCard.addGestureRecognizer(tapGesture)
         })
         account.frame.origin.y = sync.frame.origin.y + sync.frame.height + 20
         account.center.x = scrollView.bounds.width/2
         self.scrollView.addSubview(account)
         self.scrollView.contentSize.height += account.frame.height + 20
         
-        
-        
-        
     }
     
     @objc func accountPlans(){
-        
+        let accountPlanController = AccountPlanController()
+        self.present(accountPlanController, animated: true, completion: nil)
     }
     
     @objc func syncSetting(){
+        let settingController = SettingController()
+        settingController.view.backgroundColor = .white
+        settingController.setTitle("Sync")
+       
         
+        let sync_under_wifi = SwitchSetting(title: "Sync only with Wifi", description: "Sync your notes to the cloud only if wifi presents.", tintColor:UIColor.flatGreen, onSwitch: {
+            UserDefaults.standard.set(true, forKey: "auto-sync-if-wifi-presents")
+        }) {
+            UserDefaults.standard.set(false, forKey: "auto-sync-if-wifi-presents")
+        }
+        sync_under_wifi.paperSwitch.isOn = UserDefaults.standard.bool(forKey: "auto-sync-if-wifi-presents")
+        if sync_under_wifi.paperSwitch.isOn{
+            sync_under_wifi.titleLabel.textColor = .white
+            sync_under_wifi.descrptionLabel.textColor = .white
+        }
+        
+        let auto_sync = SwitchSetting(title: "Auto-Sync", description: "Sync your notes to the cloud automatically.",tintColor: UIColor.flatRed, onSwitch: {
+            UserDefaults.standard.set(true, forKey: "auto-sync")
+        }, offSwitch: {
+            UserDefaults.standard.set(false, forKey: "auto-sync")
+            sync_under_wifi.paperSwitch.isOn = false
+            sync_under_wifi.switchValueChanged()
+        })
+        
+        auto_sync.paperSwitch.isOn = UserDefaults.standard.bool(forKey: "auto-sync")
+        if auto_sync.paperSwitch.isOn{
+            auto_sync.titleLabel.textColor = .white
+            auto_sync.descrptionLabel.textColor = .white
+        }
+        
+        
+        settingController.addSettingView(view: auto_sync)
+        settingController.addSettingView(view: sync_under_wifi)
+        self.present(settingController, animated: true) {}
     }
     
     @objc func languageSetting(){

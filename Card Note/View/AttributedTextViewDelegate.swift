@@ -9,7 +9,7 @@
 import Foundation
 
 @objc protocol AttributedTextViewDelegate{
-    @objc optional func selectFont()
+    @objc optional func selectFont(height:CGFloat)
     @objc optional func selectFontColor()
     
 }

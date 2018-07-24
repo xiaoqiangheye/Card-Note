@@ -30,7 +30,7 @@ class RecordManager {
   
     
     init(userID:String,fileName:String) {
-        file_path?.append("/\(userID)/audio/\(fileName)")
+        file_path?.append("/audio/\(fileName)")
     }
     
     //开始录音

@@ -12,9 +12,11 @@ import SwiftyJSON
 import Font_Awesome_Swift
 import ChameleonFramework
 import Hero
+import MapboxGeocoder
 import MobileCoreServices
 
-class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate,AttributedTextViewDelegate, UIPickerViewDelegate,UIPickerViewDataSource,CardEditorDelegate{
+
+class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, MAMapViewDelegate,UIMapPickerDelegate,UIActionSheetDelegate,CardViewDelegate,AttributedTextViewDelegate, UIPickerViewDelegate,UIPickerViewDataSource,CardEditorDelegate,UITextFieldDelegate{
     //main components
     weak var delegate:CardEditorDelegate?
     var isSubCard:Bool = false
@@ -28,7 +30,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     var attributedView:AttributedTextView?
     var pickerView:UIPickerView!
     var pickerColorView:UIView!
-    @IBOutlet var doneButton: UIButton!
+    var doneButton: UIButton!
     @IBOutlet var addButton: UIButton!
     var color:UIColor = UIColor.red
     var card:Card?
@@ -55,10 +57,14 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     /////////selected
     var selectedPictureView:CardView.PicView?
     var selectedTextView:UITextView?
+    var selectedView:UIView?
     var selectedMapView:CardView.MapCardView?
     private var EditingSubCard:[CardEditorView] = [CardEditorView]()
-    
-    
+    //textMode
+    var isEditMode = false
+    var modeButton:UIButton!
+    //leadingBar
+    var leardingBar:UIView!
 /** pickerViewDelegate
   numberOfComponents
   numberOfRows
@@ -92,22 +98,28 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     
     
     //AttributedText
-    func selectFont()
+    func selectFont(height:CGFloat)
     {
+        let view = UIView(frame: CGRect(x:0, y: height + (attributedView?.frame.height)!, width:  UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - height - (attributedView?.frame.height)!))
         if Int((attributedView?.font?.pointSize)!) >= 1{
         pickerView.selectRow(Int((attributedView?.font?.pointSize)!) - 1, inComponent: 0, animated: true)
         }else{
         pickerView.selectRow(0, inComponent: 0, animated: true)
         }
+        view.addSubview(pickerView)
+        view.addSubview(pickerColorView)
         pickerColorView.backgroundColor = attributedView?.fontColor == nil ? UIColor.black : attributedView?.fontColor
-        self.view.addSubview(pickerColorView)
-        self.view.addSubview(pickerView)
-        let pickerViewDone = UIButton(frame: CGRect(x: pickerView.frame.width - 100, y:30, width: 100, height: 30))
+       
+        selectedTextView?.resignFirstResponder()
+        selectedTextView?.inputView = view
+        selectedTextView?.inputAccessoryView = attributedView
+        selectedTextView?.becomeFirstResponder()
+        let pickerViewDone = UIButton(frame: CGRect(x: pickerView.frame.width*2 - 50, y:0, width: 100, height: 100))
         pickerViewDone.setTitle("Done", for: .normal)
+        pickerViewDone.setFAIcon(icon: FAType.FATimesCircle, forState: .normal)
         pickerViewDone.setTitleColor(UIColor.black, for: .normal)
         pickerViewDone.addTarget(self, action: #selector(getPickerViewValue), for: .touchDown)
-        self.view.addSubview(pickerViewDone)
-       
+        view.addSubview(pickerViewDone)
     }
     
     //ActionSheet
@@ -117,8 +129,27 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
 
     
     
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        selectedView = textField
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        selectedView = textField
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.scrollView.frame.origin.y = -50
+        }, completion: nil)
+        textField.resignFirstResponder()
+    }
 /**TextView
  */
+    
+    private var lastSelectedLocation = 0
+    private var currentSelectedLocation = 0
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.lengthOfBytes(using: .utf8) < 1{
             switch textView{
@@ -140,12 +171,87 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         UIView.animate(withDuration: 0.5, animations: {
             self.scrollView.frame.origin.y = -50
         }, completion: nil)
+        textView.resignFirstResponder()
         attributedView?.removeFromSuperview()
         attributedView = nil
     }
     
     
+    
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        lastSelectedLocation = currentSelectedLocation
+        currentSelectedLocation = textView.selectedRange.location
+        if attributedView != nil{
+            if textView.selectedRange.location >= 1{
+           let character = textView.text[textView.text.index(textView.text.startIndex, offsetBy: currentSelectedLocation - 1)]
+                print(character)
+                
+                if character == "\u{2022}"{
+                     self.attributedView?.reset()
+                     self.attributedView?.update(at: textView.selectedRange.location - 1)
+                }else if character == "." && currentSelectedLocation >= 2{
+                    if let lastCharacter = Int(String(textView.text[textView.text.index(textView.text.startIndex, offsetBy: currentSelectedLocation - 2)])){
+                        var range = NSRange()
+                        let attributeOfLigature = (textView.attributedText.attribute(NSAttributedStringKey.ligature, at: currentSelectedLocation - 1, effectiveRange: &range)) == nil ? 0 : 1
+                        let attributeOfFont = (textView.attributedText.attribute(NSAttributedStringKey.ligature, at: currentSelectedLocation - 1, effectiveRange: &range)) as? UIFont
+                        if attributeOfLigature == 1 || attributeOfFont == UIFont(name: "Avenir-Medium", size: 18){
+                           self.attributedView?.reset()
+                           self.attributedView?.update(at: textView.selectedRange.location - 1)
+                        }
+                    }
+                }else if character != "\n"{
+                   self.attributedView?.update(at: textView.selectedRange.location - 1)
+                    //self.attributedView?.update(at: textView.selectedRange.location - 1)
+                }else{
+                    self.attributedView?.reset()
+                    self.attributedView?.isUnorderedListAtCurrentSelectedLine()
+                    self.attributedView?.isOrderedListAtSelectedLocation()
+                }
+            }
+        }
+    }
+    
+
+    var lastNumOfLines = 1
+    var currentNumOfLines = 1
+    var lastCharacter = ""
+    var currentCharacter = ""
     func textViewDidChange(_ textView: UITextView) {
+        lastCharacter = currentCharacter
+        if textView.selectedRange.location > 0{
+        currentCharacter = String(textView.text[textView.text.index(textView.text.startIndex, offsetBy: textView.selectedRange.location - 1)])
+        }else{
+        currentCharacter = ""
+        }
+    
+        lastNumOfLines = currentNumOfLines
+        currentNumOfLines = Int(textView.contentSize.height/(textView.font?.lineHeight)!)
+        
+        //save to files
+        if textView.superview != nil{
+            if (textView.superview?.isKind(of: CardView.ExaView.self))!{
+                let view = textView.superview as! CardView.ExaView
+                let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                var url = Constant.Configuration.url.attributedText
+                url.appendPathComponent(view.card.getId() + ".rtf")
+                do{
+                    try data?.write(to: url)
+                }catch let error{
+                    print(error.localizedDescription)
+                }
+            }else if (textView.superview?.isKind(of: CardView.TextView.self))!{
+                let view = textView.superview as! CardView.TextView
+                let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                var url = Constant.Configuration.url.attributedText
+                url.appendPathComponent(view.card.getId() + ".rtf")
+                do{
+                    try data?.write(to: url)
+                }catch let error{
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        
         let y = scrollView.contentOffset.y
         let frame = textView.frame
         
@@ -154,13 +260,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         let constrainSize=CGSize(width:frame.size.width,height:CGFloat(MAXFLOAT))
         
         //获取textview的真实高度
-        
         var size = textView.sizeThatFits(constrainSize)
         
         //如果textview的高度大于最大高度高度就为最大高度并可以滚动，否则不能滚动
-        
-        
-        
         if textView.superview != nil{
             if let cardView = textView.superview as? CardView.TextView{
                 textView.frame.size.height=size.height
@@ -181,50 +283,50 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 
             }
         }
-        //重新设置textview的高度
         
-        
-        
-        
-        //重新设置subViews的位置
-        
-        
+      //Mode Caculation
+        if textView.text.count > 0{
+            if currentNumOfLines > lastNumOfLines{
+            if attributedView?.textMode == Constant.TextMode.UnorderedListMode && lastSelectedLocation - currentSelectedLocation == -1{
+                attributedView?.setUnorderedList()
+            }
+            /*
+            else if (attributedView?.textMode == Constant.TextMode.UnorderedListMode || attributedView?.textMode == Constant.TextMode.OrderedListMode) && lastSelectedLocation > currentSelectedLocation{
+                attributedView?.textMode = Constant.TextMode.UnorderedListEndMode
+                attributedView?.setOrderedList()
+                attributedView?.setOrderedList()
+            }
+             */
+            else if attributedView?.textMode == Constant.TextMode.OrderedListMode && lastSelectedLocation - currentSelectedLocation == -1{
+                attributedView?.setOrderedList()
+            }
+             attributedView?.isUnorderedListAtCurrentSelectedLine()
+             attributedView?.isOrderedListAtSelectedLocation()
+            }else if currentNumOfLines < lastNumOfLines{
+                
+            }
+            
+            if lastCharacter == "\u{2022}" && lastSelectedLocation - currentSelectedLocation == 1{
+                attributedView?.textMode = Constant.TextMode.OrderedListEndMode
+                attributedView?.setUnorderedList()
+                attributedView?.setUnorderedList()
+            }
+        }
         
     }
     
     
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        currentSelectedLocation = textView.selectedRange.location
         if textView.textColor == .gray{
             textView.text = ""
-            textView.textColor = .white
+            textView.textColor = .black
         }
        textView.backgroundColor = UIColor.clear
       //textView.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
        selectedTextView = textView
-        if textView.superview != nil{
-            if (textView.superview?.isKind(of: CardView.ExaView.self))!{
-                let view = textView.superview as! CardView.ExaView
-        let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
-            var url = Constant.Configuration.url.attributedText
-            url.appendPathComponent(view.card.getId() + ".rtf")
-                do{
-                try data?.write(to: url)
-                }catch let error{
-                    print(error.localizedDescription)
-                }
-            }else if (textView.superview?.isKind(of: CardView.TextView.self))!{
-                 let view = textView.superview as! CardView.TextView
-                let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
-                var url = Constant.Configuration.url.attributedText
-                url.appendPathComponent(view.card.getId() + ".rtf")
-                do{
-                    try data?.write(to: url)
-                }catch let error{
-                    print(error.localizedDescription)
-                }
-            }
-        }
+       selectedView = textView
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -238,9 +340,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         selectedTextView = textView
+        selectedView = textView
         return true
     }
     
+  
 
     override func viewWillAppear(_ animated: Bool) {
         cardTitle.delegate = self
@@ -264,8 +368,32 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         self.hero.isEnabled = true
         self.view.hero.id = "batman"
         self.view.backgroundColor = .white
+        
+        //leadingBar
+        leardingBar = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50 + CGFloat(UIDevice.current.Xdistance())))
+        self.view.addSubview(leardingBar)
+        
+        doneButton = UIButton()
+        doneButton.setFAIcon(icon: FAType.FAMinusCircle,iconSize: 30,forState: .normal)
+        doneButton.setTitleColor(.red, for: .normal)
+        doneButton.frame = CGRect(x: self.view.frame.width - 50, y: 10 + CGFloat(UIDevice.current.Xdistance()), width: 30, height: 30)
+        doneButton.addTarget(self, action: #selector(save(_:)), for: .touchDown)
+        self.leardingBar.addSubview(doneButton)
+        
+        //mode button
+        modeButton = UIButton(frame: CGRect(x: self.view.frame.width - 80, y: 10 + CGFloat(UIDevice.current.Xdistance()), width: 30, height: 30))
+        modeButton.setFAIcon(icon: FAType.FAEdit, iconSize: 30, forState: .normal)
+        modeButton.setTitleColor(.black, for: .normal)
+        modeButton.addTarget(self, action: #selector(modeChanged), for: .touchDown)
+        self.leardingBar.addSubview(modeButton)
+        
+        //addButton
+        addButton.setFAIcon(icon: .FAPlusCircle, iconSize: 50, forState: .normal)
+        addButton.setTitleColor(.black, for: .normal)
+        
+        //back color
         cardColor = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 150))
-        cardTitle.frame = CGRect(x: 0, y: cardColor.frame.height - 50, width: self.view.bounds.width*0.8, height: 50)
+        cardTitle.frame = CGRect(x: 0, y: cardColor.frame.height - 50, width: self.view.bounds.width*0.6, height: 50)
         cardTitle.textColor = .white
         cardTitle.backgroundColor = .clear
         cardTitle.center.x = self.view.bounds.width/2
@@ -287,7 +415,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         definitionLabel.textColor = .black
         
         definition.frame = CGRect(x: 0, y: definitionLabel.frame.origin.y + definitionLabel.frame.height + 20, width: self.view.bounds.width*0.8, height: 100)
-        definition.font = UIFont.systemFont(ofSize: 15)
+        definition.font = UIFont(name: "AmericanTypewriter", size: 18)
         definition.textColor = .black
         definition.backgroundColor = .black
         definition.center.x = self.view.bounds.width/2
@@ -302,7 +430,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         descriptionLabel.frame = CGRect(x: 20, y: definition.frame.origin.y + definition.frame.height + 20, width: self.view.bounds.width, height: 20)
         
         descriptions.frame = CGRect(x:0, y: descriptionLabel.frame.height + descriptionLabel.frame.origin.y + 20, width: self.view.bounds.width*0.8, height: 200)
-        descriptions.font = .systemFont(ofSize:15)
+        descriptions.font = UIFont(name: "AmericanTypewriter", size: 18)
         descriptions.textColor = .black
         descriptions.backgroundColor = .clear
         descriptions.center.x = self.view.bounds.width/2
@@ -344,14 +472,18 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         
         if card != nil{
             loadCard(card: card!)
+        }else{
+            cardColor.backgroundColor = Constant.Color.西瓜红
+            leardingBar.backgroundColor = Constant.Color.西瓜红
         }
     
        self.view.addSubview(scrollView)
         
         cumulatedheight = Int(descriptions.frame.origin.y + descriptions.frame.height)
         
+       
+        self.view.bringSubview(toFront: leardingBar)
         self.view.bringSubview(toFront: addButton)
-        self.view.bringSubview(toFront: doneButton)
         
         let centerDefault = NotificationCenter.default
         centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -369,12 +501,27 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         showPalette.numberOfTapsRequired = 1
         showPalette.numberOfTouchesRequired = 1
         pickerColorView.addGestureRecognizer(showPalette)
+        
+    }
+    
+    
+    @objc func modeChanged(){
+        if isEditMode{
+            isEditMode = false
+            modeButton.setFAIcon(icon: FAType.FAEye, forState: .normal)
+            for subCard in subCards{
+                subCard.observeMode()
+            }
+        }else{
+            isEditMode = true
+            modeButton.setFAIcon(icon: FAType.FAEdit, forState: .normal)
+            for subCard in subCards{
+                subCard.editMode()
+            }
+        }
     }
     
     @objc func getPickerViewValue(sender:UIButton){
-        pickerView.removeFromSuperview()
-        pickerColorView.removeFromSuperview()
-        sender.removeFromSuperview()
         ifPaletteShowed = false
         if attributedView != nil{
            /*deprecated
@@ -387,6 +534,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             let color = pickerColorView.backgroundColor
             attributedView?.setFontColor(color: color!)
         }
+        selectedTextView?.resignFirstResponder()
+        selectedTextView?.inputView = nil
+        selectedTextView?.becomeFirstResponder()
     }
     
     
@@ -406,27 +556,32 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             if attributedView != nil && attributedView?.superview != nil{
                 attributedView?.removeFromSuperview()
             }
-             if (selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && (selectedTextView?.superview?.isKind(of: CardView.ExaView.self))!{
-            attributedView = AttributedTextView(y: self.view.frame.height - height! - 30, textView: selectedTextView!)
+             if (selectedTextView?.superview?.isKind(of: CardView.TextView.self))! || (selectedTextView?.superview?.isKind(of: CardView.ExaView.self))!{
+            attributedView = AttributedTextView(y: self.view.frame.height - height! - 50, textView: selectedTextView!)
             attributedView?.delegate = self
             self.view.addSubview(attributedView!)
             }
-            //adjust the offset of the scrollview
-            var relativeHeight:CGFloat!
-            if !(selectedTextView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.ExaView.self))! && !(selectedTextView?.superview?.isKind(of: CardView.SubCardView.self))!{
-            relativeHeight = (selectedTextView?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedTextView?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
-            }else{
-            relativeHeight = (selectedTextView?.superview?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedTextView?.superview?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
-                
-            }
-            print(selectedTextView?.frame.origin.y)
-            let heightDifference = relativeHeight - (self.view.frame.height - height!)
-            if heightDifference > 0{
+           
+         }
+        
+        if selectedView != nil{
+        //adjust the offset of the scrollview
+        var relativeHeight:CGFloat!
+        
+        if !(selectedView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedView?.superview?.isKind(of: CardView.SubCardView.self))! && !(selectedView?.superview?.isKind(of: CardView.PicView.self))!{
+            relativeHeight = (selectedView?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedView?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
+        }else{
+            relativeHeight = (selectedView?.superview?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedView?.superview?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
+            
+        }
+        print(selectedView?.frame.origin.y)
+        let heightDifference = relativeHeight - (self.view.frame.height - height!)
+        if heightDifference > 0{
             UIView.animate(withDuration: 0.5) {
                 self.scrollView.contentOffset.y += heightDifference
             }
-            }
-    }
+        }
+        }
  
     }
     
@@ -455,6 +610,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         palette.parentView = sender.view
         palette.viewController = self
         sender.view?.addSubview(palette)
+        sender.view?.bringSubview(toFront: palette)
         ifPaletteShowed = true
         }else{
             for subView in (sender.view?.subviews)!{
@@ -493,10 +649,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         cardTitle.text = card.getTitle()
         cardColor.backgroundColor = card.getColor()
         tag.text = card.getTag()
-        definition.attributedText = NSAttributedString(string:card.getDefinition())
-        descriptions.attributedText = NSAttributedString(string:card.getDescription())
+        definition.text = card.getDefinition()
+        descriptions.text = card.getDescription()
         color = card.getColor()
         cardBackGround.backgroundColor = .white
+        leardingBar.backgroundColor = color
        // self.view.backgroundColor = color
         var cumulatedHeight = descriptions.frame.origin.y + descriptions.frame.height + 20
         for card in card.getChilds(){
@@ -519,6 +676,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             }else if card.isKind(of: PicCard.self){
                 let picCard = CardView.getSinglePicView(pic: card as! PicCard)
                 picCard.delegate = self
+                picCard.commentView.delegate = self
                 cardBackGround.addSubview(picCard)
                 subCards.append(picCard)
                // picCard.image.image = #imageLiteral(resourceName: "searchBar")
@@ -603,7 +761,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             }
             else{
          let cardView = CardView.getSubCardView(card)
-        cardView.delegate = self
+         cardView.delegate = self
          cardView.frame.origin.y = cumulatedHeight
          cardView.layer.shadowOpacity = 0.5
          cardView.layer.shadowColor = UIColor.black.cgColor
@@ -654,6 +812,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     @IBAction func save(_ sender: Any) {
+        
         if EditingSubCard.count >= 1{
             var index = 0
             if EditingSubCard.count > 1{
@@ -711,6 +870,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             UIView.commitAnimations()
             
         }else{
+            
         if self.type == CardEditor.type.add{
             var childs:[Card] = [Card]()
             if subCards.count >= 1{
@@ -802,7 +962,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let strNowTime = timeFormatter.string(from: date as Date) as String
-            let card = Card(title: cardTitle.text, tag: tag.text, description: descriptions.attributedText.string, id: UUID().uuidString, definition: definition.attributedText.string, color: color, cardType:Card.CardType.card.rawValue,modifytime:strNowTime)
+            let card = Card(title: cardTitle.text, tag: tag.text, description: descriptions.text, id: UUID().uuidString, definition: definition.text, color: cardColor.backgroundColor, cardType:Card.CardType.card.rawValue,modifytime:strNowTime)
             card.addChildNotes(childs)
             
              if !isSubCard{
@@ -817,6 +977,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
             url?.appendPathComponent(loggedID)
             url?.appendPathComponent("card.txt")
+               
             if let dateRead = try? Data.init(contentsOf: url!){
                 var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
                 if cardList == nil{
@@ -831,6 +992,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 }
             }
             }
+          
             
         }else if self.type == CardEditor.type.save{
             let manager = FileManager.default
@@ -848,7 +1010,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                 if card != nil{
                     
                     self.card?.setTitle(cardTitle.text)
-                    self.card?.setColor(color)
+                    self.card?.setColor(cardColor.backgroundColor!)
                     self.card?.setDefinition(definition.attributedText.string)
                     self.card?.setDescription(descriptions.attributedText.string)
                     self.card?.setTag(tag.text)
@@ -1079,6 +1241,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     
+/** picView
+ 
+ */
     @objc func addPic(){
         let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -1106,6 +1271,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         
         self.present(alertSheet, animated: true, completion: nil)
     }
+    
+    
     
     @objc func updatePic(_ sender:UITapGestureRecognizer){
         selectedPictureView = sender.view as! CardView.PicView
@@ -1137,7 +1304,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         //获得照片
-       
         if picTureAction == "addPic"{
         print("get Photo")
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
@@ -1157,6 +1323,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         picView.layer.shadowColor = UIColor.black.cgColor
         picView.layer.shadowOpacity = 0.5
         picView.layer.shadowOffset = CGSize(width:1,height:1)
+            picView.delegate = self
+            picView.commentView.delegate = self
             if subCards.count > 0{
                 picView.frame.origin.y = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
         
@@ -1188,6 +1356,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             let movieCard = MovieCard(id: id)
            // movieCard.path = videoURL.path
             let movieView = CardView.getSingleMovieView(card: movieCard)
+            movieView.delegate = self
             if subCards.count > 0{
                 movieView.frame.origin.y = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
                 
@@ -1201,6 +1370,15 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             
         }
          self.dismiss(animated: true, completion: nil)
+    }
+    
+    func cardView(commentHide picView: CardView.PicView) {
+        reLoad()
+    }
+    
+    func cardView(commentShowed picView: CardView.PicView) {
+       reLoad()
+       picView.commentView.becomeFirstResponder()
     }
     
     @objc func addCard(){
@@ -1266,6 +1444,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         let exampleCard = ExampleCard()
         let exaView = CardView.singleExampleView(card:exampleCard)
          exaView.textView.delegate = self
+         exaView.delegate = self
         if subCards.count < 1{
             exaView.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
             self.cardBackGround.addSubview(exaView)
@@ -1282,6 +1461,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         let textCard = TextCard()
         let textView = CardView.getSingleTextView(card:textCard)
         textView.textView.delegate = self
+        textView.delegate = self
         textView.addSubview(textView.textView)
         if subCards.count < 1{
             textView.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
@@ -1326,6 +1506,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     @objc func addVoice(){
         let voiceCard = VoiceCard(id: UUID().uuidString)
         let voiceView = CardView.getSingleVoiceView(card: voiceCard)
+        voiceView.delegate = self
         if subCards.count < 1{
             voiceView.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
             self.cardBackGround.addSubview(voiceView)
@@ -1339,24 +1520,136 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
     }
     
     @objc func addMap(){
-        let picker = UIMapPicker()
+        let picker = UIMapPickerWithMapBox()
         picker.delegate = self
         mapAction = "add"
-        picker.action = UIMapPicker.Action.add.rawValue
+        picker.action = UIMapPickerWithMapBox.Action.add
         self.present(picker, animated: false, completion: nil)
     }
     
     @objc func updateMap(_ sender:UITapGestureRecognizer){
         let mapView = sender.view as! CardView.MapCardView
-        let picker = UIMapPicker()
-         picker.action = UIMapPicker.Action.update.rawValue
-         picker.latitude = (mapView.card as! MapCard).latitude
-         picker.longitude = (mapView.card as! MapCard).longitude
+        let picker = UIMapPickerWithMapBox()
+         picker.action = UIMapPickerWithMapBox.Action.update
+        picker.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees((mapView.card as! MapCard).latitude!), longitude: CLLocationDegrees((mapView.card as! MapCard).longitude!))
+        picker.name = (mapView.card as! MapCard).neibourAddress
          picker.delegate = self
          mapAction = "update"
          selectedMapView = mapView
         self.present(picker,animated:false,completion: nil)
         
+    }
+    
+    func UIMapDidSelected(image: UIImage, place: Placemark?) {
+        if mapAction == "add"{
+            let id = UUID().uuidString
+            let imageData = UIImageJPEGRepresentation(image, 0.5)
+            let manager = FileManager.default
+            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+            url?.appendPathComponent(loggedID)
+            url?.appendPathComponent("mapPic")
+            try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
+            url?.appendPathComponent(id + ".jpg")
+            do{
+                try? imageData?.write(to: url!)
+            }catch let err{
+                print(err.localizedDescription)
+            }
+            let mapCard = MapCard(id:id,placeMark:place!)
+            let mapview = CardView.getSingleMapView(card: mapCard)
+            mapview.delegate = self
+            if subCards.count < 1{
+                mapview.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
+                self.cardBackGround.addSubview(mapview)
+            }else if subCards.count >= 1{
+                mapview.frame.origin.y = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
+                self.cardBackGround.addSubview(mapview)
+            }
+            let tapgesture = UITapGestureRecognizer(target: self, action: #selector(updateMap))
+            tapgesture.numberOfTapsRequired = 1
+            tapgesture.numberOfTouchesRequired = 1
+            mapview.addGestureRecognizer(tapgesture)
+            subCards.append(mapview)
+            cardBackGround.frame.size.height = mapview.frame.origin.y + mapview.frame.height + 20
+            scrollView.contentSize.height = mapview.frame.origin.y + mapview.frame.height + 20
+        }else if mapAction == "update"{
+            selectedMapView?.image.image = image
+            let mapCard = (selectedMapView?.card as! MapCard)
+            mapCard.image = image
+            mapCard.formalAddress = place?.address == nil ? "" : (place?.address)!
+            mapCard.neibourAddress = (place?.name)!
+            mapCard.latitude = CGFloat((place?.location?.coordinate.latitude)!)
+            mapCard.longitude = CGFloat((place?.location?.coordinate.longitude)!)
+            let manager = FileManager.default
+            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+            url?.appendPathComponent(loggedID)
+            url?.appendPathComponent("mapPic")
+            try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
+            url?.appendPathComponent(mapCard.getId() + ".jpg")
+            let imageData = UIImageJPEGRepresentation(image, 0.5)
+            do{
+                try? imageData?.write(to: url!)
+            }catch let err{
+                print(err.localizedDescription)
+            }
+            
+        }
+    }
+    
+    func UIMapDidSelected(image: UIImage, name: String, address: String, coordinate: CLLocationCoordinate2D) {
+        if mapAction == "add"{
+            let id = UUID().uuidString
+            let imageData = UIImageJPEGRepresentation(image, 0.5)
+            let manager = FileManager.default
+            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+            url?.appendPathComponent(loggedID)
+            url?.appendPathComponent("mapPic")
+            try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
+            url?.appendPathComponent(id + ".jpg")
+            do{
+                try? imageData?.write(to: url!)
+            }catch let err{
+                print(err.localizedDescription)
+            }
+            let mapCard = MapCard(id: id, formalAddress: address, neighbourAddress: name, longitude: CGFloat(coordinate.longitude), latitude: CGFloat(coordinate.latitude))
+            let mapview = CardView.getSingleMapView(card: mapCard)
+            mapview.delegate = self
+            if subCards.count < 1{
+                mapview.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
+                self.cardBackGround.addSubview(mapview)
+            }else if subCards.count >= 1{
+                mapview.frame.origin.y = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
+                self.cardBackGround.addSubview(mapview)
+            }
+            let tapgesture = UITapGestureRecognizer(target: self, action: #selector(updateMap))
+            tapgesture.numberOfTapsRequired = 1
+            tapgesture.numberOfTouchesRequired = 1
+            mapview.addGestureRecognizer(tapgesture)
+            subCards.append(mapview)
+            cardBackGround.frame.size.height = mapview.frame.origin.y + mapview.frame.height + 20
+            scrollView.contentSize.height = mapview.frame.origin.y + mapview.frame.height + 20
+        }else if mapAction == "update"{
+            selectedMapView?.image.image = image
+            let mapCard = (selectedMapView?.card as! MapCard)
+            mapCard.image = image
+            mapCard.formalAddress = address
+            mapCard.neibourAddress = name
+            mapCard.latitude = CGFloat(coordinate.latitude)
+            mapCard.longitude = CGFloat(coordinate.longitude)
+            let manager = FileManager.default
+            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+            url?.appendPathComponent(loggedID)
+            url?.appendPathComponent("mapPic")
+            try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
+            url?.appendPathComponent(mapCard.getId() + ".jpg")
+            let imageData = UIImageJPEGRepresentation(image, 0.5)
+            do{
+                try? imageData?.write(to: url!)
+            }catch let err{
+                print(err.localizedDescription)
+            }
+            
+        }
     }
     
     func UIMapDidSelected(image:UIImage,poi:AMapPOI?,formalAddress:String) {
@@ -1374,8 +1667,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
         }catch let err{
             print(err.localizedDescription)
         }
-        let mapCard = MapCard(poi: poi, formalAddress: formalAddress, id:id)
+            let mapCard = MapCard(poi: poi, formalAddress: formalAddress, id: id)
         let mapview = CardView.getSingleMapView(card: mapCard)
+            mapview.delegate = self
         if subCards.count < 1{
             mapview.frame.origin.y = descriptions.frame.origin.y + descriptions.frame.height + 20
             self.cardBackGround.addSubview(mapview)
@@ -1394,6 +1688,14 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
             selectedMapView?.image.image = image
             let mapCard = (selectedMapView?.card as! MapCard)
             mapCard.image = image
+            mapCard.formalAddress = formalAddress
+            if poi != nil{
+                mapCard.neibourAddress = (poi?.name)!
+            }else{
+            mapCard.neibourAddress = formalAddress
+            }
+            mapCard.latitude = poi?.location.latitude
+            mapCard.longitude = poi?.location.longitude
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
             url?.appendPathComponent(loggedID)

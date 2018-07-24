@@ -12,9 +12,10 @@ import UIKit
 class Constant{
     struct Configuration{
         static let version = 1.0
+        static let sharedSecret = "95b689872bae44ff9de22d57f3b5510c"
         struct url {
             static let manager = FileManager.default
-            static var url = (manager.urls(for: .documentDirectory, in:.userDomainMask).first)!
+            static var url = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)
             static var user:URL = url.appendingPathComponent(loggedID)
             static let Card:URL = user
             static let PicCard:URL = user
@@ -24,10 +25,25 @@ class Constant{
             static let temporary:URL = url.appendingPathComponent("temp")
             static let attributedText = url.appendingPathComponent("attr")
         }
+        static var AccountPlan:String = ""
     }
+    
     enum TextMode {
-        case PlaceHolderMode
-        case EditingMode
+        case UnorderedListStartMode
+        case UnorderedListMode
+        case UnorderedListEndMode
+        case OrderedListStartMode
+        case OrderedListEndMode
+        case OrderedListMode
+        case ItalicMode
+        case BoldMode
+        case UnderLineMode
+        case StrokeMode
+    }
+    
+    enum AccountPlan:String{
+        case premium = "premium"
+        case basic = "basic"
     }
     
     struct Color{

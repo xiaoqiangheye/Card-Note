@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapboxGeocoder
 class MapCard:Card{
     var poi:AMapPOI?
     var formalAddress:String
@@ -62,6 +63,25 @@ class MapCard:Card{
             }
         }
         self.imagePath = (url?.path)!
+    }
+    
+    init(id:String,placeMark:Placemark){
+        self.neibourAddress = placeMark.name
+        self.formalAddress = placeMark.address == nil ? "" : placeMark.address!
+        self.latitude = CGFloat((placeMark.location?.coordinate.latitude)!)
+        self.longitude = CGFloat((placeMark.location?.coordinate.longitude)!)
+        self.image = #imageLiteral(resourceName: "searchBar")
+        super.init(title: "", tag: "", description: "", id: id, definition: "", color: .white, cardType: "map", modifytime: "")
+        let url = Constant.Configuration.url.Map.appendingPathComponent(id + ".jpg")
+         let manager = FileManager.default
+        if manager.fileExists(atPath: (url.path))
+        {
+            let image = UIImage(contentsOfFile: (url.path))
+            if image != nil{
+                self.image = image!
+            }
+        }
+        self.imagePath = url.path
     }
     
     required init?(coder aDecoder: NSCoder) {

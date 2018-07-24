@@ -12,15 +12,19 @@ PODS:
     - ChameleonFramework/Default
   - Font-Awesome-Swift (1.7.2)
   - Hero (1.2.0)
+  - Mapbox-iOS-SDK (4.2.0)
+  - MapboxGeocoder.swift (0.9.0)
   - QCloudCore (5.4.3)
   - QCloudCOSXML (5.4.3):
     - QCloudCore (= 5.4.3)
     - QCloudCOSXML/Transfer (= 5.4.3)
   - QCloudCOSXML/Transfer (5.4.3):
     - QCloudCore (= 5.4.3)
+  - RAMPaperSwitch (2.1.0)
   - SCLAlertView (0.8)
   - Spring (1.0.5)
   - SwiftMessages (4.1.2)
+  - SwiftyStoreKit (0.13.2)
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
@@ -30,13 +34,17 @@ DEPENDENCIES:
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
   - Font-Awesome-Swift (~> 1.7.2)
   - Hero (~> 1.2.0)
+  - Mapbox-iOS-SDK (~> 4.2)
+  - MapboxGeocoder.swift (~> 0.9)
   - QCloudCOSXML
+  - RAMPaperSwitch
   - SCLAlertView
   - Spring (from `https://github.com/MengTo/Spring.git`)
   - SwiftMessages
+  - SwiftyStoreKit
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - Alamofire
     - AMap2DMap
     - AMapFoundation
@@ -44,10 +52,14 @@ SPEC REPOS:
     - AMapSearch
     - Font-Awesome-Swift
     - Hero
+    - Mapbox-iOS-SDK
+    - MapboxGeocoder.swift
     - QCloudCore
     - QCloudCOSXML
+    - RAMPaperSwitch
     - SCLAlertView
     - SwiftMessages
+    - SwiftyStoreKit
 
 EXTERNAL SOURCES:
   ChameleonFramework:
@@ -72,12 +84,16 @@ SPEC CHECKSUMS:
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   Font-Awesome-Swift: 83ab9db365379ee6025167cec67bdc5d3226a811
   Hero: 33dadf2cd1c98af71e213dcbc2902e6e03622a4e
+  Mapbox-iOS-SDK: 706d52e3ad095e16944d9643f37d5a97627f6c19
+  MapboxGeocoder.swift: 66d2e5e452c5de6b65ea9b01be436d1c5f100b7e
   QCloudCore: 91bff302e250f7f0066bcca8d9e5c3f3b75e9f78
   QCloudCOSXML: 45d66cd7ceb4ad64d4411f882996b77356ebbb76
+  RAMPaperSwitch: ef08af0400a040c9850e09253280deb77510becb
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   Spring: 3c7666eccefdeb87140008dc81043f89f8dbb787
   SwiftMessages: d81f48c1f8b6bc1dbebdfffe11226f0344f937ca
+  SwiftyStoreKit: b7563505440a68c9d9fa70bc43d8a97015519409
 
-PODFILE CHECKSUM: b811c7145f9621b30489fc7c1d76aee6174bc81f
+PODFILE CHECKSUM: 9507fbe767b525ec5b2b301c39c36ca291df3028
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3
