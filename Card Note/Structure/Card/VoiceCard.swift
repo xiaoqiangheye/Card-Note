@@ -30,6 +30,7 @@ class VoiceCard:Card{
         super.init(coder: aDecoder)
       //  self.voicepath = (aDecoder.decodeObject(forKey: "voicePath") as? String)!
         self.voiceManager = RecordManager(userID: loggedID, fileName: "\(self.getId()).wav")
+        voicepath.append(contentsOf: "/\(self.getId()).wav")
         let state = aDecoder.decodeObject(forKey: "state") as? String
         if state != nil{
             self.voiceManager?.state = RecordManager.State(rawValue:state!)!

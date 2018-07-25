@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyStoreKit
 import StoreKit
+import SwiftMessages
 
 class PurchaseManager{
     enum Product:String{
@@ -75,6 +76,30 @@ class PurchaseManager{
                     UserDefaults.standard.synchronize()
                     Constant.Configuration.AccountPlan = Constant.AccountPlan.premium.rawValue
                     print("\(productIds) are valid until \(expiryDate)\n\(items)\n")
+                    
+                    if UserDefaults.standard.bool(forKey: "auto-sync") && isPremium(){
+                        sync { (ifSuccess, error) in
+                            if ifSuccess{
+                                
+                            }else{
+                                let view = MessageView.viewFromNib(layout: .cardView)
+                                // Theme message elements with the warning style.
+                                view.configureTheme(.error)
+                                
+                                // Add a drop shadow.
+                                view.configureDropShadow()
+                                
+                                view.button?.removeFromSuperview()
+                                // Set message title, body, and icon. Here, we're overriding the default warning
+                                // image with an emoji character.
+                                
+                                view.configureContent(title: "Error", body: "Sync failed.", iconText: "")
+                                
+                                // Show the message.
+                                SwiftMessages.show(view: view)
+                            }
+                        }
+                    }
                 case .expired(let expiryDate, let items):
                     UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue, forKey: "accountPlan")
                     Constant.Configuration.AccountPlan = Constant.AccountPlan.basic.rawValue

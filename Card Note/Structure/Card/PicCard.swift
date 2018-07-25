@@ -20,10 +20,10 @@ class PicCard:Card{
        // self.pic = aDecoder.decodeObject(forKey: "pic") as? UIImage
         super.init(coder: aDecoder)
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-        url?.appendPathComponent(self.getId() + ".jpg")
-        let im = UIImage(named: (url?.path)!)
+        var url = Constant.Configuration.url.PicCard
+        url.appendPathComponent(loggedID)
+        url.appendPathComponent(self.getId() + ".jpg")
+        let im = UIImage(named: (url.path))
         if im != nil{
             self.pic = im
         }else{
@@ -39,7 +39,7 @@ class PicCard:Card{
             */
             User.downloadPhotosUsingQCloud(email: loggedemail, cardID: self.getId()) { (bool, error) in
                 if bool{
-                    self.pic = UIImage(contentsOfFile: (url?.path)!)
+                    self.pic = UIImage(contentsOfFile: (url.path))
                 }
             }
         }

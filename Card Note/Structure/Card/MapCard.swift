@@ -28,10 +28,10 @@ class MapCard:Card{
         self.latitude = poi?.location.latitude
         self.longitude = poi?.location.longitude
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-        url?.appendPathComponent("mapPic")
-        url?.appendPathComponent(id + ".jpg")
+        var url = Constant.Configuration.url.Map
+        url.appendPathComponent(loggedID)
+        url.appendPathComponent("mapPic")
+        url.appendPathComponent(id + ".jpg")
         self.imagePath = (url?.path)!
         if self.imagePath == nil{
             self.image = #imageLiteral(resourceName: "searchBar")

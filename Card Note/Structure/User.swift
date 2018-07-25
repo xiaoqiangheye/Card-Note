@@ -149,10 +149,9 @@ class User:NSObject,URLSessionDelegate{
          if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
-        url?.appendPathComponent(cardID + ".jpg")
+        var url = Constant.Configuration.url.PicCard
+         try? manager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        url.appendPathComponent(cardID + ".jpg")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
         request.object = "userImage/" + email + "/" + cardID + ".jpg"
@@ -175,11 +174,9 @@ class User:NSObject,URLSessionDelegate{
          if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-        url?.appendPathComponent("mapPic")
-         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
-        url?.appendPathComponent(cardID + ".jpg")
+        var url = Constant.Configuration.url.Map
+         try? manager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        url.appendPathComponent(cardID + ".jpg")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
         request.object = "userImage/" + email + "/" + cardID + ".jpg"
@@ -202,11 +199,9 @@ class User:NSObject,URLSessionDelegate{
          if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-        url?.appendPathComponent("audio")
-         try? manager.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
-        url?.appendPathComponent(cardID + ".wav")
+        var url = Constant.Configuration.url.Audio
+         try? manager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        url.appendPathComponent(cardID + ".wav")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
         request.object = "userAudio/" + email + "/" + cardID + ".wav"

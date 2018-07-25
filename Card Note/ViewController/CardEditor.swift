@@ -879,13 +879,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                     childs.append(card.card)
                     if card.isKind(of: CardView.PicView.self){
                         let manager = FileManager.default
-                        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                        url?.appendPathComponent(loggedID)
-                        url?.appendPathComponent(card.card.getId() + ".jpg")
-                        if manager.fileExists(atPath: (url?.path)!){                           // User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
+                        var url = Constant.Configuration.url.PicCard
+                        url.appendPathComponent(card.card.getId() + ".jpg")
+                        if manager.fileExists(atPath: (url.path)){                           // User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
                            // User.uploadPhotoUsingFTP(url: url!)
                             //deprecated above
-                            User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
+                            User.uploadPhotoUsingQCloud(email: loggedemail, url: url)
                         }
                     }else if card.isKind(of: CardView.ExaView.self){
                         /**deprecated in 6.13
@@ -927,28 +926,26 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
  
                     }else if card.isKind(of: CardView.VoiceCardView.self){
                         let manager = FileManager.default
-                        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                        url?.appendPathComponent(loggedID)
-                        url?.appendPathComponent("audio")
-                        url?.appendPathComponent(card.card.getId() + ".wav")
-                        if manager.fileExists(atPath: (url?.path)!){
-                            User.uploadAudioUsingQCloud(email: loggedemail, url: url!)
+                        var url = Constant.Configuration.url.Audio
+                        url.appendPathComponent(card.card.getId() + ".wav")
+                        if manager.fileExists(atPath: (url.path)){
+                            User.uploadAudioUsingQCloud(email: loggedemail, url: url)
                         }
                     }else if card.isKind(of: CardView.MapCardView.self){
                         let manager = FileManager.default
-                        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                        url?.appendPathComponent(loggedID)
-                        url?.appendPathComponent("mapPic")
-                        url?.appendPathComponent(card.card.getId() + ".jpg")
-                        if manager.fileExists(atPath: (url?.path)!){
-                            User.uploadPhotoUsingQCloud(email: loggedemail, url: url!)
+                        var url = Constant.Configuration.url.Map
+                        url.appendPathComponent(card.card.getId() + ".jpg")
+                        if manager.fileExists(atPath: (url.path)){
+                            User.uploadPhotoUsingQCloud(email: loggedemail, url: url)
                         }
-                        else if card.isKind(of: CardView.MovieView.self){
+                        
+                    }else if card.isKind(of: CardView.MovieView.self){
+                        let manager = FileManager.default
+                        var url = Constant.Configuration.url.Movie
+                        url.appendPathComponent(card.card.getId() + ".mov")
                             if manager.fileExists(atPath:((card.card as! MovieCard).path)){
-                                
-                                User.uploadMovieUsingQCloud(email: loggedemail, url: url!)
+                                User.uploadMovieUsingQCloud(email: loggedemail, url: url)
                             }
-                        }
                     }else if card.isKind(of: CardView.SubCardView.self){
                         let sub = card.card
                         let view = card as! CardView.SubCardView
@@ -1038,14 +1035,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIScrollViewDelegate,UIImag
                             User.uploadAttrUsingQCloud(url:url)
                         }else if card.isKind(of: CardView.VoiceCardView.self){
                             let manager = FileManager.default
-                            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                            url?.appendPathComponent(loggedID)
-                            url?.appendPathComponent("audio")
-                            url?.appendPathComponent(card.card.getId() + ".wav")
-                            if manager.fileExists(atPath: (url?.path)!){
+                            var url = Constant.Configuration.url.Audio
+                            url.appendPathComponent(card.card.getId() + ".wav")
+                            if manager.fileExists(atPath: (url.path)){
                             
                                // User.uploadAudioWithAF(email: loggedemail, filePath: (url?.path)!, cardID: card.card.getId())
-                                User.uploadAudioUsingQCloud(email: loggedemail, url: url!)
+                                User.uploadAudioUsingQCloud(email: loggedemail, url: url)
                             }
                         }else if card.isKind(of: CardView.MapCardView.self){
                             let manager = FileManager.default

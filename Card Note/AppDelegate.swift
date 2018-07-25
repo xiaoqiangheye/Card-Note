@@ -130,13 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
                 let tags = [String]()
                 UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
             }
-            if UserDefaults.standard.string(forKey: "accountPlan") != "basic"{
-                PurchaseManager.verifySubscriptions(types: PurchaseManager.products)
-            }else{
-                UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue,forKey: "accountPlan")
-                   UserDefaults.standard.synchronize()
-                Constant.Configuration.AccountPlan = Constant.AccountPlan.basic.rawValue
-            }
+           PurchaseManager.verifySubscriptions(types: PurchaseManager.products)
         }
         
         SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
