@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Arabic</key>
+	<string>ar</string>
+	<key>Belarusian</key>
+	<string>be</string>
+	<key>Bulgarian</key>
+	<string>bg</string>
+	<key>Bengali</key>
+	<string>bn</string>
+	<key>Catalan</key>
+	<string>ca</string>
+	<key>Czech</key>
+	<string>cs</string>
+	<key>Danish</key>
+	<string>da</string>
+	<key>German</key>
+	<string>de</string>
+	<key>Greek</key>
+	<string>el</string>
+	<key>English</key>
+	<string>en</string>
+	<key>English (Australian)</key>
+	<string>en-Au</string>
+	<key>English (Great Britain)</key>
+	<string>en-GB</string>
+	<key>Spanish</key>
+	<string>es</string>
+	<key>Basque</key>
+	<string>eu</string>
+	<key>Farsi</key>
+	<string>fa</string>
+	<key>Finnish</key>
+	<string>fi</string>
+	<key>Filipino</key>
+	<string>fil</string>
+	<key>French</key>
+	<string>fr</string>
+	<key>Galician</key>
+	<string>gl</string>
+	<key>Gujarati</key>
+	<string>gu</string>
+	<key>Hindi</key>
+	<string>hi</string>
+	<key>Croatian</key>
+	<string>hr</string>
+	<key>Hungarian</key>
+	<string>hu</string>
+	<key>Indonesian</key>
+	<string>id</string>
+	<key>Italian</key>
+	<string>it</string>
+	<key>Hebrew</key>
+	<string>iw</string>
+	<key>Japanese</key>
+	<string>ja</string>
+	<key>Kazakh</key>
+	<string>kk</string>
+	<key>Kannada</key>
+	<string>kn</string>
+	<key>Korean</key>
+	<string>ko</string>
+	<key>Kyrgyz</key>
+	<string>ky</string>
+	<key>Lithuanian</key>
+	<string>lt</string>
+	<key>Latvian</key>
+	<string>lv</string>
+	<key>Macedonian</key>
+	<string>mk</string>
+	<key>Malayalam</key>
+	<string>ml</string>
+	<key>Marathi</key>
+	<string>mr</string>
+	<key>Burmese</key>
+	<string>my</string>
+	<key>Dutch</key>
+	<string>nl</string>
+	<key>Norwegian</key>
+	<string>no</string>
+	<key>Punjabi</key>
+	<string>pa</string>
+	<key>Polish</key>
+	<string>pl</string>
+	<key>Portuguese</key>
+	<string>pt</string>
+	<key>Portuguese (Brazil)</key>
+	<string>pt-BR</string>
+	<key>Portuguese (Portugal)</key>
+	<string>pt-PT</string>
+	<key>Romanian</key>
+	<string>ro</string>
+	<key>Russian</key>
+	<string>ru</string>
+	<key>Slovak</key>
+	<string>sk</string>
+	<key>Slovenian</key>
+	<string>sl</string>
+	<key>Serbian</key>
+	<string>sr</string>
+	<key>Swedish</key>
+	<string>sv</string>
+	<key>Tamil</key>
+	<string>ta</string>
+	<key>Telugu</key>
+	<string>te</string>
+	<key>Thai</key>
+	<string>th</string>
+	<key>Tagalog</key>
+	<string>tl</string>
+	<key>Turkish</key>
+	<string>tr</string>
+	<key>Ukrainian</key>
+	<string>uk</string>
+	<key>Uzbek</key>
+	<string>uz</string>
+	<key>Vietnamese</key>
+	<string>vi</string>
+	<key>Chinese (Simlified)</key>
+	<string>zh-CN</string>
+	<key>Chinese (Traditional)</key>
+	<string>zh-TW</string>
+</dict>
+</plist>

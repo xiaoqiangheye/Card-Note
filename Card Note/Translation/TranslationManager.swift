@@ -8,6 +8,108 @@
 
 import Foundation
 class TranslationManager{
+    class func gTranslate(text:String,toLanguage:String,completionHandler:@escaping (String?)->()){
+        let strToTranslate = "他们是这样说的";
+        let googleTransBaseUrl = "http://translate.google.cn/translate_a/t?";
+        var googleTransUrl = googleTransBaseUrl
+        googleTransUrl  += "&client=" + "t"
+        googleTransUrl += "&text=" + strToTranslate
+        googleTransUrl += "&hl=" + "zh-CN"
+        googleTransUrl += "&sl=" + "auto"// source   language
+        googleTransUrl += "&tl=" + toLanguage  // to       language
+        googleTransUrl += "&ie=" + "UTF-8"   // input    encode
+        googleTransUrl += "&oe=" + "UTF-8"    // output   encode
+        var request = URLRequest(url: URL(string: googleTransUrl)!)
+        request.httpMethod = "GET"
+        let urlsession = URLSession.shared
+        let dataTask = urlsession.dataTask(with: request) { (data, response, error) in
+            
+        }
+        dataTask.resume()
+    }
+    
+    class func translate(text:String,from:String,to:String,completionHandler:@escaping (String?)->()){
+        let yd = YDTranslateInstance.shared()
+        yd?.appKey = "0388377d12128473"
+        var results = ""
+        let translateRequest = YDTranslateRequest()
+        let parameters = YDTranslateParameters.targeting()
+        parameters?.source = "youdaosw"
+        if from.contains("zh"){
+            parameters?.from = .chinese
+        }else if from.contains("en"){
+            parameters?.from = .english
+        }
+        else if from.contains("fr"){
+            parameters?.from = .french
+        }
+        else if from.contains("pt"){
+            parameters?.from = .portuguese
+        }
+        else if from.contains("ja"){
+            parameters?.from = .japanese
+        }
+        else if from.contains("ko"){
+            parameters?.from = .korean
+        }
+        else if from.contains("ru"){
+            parameters?.from = .russian
+        }
+        else if from.contains("es"){
+            parameters?.from = .spanish
+        }
+        else if from.contains("vi"){
+            parameters?.from = .vietnamese
+        }else{
+            parameters?.from = .auto
+        }
+        
+    
+        if to.contains("zh"){
+            parameters?.to = .chinese
+        }else if to.contains("en"){
+            parameters?.to = .english
+        }
+        else if to.contains("fr"){
+            parameters?.to = .french
+        }
+        else if to.contains("pt"){
+            parameters?.to = .portuguese
+        }
+        else if to.contains("ja"){
+            parameters?.to = .japanese
+        }
+        else if to.contains("ko"){
+            parameters?.to = .korean
+        }
+        else if to.contains("ru"){
+            parameters?.to = .russian
+        }
+        else if to.contains("es"){
+            parameters?.to = .spanish
+        }
+        else if to.contains("vi"){
+            parameters?.to = .vietnamese
+        }else{
+            parameters?.to = .english
+        }
+        translateRequest.translateParameters = parameters
+        translateRequest.lookup(text) { (request, response, error) in
+            if error == nil{
+                let string = response?.translation[0]
+                if string != nil{
+                    DispatchQueue.main.async {
+                        results = string as! String
+                        completionHandler(results)
+                    }
+                }else{
+                    completionHandler(nil)
+                }
+            }else{
+                completionHandler(nil)
+            }
+        }
+    }
     
     class func translate(text:String,completionHandler:@escaping (String?)->()){
         let yd = YDTranslateInstance.shared()

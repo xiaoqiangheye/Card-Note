@@ -36,6 +36,8 @@ class LocationListView:UIView,UIScrollViewDelegate{
         var neighbourhood:UILabel = UILabel()
         var standardFormat:UILabel = UILabel()
         var poi:AMapPOI!
+        var latitude:CLLocationDegrees?
+        var longitude:CLLocationDegrees?
         override init(frame: CGRect) {
             super.init(frame: frame)
             self.backgroundColor = .white
@@ -78,9 +80,45 @@ class LocationListView:UIView,UIScrollViewDelegate{
     @objc func cellDidClicked(_ sender:UITapGestureRecognizer){
         let cell:LocationCellView = sender.view as! LocationCellView
         if delegate != nil{
-            delegate?.cell(cellDidClicked: cell, Pois: cell.poi)
+            if cell.poi != nil{
+            delegate?.cell?(cellDidClicked: cell, Pois: cell.poi)
+            }else{
+            delegate?.cell?(cellDidClicked: cell)
+            }
         }
         self.isHidden = true
+    }
+    
+    
+    func loadViewWithKeyandAddress(suggestion:[BMKSuggestionInfo]?){
+        if suggestion == nil{return}
+        cumulatedheight = 0
+        scrollView.contentSize.height = 0
+        for view in scrollView.subviews{
+            view.removeFromSuperview()
+        }
+        var index = 0
+        for info in suggestion!{
+            let cell = LocationCellView(frame: CGRect(x: 0, y: CGFloat(cumulatedheight), width: self.frame.width, height: self.frame.height/10))
+            cell.neighbourhood.text = info.key
+            if info.address != nil{
+            cell.standardFormat.text = info.address
+            }else{
+            cell.standardFormat.text = info.key
+            }
+            cell.latitude = info.location.latitude
+            cell.longitude = info.location.longitude
+
+            self.scrollView.addSubview(cell)
+            cumulatedheight += Int(cell.frame.height)
+            self.scrollView.contentSize.height += cell.frame.height
+            let tap = UITapGestureRecognizer()
+            tap.numberOfTapsRequired = 1
+            tap.numberOfTouchesRequired = 1
+            tap.addTarget(self, action: #selector(cellDidClicked))
+            cell.addGestureRecognizer(tap)
+            index += 1
+        }
     }
     
     func loadViewWithPOI(pois:[AMapPOI]){
@@ -106,6 +144,32 @@ class LocationListView:UIView,UIScrollViewDelegate{
             tap.addTarget(self, action: #selector(cellDidClicked))
             cell.addGestureRecognizer(tap)
         }
+    }
+    
+    func loadViewWithPOI(pois:[BMKPoiInfo]?){
+        if pois == nil{return}
+        cumulatedheight = 0
+        scrollView.contentSize.height = 0
+        for view in scrollView.subviews{
+            view.removeFromSuperview()
+        }
+        for poi in pois!{
+            let cell = LocationCellView(frame: CGRect(x: 0, y: CGFloat(cumulatedheight), width: self.frame.width, height: self.frame.height/10))
+            cell.neighbourhood.text = poi.name
+            cell.standardFormat.text = poi.address
+            cell.latitude = poi.pt.latitude
+            cell.longitude = poi.pt.longitude
+            self.scrollView.addSubview(cell)
+            cumulatedheight += Int(cell.frame.height)
+            self.scrollView.contentSize.height += cell.frame.height
+            
+            let tap = UITapGestureRecognizer()
+            tap.numberOfTapsRequired = 1
+            tap.numberOfTouchesRequired = 1
+            tap.addTarget(self, action: #selector(cellDidClicked))
+            cell.addGestureRecognizer(tap)
+        }
+        
     }
     
 }

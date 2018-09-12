@@ -22,8 +22,9 @@ var signUpEmail = ""
 var signUpPassword = ""
 var signUpUsername = ""
 var signUpAuthCode = ""
+var isFirstLaunch = true
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
+class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,BMKGeneralDelegate,BMKLocationAuthDelegate{
     func signature(with fileds: QCloudSignatureFields!, request: QCloudBizHTTPRequest!, urlRequest urlRequst: NSMutableURLRequest!, compelete continueBlock: QCloudHTTPAuthentationContinueBlock!) {
         let credential = QCloudCredential()
         credential.secretID = "AKIDCRdjfPSdQAkAORR6f3FSYVGrJnAZvyWx"
@@ -81,6 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //Tencent Cloud
       let configuration = QCloudServiceConfiguration()
         configuration.appID = "1253464939"
        configuration.signatureProvider = self
@@ -97,19 +99,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider{
         }
         
         //map setting
+        //gao de
         AMapServices.shared().apiKey = "cd1079b6f89a637f97e367d5b2baa101"
+        let mapManager = BMKMapManager()
+         BMKLocationAuth.sharedInstance()?.checkPermision(withKey: "gB7SGt9F65EgmkiWWcaHtLaxssYpyCLx", authDelegate: self)
+        //Baidu
+        let ret = mapManager.start("gB7SGt9F65EgmkiWWcaHtLaxssYpyCLx", generalDelegate: self)
+        if ret == false {
+            NSLog("manager start failed!")
+        }
+        if BMKMapManager.setCoordinateTypeUsedInBaiduMapSDK(BMK_COORD_TYPE.COORDTYPE_BD09LL) {
+            NSLog("经纬度类型设置成功");
+        } else {
+            NSLog("经纬度类型设置失败");
+        }
         
+    
         //directory setting
         createDirectory()
         
         //if lauchedsetting
-        let ifLauched = UserDefaults.standard.bool(forKey: "ifLauched")
+        isFirstLaunch = UserDefaults.standard.bool(forKey: "ifLauched")
         let ifUpdateFirstLauch = isUpdateFirstLaunch()
         if ifUpdateFirstLauch{
             //add some settings
         }
         
-        if !ifLauched{
+        if !isFirstLaunch{
         UserDefaults.standard.set(true, forKey: Constant.Key.ifLauched)
             let tags = [String]()
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)

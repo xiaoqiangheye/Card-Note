@@ -78,25 +78,11 @@ class PurchaseManager{
                     print("\(productIds) are valid until \(expiryDate)\n\(items)\n")
                     
                     if UserDefaults.standard.bool(forKey: "auto-sync") && isPremium(){
-                        sync { (ifSuccess, error) in
+                        sync { (ifSuccess) in
                             if ifSuccess{
-                                
+                                 AlertView.show(success: "Sync Success")
                             }else{
-                                let view = MessageView.viewFromNib(layout: .cardView)
-                                // Theme message elements with the warning style.
-                                view.configureTheme(.error)
-                                
-                                // Add a drop shadow.
-                                view.configureDropShadow()
-                                
-                                view.button?.removeFromSuperview()
-                                // Set message title, body, and icon. Here, we're overriding the default warning
-                                // image with an emoji character.
-                                
-                                view.configureContent(title: "Error", body: "Sync failed.", iconText: "")
-                                
-                                // Show the message.
-                                SwiftMessages.show(view: view)
+                                AlertView.show(error: "Sync Failed")
                             }
                         }
                     }

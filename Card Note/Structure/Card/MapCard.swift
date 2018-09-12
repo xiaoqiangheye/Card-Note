@@ -11,11 +11,37 @@ import MapboxGeocoder
 class MapCard:Card{
     var poi:AMapPOI?
     var formalAddress:String
-    var image:UIImage
     var neibourAddress:String
     internal var latitude:CGFloat?
     internal var longitude:CGFloat?
     internal var imagePath:String?
+    
+    
+    private enum CodingKeys:String,CodingKey{
+        case formalAddress
+        case neibourAddress
+        case latitude
+        case longitude
+    }
+    
+    override func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy:CodingKeys.self)
+        try container.encode(formalAddress, forKey: MapCard.CodingKeys.formalAddress)
+        try container.encode(neibourAddress, forKey: .neibourAddress)
+        try container.encode(latitude, forKey: .latitude)
+        try container.encode(longitude, forKey: .longitude)
+    
+        
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: MapCard.CodingKeys.self)
+        formalAddress = try container.decode(String.self, forKey: MapCard.CodingKeys.formalAddress)
+        neibourAddress = try container.decode(String.self, forKey: .neibourAddress)
+        latitude = try container.decode(CGFloat.self, forKey: .latitude)
+        longitude = try container.decode(CGFloat.self, forKey: .longitude)
+    }
+    
     init(poi:AMapPOI?,formalAddress:String,id:String) {
         self.poi = poi
         if poi == nil{
@@ -27,19 +53,10 @@ class MapCard:Card{
         self.formalAddress = formalAddress
         self.latitude = poi?.location.latitude
         self.longitude = poi?.location.longitude
-        let manager = FileManager.default
         var url = Constant.Configuration.url.Map
-        url.appendPathComponent(loggedID)
-        url.appendPathComponent("mapPic")
         url.appendPathComponent(id + ".jpg")
-        self.imagePath = (url?.path)!
-        if self.imagePath == nil{
-            self.image = #imageLiteral(resourceName: "searchBar")
-        }else{
-            
-            self.image = UIImage(contentsOfFile: imagePath!)!
-        }
-        super.init(title: "", tag: "", description: "", id: id, definition: "", color: .white, cardType: "map", modifytime: "")
+        self.imagePath = (url.path)
+        super.init(title: "", tag: nil, description: "", id: id, definition: "", color: .white, cardType: "map", modifytime: "")
     }
     
     init(id:String, formalAddress:String, neighbourAddress:String,longitude:CGFloat, latitude:CGFloat){
@@ -47,22 +64,10 @@ class MapCard:Card{
         self.formalAddress = formalAddress
         self.longitude = longitude
         self.latitude = latitude
-        self.image = #imageLiteral(resourceName: "searchBar")
-        super.init(title: "", tag: "", description: "", id: id, definition: "", color: .white, cardType: "map", modifytime: "")
-        let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-        url?.appendPathComponent("mapPic")
-        url?.appendPathComponent(id + ".jpg")
-        
-        if manager.fileExists(atPath: (url?.path)!)
-        {
-            let image = UIImage(contentsOfFile: (url?.path)!)
-            if image != nil{
-                self.image = image!
-            }
-        }
-        self.imagePath = (url?.path)!
+        super.init(title: "", tag: nil, description: "", id: id, definition: "", color: .white, cardType: "map", modifytime: "")
+        var url = Constant.Configuration.url.Map
+        url.appendPathComponent(id + ".jpg")
+        self.imagePath = (url.path)
     }
     
     init(id:String,placeMark:Placemark){
@@ -70,46 +75,24 @@ class MapCard:Card{
         self.formalAddress = placeMark.address == nil ? "" : placeMark.address!
         self.latitude = CGFloat((placeMark.location?.coordinate.latitude)!)
         self.longitude = CGFloat((placeMark.location?.coordinate.longitude)!)
-        self.image = #imageLiteral(resourceName: "searchBar")
-        super.init(title: "", tag: "", description: "", id: id, definition: "", color: .white, cardType: "map", modifytime: "")
+        super.init(title: "", tag: nil, description: "", id: id, definition: "", color: .white, cardType: "map", modifytime: "")
         let url = Constant.Configuration.url.Map.appendingPathComponent(id + ".jpg")
-         let manager = FileManager.default
-        if manager.fileExists(atPath: (url.path))
-        {
-            let image = UIImage(contentsOfFile: (url.path))
-            if image != nil{
-                self.image = image!
-            }
-        }
         self.imagePath = url.path
     }
     
     required init?(coder aDecoder: NSCoder) {
         //fatalError("init(coder:) has not been implemented")
-        self.image = #imageLiteral(resourceName: "searchBar")
         self.formalAddress = aDecoder.decodeObject(forKey: "formalAddress") as! String
         //self.imagePath = aDecoder.decodeObject(forKey: "imagePath") as? String
         self.longitude = aDecoder.decodeObject(forKey:"longitude") as? CGFloat
         self.latitude = aDecoder.decodeObject(forKey:"latitude") as? CGFloat
         self.neibourAddress = aDecoder.decodeObject(forKey: "neighbourAddress") as! String
         super.init(coder: aDecoder)
-        let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
-        url?.appendPathComponent("mapPic")
-        url?.appendPathComponent(self.getId() + ".jpg")
-        self.imagePath = url?.path
-        if manager.fileExists(atPath: imagePath!){
-            let image = UIImage(contentsOfFile: imagePath!)
-            if image != nil{
-            self.image = image!
-            
-            }
-        }else{
-            self.image = #imageLiteral(resourceName: "searchBar")
-        }
-       
+        var url = Constant.Configuration.url.Map
+        url.appendPathComponent(self.getId() + ".jpg")
+        self.imagePath = url.path
     }
+    
     
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)

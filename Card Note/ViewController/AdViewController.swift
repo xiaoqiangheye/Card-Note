@@ -9,17 +9,28 @@
 import Foundation
 import UIKit
 import SwiftyJSON
-import GoogleMobileAds
 class AdViewController:UIViewController{
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        let manager = FileManager.default
+        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+        url?.appendPathComponent("card.txt")
+        if !manager.fileExists(atPath: (url?.path)!){
+            try? manager.createDirectory(atPath: (url?.deletingLastPathComponent().path)!, withIntermediateDirectories: true, attributes: nil)
+            if !manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil){print("false to create Directory")}
+            let cardList = [Card]()
+            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
+            do{
+                try datawrite.write(to: url!)
+            }catch{
+                print("fail to add")
+            }
+        }
+        /*
         let token = UserDefaults.standard.string(forKey: Constant.Key.Token)
-        
         if token != nil && token != ""{
-            
             User.loginWithToken(completionHandler: {
                 (json:JSON?)->Void in
-                
                 if json != nil{
                 let ifSuccess = json!["ifSuccess"].boolValue
                 if !ifSuccess{
@@ -66,11 +77,14 @@ class AdViewController:UIViewController{
         }else if token == "" || token == nil{
             performSegue(withIdentifier: "login", sender: nil)
         }
+        */
+        performSegue(withIdentifier: "main", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.destination.isKind(of: SignUpController.self){
             (segue.destination as! SignUpController).former = "ad"
+             (segue.destination as! SignUpController).now = "login"
         }
     }
 }

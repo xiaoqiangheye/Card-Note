@@ -52,6 +52,16 @@ class Constant{
         static let 勿忘草色 = UIColor(red: 123/255, green: 191/255, blue: 234/255, alpha: 1)
         static let 江戸紫 = UIColor(red: 111/255, green: 89/255, blue: 156/255, alpha: 1)
         static let 花季色 = UIColor(red: 227/255, green: 170/255, blue: 203/255, alpha: 1)
+        static let themeColor = UIColor(red: 70/255, green: 175/255, blue: 229/255, alpha: 1)
+        static let translusentGray = UIColor(red: 202/255, green: 201/255, blue: 187/255, alpha: 0.7)
+        static let darkWhite = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 0.7)
+        static let blueLeft = UIColor(red:44/255.0,green:181/255.0,blue:241/255.0,alpha:1)
+        static let blueRight = UIColor(red:97/255.0,green:130/255.0,blue:255/255.0,alpha:1)
+        static let redLeft = UIColor(red:255/255.0,green:178/255.0,blue:144/255.0,alpha:1)
+        static let redRight = UIColor(red:255/255.0,green:116/255.0,blue:120/255.0,alpha:1)
+        static let greenLeft = UIColor(red:68/255.0,green:227/255.0,blue:171/255.0,alpha:1)
+        static let greenRight = UIColor(red:59/255.0,green:218/255.0,blue:195/255.0,alpha:1)
+        static let blueWhite = UIColor(red:250/255, green: 250/255, blue: 255/255, alpha: 1)
     }
     
     struct Key{

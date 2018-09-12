@@ -360,14 +360,21 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             while (newIndex < textView.text.count - 1 && textView.text[textView.text.index(textView.text.startIndex, offsetBy: newIndex)] != "\n"){
                 newIndex += 1
             }
-            var length = newIndex - 2 - index
+            var length = newIndex - 1 - index
+            if index == 0{
+                index = 1
+                length -= 1
+            }
+            
             let paragraph = NSMutableParagraphStyle()
             paragraph.headIndent = 0
             paragraph.firstLineHeadIndent = 0
-            attributedString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraph, range: NSRange(location: index, length: length))
+            paragraph.lineBreakMode = .byCharWrapping
+            attributedString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraph, range: NSRange(location: index - 1, length: length))
+        
             textView.attributedText = attributedString
             textView.selectedRange = NSRange(location: location - 2, length: 0)
-    
+            textView.typingAttributes[NSAttributedStringKey.paragraphStyle.rawValue] = paragraph
             reset()
             
             self.textMode = Constant.TextMode.OrderedListEndMode
@@ -464,9 +471,9 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                 }
             }
             if textMode == Constant.TextMode.UnorderedListMode{
-                 self.textMode = Constant.TextMode.UnorderedListMode
+                self.textMode = Constant.TextMode.UnorderedListMode
                 isUnorderedList = 1
-                unOrderedList.setTitleColor(Constant.Color.勿忘草色, for: .normal)
+                unOrderedList.setTitleColor(Constant.Color.themeColor, for: .normal)
             }else{
               
                 isUnorderedList = 0
@@ -524,13 +531,19 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                 while (newIndex < textView.text.count - 1 && textView.text[textView.text.index(textView.text.startIndex, offsetBy: newIndex)] != "\n"){
                     newIndex += 1
                 }
-                var length = newIndex - 1 - index
+                var length = newIndex - index
+                if index == 0{
+                    index = 1
+                    length -= 1
+                }
                 let paragraph = NSMutableParagraphStyle()
                 paragraph.headIndent = 0
                 paragraph.firstLineHeadIndent = 0
-                attributedString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraph, range: NSRange(location: index, length: length))
+                 paragraph.lineBreakMode = .byCharWrapping
+                attributedString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraph, range: NSRange(location: index - 1, length: length))
                 textView.attributedText = attributedString
                 textView.selectedRange = NSRange(location: location - 1, length: 0)
+                textView.typingAttributes[NSAttributedStringKey.paragraphStyle.rawValue] = paragraph
                 reset()
                 self.textMode = Constant.TextMode.UnorderedListEndMode
             }else{
@@ -673,7 +686,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             if array.contains("\((self.font?.familyName)!)-Bold"){
             self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont(name: "\((self.font?.familyName)!)-Bold", size: (self.font?.pointSize)!)
             }else{
-                self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont(name: "PingFangSC-Bold", size: (self.font?.pointSize)!)
+                self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont.boldSystemFont(ofSize: (self.font?.pointSize)!)
             }
             
             BoldButton.setTitleColor(Constant.Color.勿忘草色, for: .normal)

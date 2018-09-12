@@ -21,11 +21,11 @@ class AccountPlanView:UIView{
         super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.6))
         title = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 30))
         title.textColor = .white
-        title.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+        title.font = UIFont.systemFont(ofSize: 20)
         title.textAlignment = .center
         price = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 50))
         price.textColor = .white
-        price.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+        price.font = UIFont.systemFont(ofSize: 20)
         price.textAlignment = .left
         advantageView = UIView(frame: CGRect(x: 0, y: 80, width: UIScreen.main.bounds.width * 0.8, height: 320))
         advantageView.backgroundColor = .flatWhite
@@ -41,25 +41,25 @@ class AccountPlanView:UIView{
         
         switch plan{
         case Plan.basic:
-            self.backgroundColor = UIColor.flatBlue
+            self.backgroundColor = Constant.Color.themeColor
             title.text = "Basic"
             var cumulatedHeight = 0
             for advantage in ADVANTAGE_BASIC{
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 20))
             label.textColor = .black
-            label.font = UIFont(name: "ChalkboardSE-Light", size: 15)
+            label.font = UIFont.systemFont(ofSize: 15)
             label.text = advantage
             label.numberOfLines = 3
             label.textAlignment = .center
             label.backgroundColor = UIColor.flatWhite
-                label.frame.size.height = UILabel.heightWithConstrainedWidth(width: UIScreen.main.bounds.width * 0.8, font: label.font, str: label.text as! NSString) + 20
+            label.frame.size.height = UILabel.heightWithConstrainedWidth(width: UIScreen.main.bounds.width * 0.8, font: label.font, str: label.text as! NSString) + 20
             label.frame.origin.y = CGFloat(cumulatedHeight)
             cumulatedHeight += Int(label.frame.height)
             advantageView.addSubview(label)
             }
             
         case Plan.premium:
-            self.backgroundColor = UIColor.flatPurple
+            self.backgroundColor = Constant.Color.themeColor
             title.text = "Professional"
             var cumulatedHeight = 0
             for advantage in ADVANTAGE_PREMIUM{

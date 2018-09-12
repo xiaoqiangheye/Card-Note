@@ -53,7 +53,7 @@ class UIMapPicker:UIViewController,MAMapViewDelegate, AMapSearchDelegate, UIText
         //the first search for location
        
         
-         locationListView = LocationListView(frame: CGRect(x: 40, y: search.frame.origin.y + 40 + 20, width: self.view.frame.width - 80, height: self.view.frame.height - (search.frame.origin.y + 40 + 20 + 20 + 80)))
+        locationListView = LocationListView(frame: CGRect(x: 40, y: search.frame.origin.y + 40 + 20, width: self.view.frame.width - 80, height: self.view.frame.height - (search.frame.origin.y + 40 + 20 + 20 + 80)))
          locationListView.isHidden = true
          locationListView.delegate = self
         self.view.addSubview(locationListView)
@@ -84,7 +84,7 @@ class UIMapPicker:UIViewController,MAMapViewDelegate, AMapSearchDelegate, UIText
             mapView.centerCoordinate = mapView.userLocation.location.coordinate
         }
         if !self.isLocated && action == Action.add.rawValue{
-            self.isLocated = true
+        self.isLocated = true
         let location = mapView.centerCoordinate
         let request = AMapReGeocodeSearchRequest()
         request.location = AMapGeoPoint.location(withLatitude: CGFloat(location.latitude), longitude: CGFloat(location.longitude))

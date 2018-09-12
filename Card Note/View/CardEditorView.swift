@@ -83,7 +83,8 @@ class CardEditorView:UIView{
         definition.text = card.getDefinition()
         cardTitle.text = card.getTitle()
         cardTitle.textColor = card.getColor()
-        classification.text = card.getTag()
+       // classification.text = card.getTag()
+       
         cardBackGround.backgroundColor = .white
         self.card = card
         var cumulatedHeight = descriptions.frame.origin.y + descriptions.frame.height + 20
@@ -120,7 +121,7 @@ class CardEditorView:UIView{
         descriptions.text = card?.getDescription()
         definition.text = card?.getDefinition()
         cardTitle.text = card?.getTitle()
-        classification.text = card?.getTag()
+       // classification.text = card?.getTag()
         cardBackGround.backgroundColor = card?.getColor()
         
         for subview in cardBackGround.subviews{
@@ -129,7 +130,7 @@ class CardEditorView:UIView{
             }
         }
         
-        var cumulatedHeight = descriptions.frame.origin.y + descriptions.frame.height + 20
+       
         for example in examples{
             cardBackGround.addSubview(example)
             cardBackGround.frame.size.height += example.frame.height + 20

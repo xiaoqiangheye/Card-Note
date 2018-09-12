@@ -16,11 +16,11 @@ class TextCard:Card{
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let strNowTime = timeFormatter.string(from: date as Date) as String
-        super.init(title: "", tag: "", description: "", id: UUID().uuidString, definition: "", color: nil, cardType: CardType.text.rawValue,modifytime:strNowTime)
+        super.init(title: "", tag: nil, description: "", id: UUID().uuidString, definition: "", color: nil, cardType: CardType.text.rawValue,modifytime:strNowTime)
     }
     
     init(id:String){
-    super.init(title: "", tag: "", description: "", id: id, definition: "", color: nil, cardType: CardType.text.rawValue, modifytime: "")
+    super.init(title: "", tag: nil, description: "", id: id, definition: "", color: nil, cardType: CardType.text.rawValue, modifytime: "")
     }
     
     func getText()->NSAttributedString?{
@@ -56,8 +56,12 @@ class TextCard:Card{
        // fatalError("init(coder:) has not been implemented")
     }
     
+    required init(from decoder: Decoder) throws {
+         try super.init(from: decoder)
+    }
+    
+   
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
-
     }
 }

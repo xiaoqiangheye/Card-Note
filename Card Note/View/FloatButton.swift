@@ -12,6 +12,16 @@ import UIKit
 
 class FloatButton:UIButton{
     weak var delegate:FloatButtonDelegate?
+    private var _yBottomOffSet:CGFloat = 0
+    var yBottomOffSet:CGFloat{
+        get{
+            return _yBottomOffSet
+        }
+        set{
+            _yBottomOffSet = newValue
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panGesture(gesture:)))
@@ -44,7 +54,7 @@ class FloatButton:UIButton{
             case fromBottom:
                 UIView.setAnimationCurve(.easeOut)
                 UIView.animate(withDuration: 0.2) {
-                    self.frame.origin.y = UIScreen.main.bounds.height - self.frame.height
+                    self.frame.origin.y = UIScreen.main.bounds.height - self.frame.height - self._yBottomOffSet
                 }
             case fromLeft:
                 UIView.setAnimationCurve(.easeOut)

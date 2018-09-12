@@ -11,7 +11,7 @@ class ListCard:Card{
     var list:[String]
     init(id:String, type:String, title:String){
     list = [String]()
-    super.init(title: title, tag: "", description: "", id: id, definition: "", color: nil, cardType: type, modifytime: "")
+    super.init(title: title, tag: nil, description: "", id: id, definition: "", color: nil, cardType: type, modifytime: "")
     }
     
     override func encode(with aCoder: NSCoder) {
@@ -22,5 +22,9 @@ class ListCard:Card{
         self.list = aDecoder.decodeObject(forKey: "list") as! [String]
         super.init(coder: aDecoder)
         //fatalError("init(coder:) has not been implemented")
+    }
+    
+    required init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
     }
 }

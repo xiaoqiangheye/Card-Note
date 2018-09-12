@@ -9,4 +9,5 @@
 import Foundation
 @objc protocol CardEditorDelegate:NSObjectProtocol{
     @objc optional func saveSubCards(card:Card)
+    @objc optional func cardEditor(DidFinishSaveCard card:Card)
 }

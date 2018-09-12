@@ -22,10 +22,49 @@ class CardView: UIView{
     var labelofDes:UILabel = UILabel()
     var ifTranslated = false
     weak var uimenu:UIMenuController!
-    var deleteButton:UIButton!
+    var observeButton:UIButton!
     var isEditMode = false
+    var docController:UIDocumentInteractionController!
     override init(frame: CGRect) {
         super.init(frame: frame)
+       
+    }
+    
+    @objc func share(){
+            let alertView = SCLAlertView()
+            alertView.addButton("Generate Picture") {
+                let image = cutFullImageWithView(view: self)
+                let shareView = SCLAlertView()
+                shareView.addButton("To Other Apps", action: {
+                    let imageData = UIImageJPEGRepresentation(image, 1)
+                    do{
+                        let id = UUID().uuidString + ".jpeg"
+                        let url = Constant.Configuration.url.temporary.appendingPathComponent(id)
+                        try FileManager.default.createDirectory(at:Constant.Configuration.url.temporary, withIntermediateDirectories: true, attributes: nil)
+                        try imageData?.write(to: url)
+                        if let u:NSURL? = NSURL(fileURLWithPath: url.path) {
+                            self.docController = UIDocumentInteractionController.init(url: u as! URL)
+                            self.docController.uti = "public.jpeg"
+                            self.docController.delegate = self
+                            // controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+                            self.docController.presentOpenInMenu(from: CGRect.zero, in: self, animated: true)
+                        }
+                        
+                    }catch let err{
+                        print(err.localizedDescription)
+                    }
+                })
+                
+                shareView.addButton("To Album", action: {
+                    ImageManager.writeImageToAlbum(image: image, completionhandler: nil)
+                })
+                shareView.showSuccess("Success", subTitle: "Now Let's share!")
+            }
+            alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
+    }
+    
+    
+    @objc private func longTap(gesture:UILongPressGestureRecognizer){
        
     }
     
@@ -40,6 +79,10 @@ class CardView: UIView{
         }else if action == #selector(hideTranslate) && ifTranslated{
             return true
         }else if action == #selector(deleteCard){
+            return true
+        }else if action == #selector(share){
+            return true
+        }else if action == #selector(editMode) && !self.isEditMode{
             return true
         }
         return false
@@ -73,37 +116,40 @@ class CardView: UIView{
     
     
     @objc func menuController(_ sender:UILongPressGestureRecognizer){
-        if sender.state == .began{
+            if sender.state == .began{
                 self.becomeFirstResponder()
                 uimenu = UIMenuController.shared
                 uimenu.arrowDirection = .default
-                uimenu.menuItems = [UIMenuItem(title: "Down", action: #selector(self.down)),UIMenuItem(title: "Up", action: #selector(self.up))]
+                uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Share", action: #selector(self.share))]
                 uimenu.setTargetRect(self.bounds, in: self)
                 uimenu.setMenuVisible(true, animated: true)
-        }
+            }
     }
     
     @objc func editMode(){
         if !isEditMode{
-        deleteButton = UIButton(frame: CGRect(x: self.frame.width-50, y: 0, width: 50, height: 50))
-        deleteButton.setFAIcon(icon: .FAMinusCircle, iconSize: 30, forState: .normal)
-        deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.addTarget(self, action: #selector(deleteCard), for: .touchDown)
-        self.addSubview(deleteButton)
+        observeButton = UIButton(frame: CGRect(x: self.frame.width-40, y: 10, width: 30, height: 30))
+        observeButton.setFAIcon(icon: .FACheck, iconSize: 20, forState: .normal)
+        observeButton.setTitleColor(.black, for: .normal)
+        observeButton.backgroundColor = .white
+        observeButton.layer.cornerRadius = 15
+        observeButton.addTarget(self, action: #selector(observeMode), for: .touchDown)
+        self.addSubview(observeButton)
         isEditMode = true
         }
     }
     
     @objc func observeMode(){
         if isEditMode{
-        deleteButton.removeFromSuperview()
-        deleteButton = nil
+        observeButton.removeFromSuperview()
+        observeButton = nil
         isEditMode = false
         }
     }
     
     class ExaView:CardView,UITextViewDelegate{
-        var textView = UITextView()
+        var textView = MyTextView()
+        var title = UITextField()
         var translateTextView = UITextView()
         var example:String = ""
         
@@ -117,26 +163,19 @@ class CardView: UIView{
             self.textView.isEditable = true
         }
         
+        /*
         @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
                 if sender.state == .began{
-                    if !ifTranslated{
                         self.becomeFirstResponder()
                         uimenu = UIMenuController.shared
                         uimenu.arrowDirection = .default
-                        uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
+                        uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate)),UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Share", action: #selector(self.share))]
                         uimenu.setTargetRect(self.bounds, in: self)
                         uimenu.setMenuVisible(true, animated: true)
-                    }else{
-                        self.becomeFirstResponder()
-                        uimenu = UIMenuController.shared
-                        uimenu.arrowDirection = .default
-                        uimenu.menuItems = [UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
-                        uimenu.setTargetRect(self.bounds, in: self)
-                        uimenu.setMenuVisible(true, animated: true)
-                    }
                 }
             
         }
+       */
         
         @objc override func hideTranslate(){
             translateTextView.removeFromSuperview()
@@ -178,46 +217,38 @@ class CardView: UIView{
     }
     
     class TextView:CardView,UITextViewDelegate{
-        var textView = UITextView()
+        var textView = MyTextView()
         var translateTextView = UITextView()
         
         @objc override func observeMode(){
             super.observeMode()
-            self.textView.isEditable = false
         }
         
         @objc override func editMode() {
             super.editMode()
-            self.textView.isEditable = true
         }
         
-        @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
-            if sender.state == .began{
-                if !ifTranslated{
-                    self.becomeFirstResponder()
-                    uimenu = UIMenuController.shared
-                    uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate))]
-                    uimenu.setTargetRect(self.bounds, in: self)
-                    uimenu.setMenuVisible(true, animated: true)
-                }else{
-                    self.becomeFirstResponder()
-                    uimenu = UIMenuController.shared
-                    uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate))]
-                    uimenu.setTargetRect(self.bounds, in: self)
-                    uimenu.setMenuVisible(true, animated: true)
-                }
+       
+        @objc override func menuController(_ sender: UIGestureRecognizer) {
+            print(sender.state)
+            if sender.state == .ended{
+                self.becomeFirstResponder()
+                uimenu = UIMenuController.shared
+                uimenu.arrowDirection = .default
+                uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "Translate", action: #selector(self.translate)),UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate)),UIMenuItem(title: "Share", action: #selector(self.share)),UIMenuItem(title: "Delete", action: #selector(delete))]
+                uimenu.setTargetRect(self.bounds, in: self)
+                uimenu.setMenuVisible(true, animated: true)
             }
             
         }
+ 
+        
         
         @objc override func hideTranslate(){
             translateTextView.removeFromSuperview()
             textView.isHidden = false
             ifTranslated = false
         }
-        
        
         
         @objc override func translate(){
@@ -248,7 +279,9 @@ class CardView: UIView{
                     SwiftMessages.show(view: view)
                 }
             }
+          
         }
+ 
     }
     
     class PicView:CardView{
@@ -256,23 +289,40 @@ class CardView: UIView{
         var commentView:UITextField = UITextField()
         var ifCommentShowed = false
         
+        @objc override func share() {
+            let alertView = SCLAlertView()
+            var url = Constant.Configuration.url.PicCard
+            url.appendPathComponent(self.card.getId() + ".jpg")
+            if !FileManager.default.fileExists(atPath: url.path){
+               AlertView.show(alert: "Picture has not been loaded or is damaged.")
+               return
+            }
+            alertView.addButton("Generate Picture") {
+                let shareView = SCLAlertView()
+                shareView.addButton("To Other Apps", action: {
+                self.docController = UIDocumentInteractionController.init(url:url)
+                self.docController.uti = "public.jpeg"
+                self.docController.delegate = self
+                            // controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+                self.docController.presentOpenInMenu(from: CGRect.zero, in: self, animated: true)
+                })
+                
+                shareView.addButton("To Album", action: {
+                    ImageManager.writeImageToAlbum(image: self.image.image!, completionhandler: nil)
+                })
+                shareView.showSuccess("Success", subTitle: "Now Let's share!")
+            }
+            alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
+        }
         @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
             if sender.state == .began{
-                if !ifCommentShowed{
                     self.becomeFirstResponder()
                     uimenu = UIMenuController.shared
                     uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Footnote", action: #selector(self.addComment))]
+                    uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "FootNote", action: #selector(self.addComment)),UIMenuItem(title: "Hide FootNote", action: #selector(self.hideComment)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Extract Text", action: #selector(self.extractText))]
                     uimenu.setTargetRect(self.bounds, in: self)
                     uimenu.setMenuVisible(true, animated: true)
-                }else{
-                    self.becomeFirstResponder()
-                    uimenu = UIMenuController.shared
-                    uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Hide FootNote", action: #selector(self.hideComment)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard))]
-                    uimenu.setTargetRect(self.bounds, in: self)
-                    uimenu.setMenuVisible(true, animated: true)
-                }
+                
             }
             
         }
@@ -280,16 +330,22 @@ class CardView: UIView{
         override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
             if (action == #selector(self.deleteCard)){
                 return true
-            }else if(action == #selector(self.addComment)){
+            }else if(action == #selector(self.addComment)) && !ifCommentShowed{
                 return true
-            }else if (action == #selector(self.hideComment)){
+            }else if (action == #selector(self.hideComment)) && ifCommentShowed{
+                return true
+            }else if (action == #selector(self.extractText)){
+                return true
+            }else if action == #selector(self.editMode){
                 return true
             }else{
                 return false
             }
         }
         
-        
+        @objc func extractText(){
+            delegate?.picView!(extractText:self)
+        }
         
         @objc func addComment(){
             ifCommentShowed = true
@@ -311,28 +367,13 @@ class CardView: UIView{
         }
         
         func loadPic(){
-            let manager = FileManager.default
-            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-            url?.appendPathComponent(loggedID)
-            url?.appendPathComponent(self.card.getId() + ".jpg")
-            /*deprecated
-                User.getImage(email: loggedemail, cardID: self.card.getId(), completionHandler: { (im:UIImage?) in
-                    if im != nil{
-                        DispatchQueue.main.async {
-                        (self.card as! PicCard).pic = im!
-                            self.image.image = im!
-                            print("get Image Success")
-                        }
-                    }else{
-                        print("get Image failed")
-                    }
-                })
-            */
-            User.downloadPhotosUsingQCloud(email: loggedemail, cardID: self.card.getId()) { (bool, error) in
+            var url = Constant.Configuration.url.PicCard
+            url.appendPathComponent(self.card.getId() + ".jpg")
+            User.downloadPhotosUsingQCloud(cardID: self.card.getId()) { (bool, error) in
                 if bool{
                     DispatchQueue.main.async {
-                        (self.card as! PicCard).pic = UIImage(contentsOfFile: (url?.path)!)
-                        self.image.image = UIImage(contentsOfFile: (url?.path)!)
+                        (self.card as! PicCard).pic = UIImage(contentsOfFile: (url.path))
+                        self.image.image = UIImage(contentsOfFile: (url.path))
                     }
                     print("load picture success; cardId\(self.card.getId())")
                 }
@@ -348,11 +389,13 @@ class CardView: UIView{
     }
     
     class SubCardView:CardView{
-        var title = UITextView()
-        var content = UITextView()
+        var title = UILabel()
+        var content = UILabel()
         var translatedTitle = UITextView()
         var translatedContent = UITextView()
         
+        
+        /*
         @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
             if sender.state == .began{
                 if !ifTranslated{
@@ -373,6 +416,7 @@ class CardView: UIView{
             }
             
         }
+        */
         
         @objc override func translate() {
             translatedTitle.textColor = .black
@@ -384,7 +428,7 @@ class CardView: UIView{
             translatedContent.frame = content.frame
             translatedContent.backgroundColor = .clear
             translatedContent.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
-            TranslationManager.translate(text: title.text) { (translate) in
+            TranslationManager.translate(text: title.text!) { (translate) in
                 if translate != nil{
                     self.translatedTitle.text = translate
                      self.translatedTitle.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(self.menuController(_:))))
@@ -446,6 +490,7 @@ class CardView: UIView{
     }
     
     class VoiceCardView:CardView,SFSpeechRecognizerDelegate{
+        var title = UITextField()
         var controllerButton = UIButton()
         var timerLable = UILabel()
         var progressBar = UIProgressView(progressViewStyle: .default)
@@ -518,21 +563,19 @@ class CardView: UIView{
         recognitionTextView.removeFromSuperview()
         self.frame.size.height -= self.recognitionTextView.frame.height
         }
+        
+       
     }
     
     class MapCardView:CardView{
-        var title = UITextView()
+        //var title = UITextView()
         var neighbourAddrees = UILabel()
         var formalAddress = UILabel()
         var image = UIImageView()
         
         func loadPic(){
-            let manager = FileManager.default
-            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-            url?.appendPathComponent(loggedID)
-            url?.appendPathComponent("mapPic")
-            try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
-            url?.appendPathComponent(self.card.getId() + ".jpg")
+            var url = Constant.Configuration.url.Map
+            url.appendPathComponent(self.card.getId() + ".jpg")
             /*deprecared
             User.getImage(email: loggedemail, cardID: self.card.getId(), completionHandler: { (im:UIImage?) in
                 if im != nil{
@@ -549,11 +592,10 @@ class CardView: UIView{
             })
  */
           
-            User.downloadMapUsingQCloud(email: loggedemail, cardID: self.card.getId()) { (bool, error) in
+            User.downloadMapUsingQCloud(cardID: self.card.getId()) { (bool, error) in
                 if bool{
                     DispatchQueue.main.async {
-                        (self.card as! MapCard).image = UIImage(contentsOfFile: (url?.path)!)!
-                        self.image.image = UIImage(contentsOfFile: (url?.path)!)
+                        self.image.image = UIImage(contentsOfFile: (url.path))
                     }
                     print("load map success; cardId\(self.card.getId())")
                 }
@@ -574,6 +616,7 @@ class CardView: UIView{
         var playerLayer:AVPlayerLayer?
         var progressBar:UIProgressView?
         var state:State = State.readyToPlay
+        var playerButton:UIButton!
         enum State{
             case playing
             case readyToPlay
@@ -582,6 +625,7 @@ class CardView: UIView{
         
        @objc func playerDidFinishPlaying(){
             state = .readyToPlay
+            playerButton.isHidden = false
         }
         
         @objc func play(sender:UIButton){
@@ -592,6 +636,10 @@ class CardView: UIView{
         }catch let error{
             print(error.localizedDescription)
         }
+        }
+        
+        @objc func tapped(){
+            //open movie controller
         }
         
         @objc func pause(){
@@ -607,27 +655,49 @@ class CardView: UIView{
     class func getSingleCardView(card:Card)->CardView{
         let x = UIScreen.main.bounds.width
         let y = UIScreen.main.bounds.height
-        let cardView = CardView(frame: CGRect(x: 0, y: 0, width: x*0.8, height: y/4))
+        let cardView = CardView(frame: CGRect(x: 0, y: 0, width: x*0.85, height: y/4))
+        //cardView.clipsToBounds = true
         cardView.card = card
         cardView.center.x = x/2
-        let colorView = UIView(frame: CGRect(x: 0, y: 0, width: cardView.frame.width/8, height: cardView.frame.height))
-        colorView.backgroundColor = card.color
-        cardView.backgroundColor = .white
-        //cardView.layer.cornerRadius = 20
         
-        cardView.addSubview(colorView)
+        //colorView.backgroundColor = card.color
+       // cardView.backgroundColor = .white
+        
+      
+        cardView.layer.shadowColor = card.getColor().cgColor
+        cardView.layer.shadowOffset = CGSize(width:0,height:10)
+        cardView.layer.shadowOpacity = 1
+        cardView.layer.shadowRadius = 15
+        cardView.layer.cornerRadius = 20
+        
+        //cardView.addSubview(colorView)
+        
+        var red:CGFloat = 0
+        var green:CGFloat = 0
+        var blue:CGFloat = 0
+        var alpha:CGFloat = 0
+        card.getColor().getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        let gl = CAGradientLayer.init()
+        gl.frame = CGRect(x:0,y:0,width:cardView.frame.width,height:cardView.frame.height);
+        gl.startPoint = CGPoint(x:0, y:0);
+        gl.endPoint = CGPoint(x:1, y:1);
+        gl.colors = [card.getColor().cgColor,getRightColorFromLeftGradient(left: card.getColor()).cgColor]
+        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        gl.cornerRadius = 20
+        cardView.layer.addSublayer(gl)
+        
         let title:String = card.getTitle()
-        let label = UILabel(frame: CGRect(x:cardView.frame.width/8,y:0,width:cardView.bounds.width-cardView.frame.width/8,height:20))
+        let label = UILabel(frame: CGRect(x:20,y:20,width:cardView.bounds.width-20,height:25))
         label.text = title
-        label.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.numberOfLines = 1
-        label.lineBreakMode = .byWordWrapping
+        //  label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
         label.center.x = cardView.frame.width/2
-        label.textColor = .black
+        label.textColor = .white
         cardView.label = label
         cardView.addSubview(label)
-        
+
         /*
         let tag:String = card.getTag()
         let labelOfTag = UILabel(frame: CGRect(x:20,y:label.bounds.height,width:cardView.bounds.width-20,height:cardView.bounds.height/5))
@@ -639,18 +709,44 @@ class CardView: UIView{
         */
         
         let definition:String = card.getDefinition()
-        let labelOfDes = UILabel(frame: CGRect(x:cardView.frame.width/8 + 20,y:label.frame.height,width:cardView.bounds.width-cardView.frame.width/8,height:cardView.bounds.height/2))
+        let labelOfDes = UILabel(frame: CGRect(x: 20,y:label.frame.height + 20,width:cardView.bounds.width - 40,height:cardView.bounds.height/2))
         labelOfDes.text = definition
-        labelOfDes.font = UIFont(name: "ChalkboardSE-Light", size: 15)
-        labelOfDes.numberOfLines = 4
-        labelOfDes.lineBreakMode = .byWordWrapping
-        labelOfDes.textColor = .black
+        labelOfDes.font = UIFont.systemFont(ofSize: 15)
+        labelOfDes.numberOfLines = 10
+        labelOfDes.lineBreakMode = .byClipping
+        labelOfDes.textColor = .white
+        let constrainSize = CGSize(width:labelOfDes.frame.size.width,height:CGFloat(MAXFLOAT))
+        let size = labelOfDes.sizeThatFits(constrainSize)
+        //如果textview的高度大于最大高度高度就为最大高度并可以滚动，否则不能滚动
+        //重新设置textview的高度
+        if size.height > 50{
+            labelOfDes.frame.size.height = size.height
+            cardView.frame.size.height = labelOfDes.frame.height + labelOfDes.frame.origin.y + 20
+        }else{
+            labelOfDes.frame.size.height = 50
+            cardView.frame.size.height = labelOfDes.frame.height + labelOfDes.frame.origin.y + 20
+        }
+        
         cardView.labelofDes = labelOfDes
         cardView.addSubview(labelOfDes)
+     
         
-        cardView.layer.shadowColor = UIColor.black.cgColor
-        cardView.layer.shadowOffset = CGSize(width: 1, height: 1)
-        cardView.layer.shadowOpacity = 0.8
+        //add imageView
+        let shootingStar = UIImageView(frame: CGRect(x: 200, y: 0, width: 82, height: 56))
+        shootingStar.image = UIImage(named:"shootingstar")
+        cardView.addSubview(shootingStar)
+        
+        let shootingStar2 = UIImageView(frame: CGRect(x: 50, y: 50, width: 70, height: 42))
+        shootingStar2.image = UIImage(named:"shootingstar")
+        cardView.addSubview(shootingStar2)
+        
+        let mountain = UIImageView(frame:CGRect(x: cardView.frame.width - 100, y: cardView.frame.height - 30, width: 60, height: 30))
+        mountain.image = UIImage(named: "mountain")
+        cardView.addSubview(mountain)
+        
+       
+        cardView.layer.frame.size = cardView.frame.size
+        gl.frame.size = cardView.frame.size
         return cardView
     }
     
@@ -658,27 +754,48 @@ class CardView: UIView{
         let x = UIScreen.main.bounds.width
         let y = UIScreen.main.bounds.height
         let cardView = SubCardView(frame: CGRect(x: 0, y: 0, width: x*0.8, height: y/4))
+        //cardView.clipsToBounds = true
         cardView.card = card
         cardView.center.x = x/2
-        let colorView = UIView(frame: CGRect(x: 0, y: 0, width: cardView.frame.width/8, height: cardView.frame.height))
-        colorView.backgroundColor = card.color
-        cardView.backgroundColor = .white
-        //cardView.layer.cornerRadius = 20
         
-        cardView.addSubview(colorView)
+        //colorView.backgroundColor = card.color
+        // cardView.backgroundColor = .white
+        
+        
+        cardView.layer.shadowColor = card.getColor().cgColor
+        cardView.layer.shadowOffset = CGSize(width:0,height:10)
+        cardView.layer.shadowOpacity = 0.5
+        cardView.layer.shadowRadius = 10
+        cardView.layer.cornerRadius = 20
+        
+        //cardView.addSubview(colorView)
+        
+        var red:CGFloat = 0
+        var green:CGFloat = 0
+        var blue:CGFloat = 0
+        var alpha:CGFloat = 0
+        card.getColor().getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        let gl = CAGradientLayer.init()
+        gl.frame = CGRect(x:0,y:0,width:cardView.frame.width,height:cardView.frame.height);
+        gl.startPoint = CGPoint(x:0, y:0);
+        gl.endPoint = CGPoint(x:1, y:1);
+        gl.colors = [card.getColor().cgColor,getRightColorFromLeftGradient(left: card.getColor()).cgColor]
+        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        gl.cornerRadius = 20
+        cardView.layer.addSublayer(gl)
+        
         let title:String = card.getTitle()
-        let label = UITextView(frame: CGRect(x:cardView.frame.width/8,y:0,width:cardView.bounds.width-cardView.frame.width/8,height:50))
-        label.backgroundColor = .clear
-        label.attributedText = NSAttributedString(string: title)
-        label.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
-        label.isScrollEnabled = false
-        //label.lineBreakMode = .byWordWrapping
+        let label = UILabel(frame: CGRect(x:20,y:20,width:cardView.bounds.width-20,height:25))
+        label.text = title
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.numberOfLines = 1
+        //  label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
-    
         label.center.x = cardView.frame.width/2
-        label.textColor = .black
-        cardView.title = label
+        label.textColor = .white
+        cardView.label = label
         cardView.addSubview(label)
+        cardView.title = label
         
         /*
          let tag:String = card.getTag()
@@ -691,56 +808,97 @@ class CardView: UIView{
          */
         
         let definition:String = card.getDefinition()
-        let labelOfDes = UITextView(frame: CGRect(x:cardView.frame.width/8 + 20,y:label.frame.height + 10,width:cardView.bounds.width-cardView.frame.width/8-20,height:cardView.bounds.height/2))
-        labelOfDes.backgroundColor = .clear
-        labelOfDes.attributedText = NSAttributedString(string: definition)
-        labelOfDes.font = UIFont(name: "ChalkboardSE-Light", size: 15)
-     //   labelOfDes.numberOfLines = 4
-       // labelOfDes.lineBreakMode = .byWordWrapping
-        labelOfDes.isScrollEnabled = false
-        labelOfDes.textColor = .black
+        let labelOfDes = UILabel(frame: CGRect(x: 20,y:label.frame.height + 20,width:cardView.bounds.width - 40,height:cardView.bounds.height/2))
+        labelOfDes.text = definition
+        labelOfDes.font = UIFont.systemFont(ofSize: 15)
+        labelOfDes.numberOfLines = 10
+        labelOfDes.lineBreakMode = .byClipping
+        labelOfDes.textColor = .white
         cardView.content = labelOfDes
-        cardView.addSubview(labelOfDes)
+        let constrainSize = CGSize(width:labelOfDes.frame.size.width,height:CGFloat(MAXFLOAT))
+        let size = labelOfDes.sizeThatFits(constrainSize)
+        //如果textview的高度大于最大高度高度就为最大高度并可以滚动，否则不能滚动
+        //重新设置textview的高度
+        if size.height > 50{
+            labelOfDes.frame.size.height = size.height
+            cardView.frame.size.height = labelOfDes.frame.height + labelOfDes.frame.origin.y + 20
+        }else{
+            labelOfDes.frame.size.height = 50
+            cardView.frame.size.height = labelOfDes.frame.height + labelOfDes.frame.origin.y + 20
+        }
         
-        cardView.layer.shadowColor = UIColor.black.cgColor
-        cardView.layer.shadowOffset = CGSize(width: 1, height: 1)
-        cardView.layer.shadowOpacity = 0.8
+        cardView.labelofDes = labelOfDes
+        cardView.addSubview(labelOfDes)
+    
+        
+        //add imageView
+        let shootingStar = UIImageView(frame: CGRect(x: 200, y: 0, width: 82, height: 56))
+        shootingStar.image = UIImage(named:"shootingstar")
+        cardView.addSubview(shootingStar)
+        
+        let shootingStar2 = UIImageView(frame: CGRect(x: 50, y: 50, width: 70, height: 42))
+        shootingStar2.image = UIImage(named:"shootingstar")
+        cardView.addSubview(shootingStar2)
+        
+        let mountain = UIImageView(frame:CGRect(x: cardView.frame.width - 100, y: cardView.frame.height - 30, width: 60, height: 30))
+        mountain.image = UIImage(named: "mountain")
+        cardView.addSubview(mountain)
+        
+        
+        cardView.layer.frame.size = cardView.frame.size
+        gl.frame.size = cardView.frame.size
+        
         
         let longTapGesture = UILongPressGestureRecognizer()
+        longTapGesture.delegate = cardView
         longTapGesture.addTarget(cardView, action: #selector(cardView.menuController))
         cardView.addGestureRecognizer(longTapGesture)
         return cardView
     }
     
-    class func singleExampleView(card:Card)->ExaView{
+    class func singleExampleView(card:ExampleCard)->ExaView{
         let view = ExaView()
         view.frame = CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height/4)
         view.backgroundColor = UIColor.white
         view.center.x = UIScreen.main.bounds.width/2
-        //view.layer.cornerRadius = 20
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width:1,height:1)
+        view.layer.cornerRadius = 15
+        view.layer.shadowColor = Constant.Color.translusentGray.cgColor
+        view.layer.shadowOffset = CGSize(width:0,height:5)
         view.layer.shadowOpacity = 0.5
         view.textView.layer.cornerRadius = 15
-        view.textView.frame = CGRect(x:0, y:50, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height/4 - 50)
+        view.textView.frame = CGRect(x:20, y:50, width: UIScreen.main.bounds.width * 0.8 - 40, height: UIScreen.main.bounds.height/4 - 50)
         view.textView.center.x = view.bounds.width/2
         view.textView.backgroundColor = .clear
         view.textView.textColor = .black
+        view.textView.text = card.getDefinition()
+        let constrainSize = CGSize(width:view.textView.frame.size.width,height:CGFloat(MAXFLOAT))
+        let size = view.textView.sizeThatFits(constrainSize)
+        //如果textview的高度大于最大高度高度就为最大高度并可以滚动，否则不能滚动
+        //重新设置textview的高度
+        if size.height > 50{
+            view.textView.frame.size.height = size.height
+            view.frame.size.height = view.textView.frame.height + view.textView.frame.origin.y
+        }else{
+            view.textView.frame.size.height = 50
+            view.frame.size.height = view.textView.frame.height + view.textView.frame.origin.y
+        }
         view.card = card
         
-        let Label = UILabel()
-        Label.textColor = .black
-        Label.backgroundColor = .clear
-        Label.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
-        Label.text = "Example"
-        Label.textAlignment = .left
-        Label.frame = CGRect(x: 20, y: 0, width: 100, height: 50)
-        Label.center.y = 25
-        view.addSubview(view.textView)
-        view.addSubview(Label)
+      
+         view.title.textColor = .black
+         view.title.backgroundColor = .clear
+         view.title.font = UIFont.systemFont(ofSize: 20)
+         view.title.text = card.getTitle()
+         view.title.textAlignment = .left
+         view.title.frame = CGRect(x: 20, y: 0, width:UIScreen.main.bounds.width * 0.8 - 40, height: 50)
+         view.title.center.y = 25
+         view.title.addBottomLine()
+         view.addSubview(view.textView)
+         view.addSubview(view.title)
         
         
         let longTapGesture = UILongPressGestureRecognizer()
+        longTapGesture.delegate = view
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
         /*
@@ -766,7 +924,7 @@ class CardView: UIView{
         view.textView.frame.size = view.frame.size
         view.textView.frame.origin = CGPoint(x: 0, y: 0)
         view.textView.backgroundColor = .clear
-        view.textView.layer.cornerRadius = 20
+        view.textView.layer.cornerRadius = 15
         view.textView.isScrollEnabled = false
         view.textView.attributedText = card.getText() == nil ? NSAttributedString(string: "") : card.getText()
         if card.getText() == nil || card.getText()?.string == ""{
@@ -777,17 +935,20 @@ class CardView: UIView{
         let size = view.textView.sizeThatFits(constrainSize)
         //如果textview的高度大于最大高度高度就为最大高度并可以滚动，否则不能滚动
         //重新设置textview的高度
-        if size.height > 100{
+        if size.height > 50{
         view.textView.frame.size.height = size.height
-             view.frame.size.height = size.height
+        view.frame.size.height = size.height
         }else{
-        view.textView.frame.size.height = 100
-             view.frame.size.height = 100
+        view.textView.frame.size.height = 50
+             view.frame.size.height = 50
         }
        
         view.card = card
+        view.addSubview(view.textView)
+       
         
         let longTapGesture = UILongPressGestureRecognizer()
+        longTapGesture.delegate = view
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
         /*
@@ -811,9 +972,10 @@ class CardView: UIView{
         let ratio = UIScreen.main.bounds.width*0.8/x
         let changedy = y * ratio
         view.frame = CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height: changedy)
+        view.layer.cornerRadius = 15
         view.center.x = UIScreen.main.bounds.width/2
-        view.layer.cornerRadius = 20
         view.backgroundColor = .clear
+        view.image.layer.cornerRadius = 15
         view.image.frame.origin = CGPoint(x:0,y:0)
         view.image.frame.size = view.frame.size
         view.image.backgroundColor = .clear
@@ -821,20 +983,18 @@ class CardView: UIView{
         view.image.alpha = 1
         view.addSubview(view.image)
         
-        
-        view.image.layer.shadowColor = UIColor.black.cgColor
-        view.image.layer.shadowOffset = CGSize(width: 1, height: 1)
-        view.image.layer.shadowOpacity = 0.8
+        view.layer.shadowColor = Constant.Color.translusentGray.cgColor
+
+        view.image.layer.shadowOffset = CGSize(width: 0, height: 5)
+        view.image.layer.shadowOpacity = 0.5
         view.commentView.frame = CGRect(x: 0, y: view.image.frame.height, width:  UIScreen.main.bounds.width * 0.8, height: 40)
         view.commentView.backgroundColor = .clear
-        view.commentView.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
+        view.commentView.font = UIFont.systemFont(ofSize: 20)
         view.commentView.textColor = .black
-        view.commentView.text = pic.getDefinition()
+        view.commentView.text = pic.getDescription()
         view.commentView.textAlignment  = .center
-        
         view.addSubview(view.commentView)
-        
-        if pic.getDefinition() == ""{
+        if pic.getDescription() == ""{
             view.commentView.isHidden = true
             view.ifCommentShowed = false
         }else{
@@ -925,12 +1085,23 @@ class CardView: UIView{
         let view = VoiceCardView()
         view.card = card
         view.backgroundColor = .white
-        view.layer.shadowOpacity = 0.8
-        view.layer.shadowOffset = CGSize(width: 1, height: 1)
-        view.layer.shadowColor = UIColor.black.cgColor
+       
+        view.layer.shadowColor = Constant.Color.translusentGray.cgColor
+        view.layer.shadowOffset = CGSize(width:0,height:5)
+        view.layer.shadowOpacity = 0.5
+        view.layer.cornerRadius = 15
     
         view.frame = CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height:100)
         view.center.x = UIScreen.main.bounds.width/2
+        
+        view.title.frame = CGRect(x: 0, y: 0, width: view.frame.width - 20, height: 30)
+        view.title.font = UIFont.boldSystemFont(ofSize: 18)
+        view.title.textAlignment = .center
+        view.title.text = card.getTitle()
+        view.title.textColor = .black
+        view.addSubview(view.title)
+        
+        
         view.controllerButton.frame = CGRect(x:30, y:0, width: 30, height:30)
         if card.voiceManager?.state == .willRecord || card.voiceManager?.state == .recording{
         view.controllerButton.setFAIcon(icon: .FAMicrophone, iconSize: 20, forState: .normal)
@@ -951,54 +1122,63 @@ class CardView: UIView{
         view.progressBar.center.y = view.frame.height/2
         view.progressBar.progress = 0
         
-        view.conversionButton = UIButton(frame: CGRect(x: 0, y: 80, width: 20, height: 20))
-        view.conversionButton.setFAIcon(icon: .FAGlobe, iconSize: 20, forState: .normal)
-        view.conversionButton.setTitleColor(.black, for: .normal)
-        view.conversionButton.addTarget(view, action: #selector(view.recognizeFile), for: .touchDown)
+       // view.conversionButton = UIButton(frame: CGRect(x: 0, y: 80, width: 20, height: 20))
+        //view.conversionButton.setFAIcon(icon: .FAGlobe, iconSize: 20, forState: .normal)
+        //view.conversionButton.setTitleColor(.black, for: .normal)
+        //view.conversionButton.addTarget(view, action: #selector(view.recognizeFile), for: .touchDown)
         view.recognizer = SFSpeechRecognizer()
         
-        
-        view.addSubview(view.conversionButton)
+        //view.addSubview(view.conversionButton)
         view.addSubview(view.controllerButton)
         view.addSubview(view.timerLable)
         view.addSubview(view.progressBar)
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
+        
         return view
     }
     
     class func getSingleMapView(card:MapCard)->MapCardView{
-        let view = MapCardView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.8))
+        let y = UIScreen.main.bounds.height
+        let view = MapCardView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: y/4))
         view.card = card
+        view.layer.cornerRadius = 15
         view.center.x = UIScreen.main.bounds.width/2
-        view.backgroundColor = .white
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 1, height: 1)
+        view.layer.shadowColor = Constant.Color.translusentGray.cgColor
+        view.layer.shadowOffset = CGSize(width:0,height:5)
         view.layer.shadowOpacity = 0.5
         view.neighbourAddrees.font = UIFont.boldSystemFont(ofSize: 15)
-        view.neighbourAddrees.frame  = CGRect(x: 0, y: 0, width: view.frame.width, height: 20)
+        view.neighbourAddrees.frame  = CGRect(x: 10, y: 5, width: view.frame.width - 40, height: 20)
         if card.neibourAddress != ""{
         view.neighbourAddrees.text = card.neibourAddress
         }else{
         view.neighbourAddrees.text = card.formalAddress
         }
-        view.formalAddress.frame = CGRect(x: 0, y: 20, width: view.frame.width, height: 20)
+        view.formalAddress.frame = CGRect(x: 10, y: 25, width: view.frame.width - 40, height: 20)
         view.formalAddress.text = card.formalAddress
         view.formalAddress.font = UIFont.systemFont(ofSize: 12)
-        let url = URL(fileURLWithPath: card.imagePath!)
+        var url = Constant.Configuration.url.Map
+        url.appendPathComponent(card.getId() + ".jpg")
         let ifExist = FileManager.default.fileExists(atPath: url.path)
         if ifExist{
-            view.image.image = UIImage(contentsOfFile: (url.path))
+            view.image.image = UIImage(named: url.path)
         }else{
-             view.image.image = card.image
+            view.image.image = UIImage(named:"searchBar")
         }
-        view.image.frame = CGRect(x:0, y: 40, width: view.frame.width, height: view.frame.width - 40)
-        view.addSubview(view.title)
-        view.addSubview(view.neighbourAddrees)
-        view.addSubview(view.formalAddress)
-        view.addSubview(view.image)
+        view.image.frame = CGRect(x:0, y: 0, width: view.frame.width, height: view.frame.height)
+        view.image.layer.cornerRadius = 15
+        view.image.clipsToBounds = true
+        let whiteCorner = UIView(frame: CGRect(x: 10, y: 10, width: view.frame.width - 20, height: 50))
+        whiteCorner.layer.cornerRadius = 15
+        whiteCorner.backgroundColor = .white
+        whiteCorner.addSubview(view.neighbourAddrees)
+        whiteCorner.addSubview(view.formalAddress)
         
+       // view.addSubview(view.title)
+        view.addSubview(view.image)
+        view.addSubview(whiteCorner)
+    
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
@@ -1009,31 +1189,43 @@ class CardView: UIView{
     class func getSingleMovieView(card:MovieCard)->MovieView{
        let view = MovieView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.6))
         view.center.x = UIScreen.main.bounds.width/2
+        view.card = card
         let url = Constant.Configuration.url.Movie.absoluteURL.appendingPathComponent(card.getId() + ".mov")
         view.url = url
+        view.clipsToBounds = true
         print("path:\(url.path)")
         view.player = AVPlayer(url: view.url!)
+          let theNaturalSize = view.player?.currentItem?.asset.tracks(withMediaType: .video)[0]
+        let size = theNaturalSize?.naturalSize
+        let ratio = (size?.width)!/(size?.height)!
+        view.frame.size.height = view.frame.width/ratio
         view.playerLayer = AVPlayerLayer(player: view.player)
+       // view.frame.size = (view.playerLayer?.videoRect.size)!
         view.playerLayer?.frame = view.bounds
-        view.card = card
+        view.playerLayer?.videoGravity = .resizeAspect
+        print(view.playerLayer?.videoRect.size)
         view.layer.addSublayer(view.playerLayer!)
+        print(view.playerLayer?.videoRect.size)
+        view.layer.cornerRadius = 10
         let playerItem = AVPlayerItem(url: view.url!)
         NotificationCenter.default.addObserver(view,
                                                selector: #selector(view.playerDidFinishPlaying),
                                                name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
                                                object: playerItem)
-        let playerButton = UIButton(frame:CGRect(x: 0, y: 0, width: 100, height: 100))
-        playerButton.setFAIcon(icon: FAType.FAPlayCircle, forState: .normal)
-        playerButton.setTitleColor(.black, for: .normal)
-        playerButton.addTarget(view, action: #selector(view.play), for: .touchDown)
-        playerButton.center.x = view.frame.width/2
-        playerButton.center.y = view.frame.height/2
+        view.playerButton = UIButton(frame:CGRect(x: 0, y: 0, width: 100, height: 100))
+        view.playerButton.setFAIcon(icon: FAType.FAPlayCircle, forState: .normal)
+        view.playerButton.setTitleColor(.white, for: .normal)
+        view.playerButton.addTarget(view, action: #selector(view.play), for: .touchDown)
+        view.playerButton.center.x = view.frame.width/2
+        view.playerButton.center.y = view.frame.height/2
         
-        view.addSubview(playerButton)
+        view.addSubview(view.playerButton)
         
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
+        
+        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(view.tapped))
         
         return view
     }
@@ -1050,4 +1242,90 @@ class CardView: UIView{
     }
     
     
+}
+
+
+extension CardView:UIGestureRecognizerDelegate{
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer.isKind(of:UILongPressGestureRecognizer.self) && (gestureRecognizer.view?.isKind(of:CardView.self))!{
+            return false
+        }else{
+            return false
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer.isKind(of:UILongPressGestureRecognizer.self){
+            return true
+        }else{
+            return false
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer.isKind(of:UITapGestureRecognizer.self) || gestureRecognizer.isKind(of:UILongPressGestureRecognizer.self){
+            return false
+        }else{
+            return false
+        }
+    }
+}
+
+
+
+extension CardView:UIDocumentInteractionControllerDelegate{
+    func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
+        let url = controller.url
+        let fileManager = FileManager.default
+        do{
+            try fileManager.removeItem(at: url!)
+        }catch let error{
+            print(error.localizedDescription)
+        }
+    }
+}
+
+
+
+
+class MyTextView:UITextView{
+   
+    override init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        let uimenu = UIMenuController.shared
+        uimenu.arrowDirection = .default
+        uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate))]
+        uimenu.setTargetRect(self.bounds, in: self)
+      // uimenu.setMenuVisible(true, animated: true)
+    }
+    
+    
+    func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    @objc func translate(){
+        let range = self.selectedRange
+        let r = Range(range, in: self.text)
+        let text = self.text.substring(with: r!)
+        let cardView = self.superview as! CardView
+        if delegate != nil{
+            cardView.delegate?.cardView?(translate: cardView, text:text)
+        }
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(select(_:)) || action == #selector(selectAll(_:)) || action == #selector(paste(_:)) && self.selectedRange.length == 0{
+            return true
+        }else if action == #selector(copy(_:)) || action == #selector(cut(_:)) || action == #selector(translate) || action == #selector(paste(_:)) && self.selectedRange.length > 0{
+            return true
+        }else{
+            return false
+        }
+    }
 }

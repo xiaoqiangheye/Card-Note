@@ -48,6 +48,7 @@ class SwitchSetting:UIView{
         self.addSubview(titleLabel)
         self.addSubview(descrptionLabel)
         self.addSubview(paperSwitch)
+        self.addBottomLine()
     }
     
     @objc func switchValueChanged(){

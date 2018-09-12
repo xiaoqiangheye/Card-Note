@@ -10,31 +10,62 @@ import Foundation
 import SwiftyJSON
 import UIKit
 class CardParser{
+    class func filter(_ string:String)->String{
+       let string1 = string.replacingOccurrences(of: "\\", with: "\\\\")
+       let string2 = string1.replacingOccurrences(of: "\r", with: "\\r")
+       let string3 = string2.replacingOccurrences(of: "\n", with: "\\n")
+        return string3
+    }
+    
+    class func JSONToCard(bycoder json:String)->Card?{
+    let data = json.data(using: .utf8)
+        let coder = JSONDecoder()
+        do{
+        let card = try coder.decode(Card.self, from: data!)
+            return card}
+        catch let e{
+            print(e.localizedDescription)
+            return nil
+        }
+    }
+    
+    class func CardToJson(bycoder card:Card)->Data?{
+        let coder = JSONEncoder()
+        do{
+        let data = try coder.encode(card)
+            return data
+        }catch let error{
+            print(error.localizedDescription)
+            return nil
+        }
+    }
     
     class func JSONToCard(_ json:String)->Card?{
         var card:Card!
-        let json = try? JSON(data: json.data(using: String.Encoding.utf8)!)
-        if json == nil{
-            return nil
-        }else{
-            let title = json!["title"].stringValue
-            let tag = json!["tag"].stringValue
-            let id = json!["id"].stringValue
-            let definition = json!["definition"].stringValue
-            let description = json!["description"].stringValue
-            let type = json!["type"].stringValue
-            let colorString = json!["color"].arrayValue
+        do{ 
+            let json = try JSON(data: json.data(using: String.Encoding.utf8)!)
+            let title = json["title"].stringValue
+            let tagsJson = json["tag"].arrayValue
+            var tags = [String]()
+            for tag in tagsJson{
+               tags.append(tag.stringValue)
+            }
+            let id = json["id"].stringValue
+            let definition = json["definition"].stringValue
+            let description = json["description"].stringValue
+            let type = json["type"].stringValue
+            let colorString = json["color"].arrayValue
             var color:UIColor?
             if colorString.count >= 4{
                 color = UIColor(red: CGFloat(colorString[0].float!), green: CGFloat(colorString[1].float!), blue: CGFloat(colorString[2].float!), alpha: CGFloat(colorString[3].float!))
             }else{
             color = nil
             }
-            let modifytime = json!["time"].stringValue
+            let modifytime = json["time"].stringValue
             if type == "card"{
-                card = Card(title: title, tag: tag, description: description, id: id, definition: definition, color: color, cardType: type, modifytime: modifytime)
+                card = Card(title: title, tag: tags, description: description, id: id, definition: definition, color: color, cardType: type, modifytime: modifytime)
             }else if type == "example"{
-                card = ExampleCard(id: id)
+                card = ExampleCard(id: id, title: title)
                 card.updateTime(modifytime)
                 let manager = FileManager.default
                 var url = Constant.Configuration.url.attributedText
@@ -81,7 +112,7 @@ class CardParser{
                         }
                     })
                     */
-                    User.downloadPhotosUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                    User.downloadPhotosUsingQCloud(cardID: id) { (bool, error) in
                         //
                     }
                 }
@@ -89,37 +120,32 @@ class CardParser{
                 card.updateTime(modifytime)
                 
             }else if type == "voice"{
-                card = VoiceCard(id: id)
+                card = VoiceCard(id: id,title:title)
                 let manager = FileManager.default
-                var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                url?.appendPathComponent(loggedID)
-                url?.appendPathComponent("audio")
-                url?.appendPathComponent(id + ".wav")
-                if !manager.fileExists(atPath:(url?.path)!){
+                var url = Constant.Configuration.url.Audio
+                url.appendPathComponent(id + ".wav")
+                if !manager.fileExists(atPath:(url.path)){
                     /* deprecated at May.7th
                 User.getAudio(email: loggedemail, cardID: id, completionHandler: { (path) in
                     print("get audio success")
                 })
                     */
                 }
-                User.downloadAudioUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                User.downloadAudioUsingQCloud(cardID: id) { (bool, error) in
                     //
                 }
-                let state = json!["state"].stringValue
+                let state = json["state"].stringValue
                 if state == RecordManager.State.willRecord.rawValue || state == RecordManager.State.recording.rawValue{
                     (card as! VoiceCard).voiceManager?.state = RecordManager.State.willRecord
                 }else{
                  (card as! VoiceCard).voiceManager?.state = RecordManager.State.haveRecord
                 }
             }else if type == "map"{
-                card = MapCard(id: id, formalAddress: json!["formalAddress"].stringValue, neighbourAddress: json!["neighbourAddress"].stringValue, longitude: CGFloat(json!["longitude"].floatValue), latitude: CGFloat(json!["latitude"].floatValue))
+                card = MapCard(id: id, formalAddress: json["formalAddress"].stringValue, neighbourAddress: json["neighbourAddress"].stringValue, longitude: CGFloat(json["longitude"].floatValue), latitude: CGFloat(json["latitude"].floatValue))
                 let manager = FileManager.default
-                var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                url?.appendPathComponent(loggedID)
-                url?.appendPathComponent("mapPic")
-                try? manager.createDirectory(atPath: (url?.path)!, withIntermediateDirectories: true, attributes: nil)
-                url?.appendPathComponent(id + ".jpg")
-                if !manager.fileExists(atPath:(url?.path)!){
+                var url = Constant.Configuration.url.Map
+                url.appendPathComponent(id + ".jpg")
+                if !manager.fileExists(atPath:(url.path)){
                     /* deprecated at May.7th
                     User.getImage(email: loggedemail, cardID: id, completionHandler: { (image) in
                         if image != nil{
@@ -137,7 +163,7 @@ class CardParser{
                         
                     })
                   */
-                    User.downloadMapUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                    User.downloadMapUsingQCloud(cardID: id) { (bool, error) in
                         if error != nil{
                             //
                         }
@@ -145,17 +171,19 @@ class CardParser{
                 }
                 }else if type == "movie"{
                     card = MovieCard(id: id)
-                    User.downloadMovieUsingQCloud(email: loggedemail, cardID: id) { (bool, error) in
+                    User.downloadMovieUsingQCloud(cardID: id) { (bool, error) in
                         if error != nil{
                             //
                         }
                     }
                 }
+            let parentCard = json["parentcard"].rawString()
+            if parentCard != nil{
+                let prCard = JSONToCard(parentCard!)
+                
+            }
             
-            
-            
-            
-            let subCardsArray = json?["subcard"].array
+            let subCardsArray = json["subcard"].array
             if subCardsArray != nil{
             var subcards:[Card] = [Card]()
             for subcard in subCardsArray!{
@@ -165,15 +193,24 @@ class CardParser{
             }
                 card.addChildNotes(subcards)
             }
-            
-    }
         return card
+    }catch let error{
+        print(error.localizedDescription)
+        return nil
+    }
     }
     
     class func CardToJSON(_ card:Card)->String?{
      var string = "{"
         string.append("\"title\":" + "\"" + card.getTitle() + "\"" + ", ")
-        string.append("\"tag\":" + "\"" + card.getTag() +  "\"" + ", ")
+        string.append("\"tag\":[")
+        for tag in card.getTag(){
+            string.append("\"" + tag + "\",")
+        }
+        if card.getTag().count > 0{
+        string.removeLast()
+        }
+        string.append("],")
         string.append("\"id\":" + "\"" + card.getId() + "\"" + ", ")
         string.append("\"definition\":" + "\"" + card.getDefinition() + "\"" + ", ")
         string.append("\"description\":" + "\"" + card.getDescription() + "\"" + ", ")
@@ -227,7 +264,9 @@ class CardParser{
             string.append(CardToJSON(card)!)
             string.append(",")
         }
+            if card.getChilds().count > 0{
             string.removeLast()
+            }
             string.append("]" )
         }
         

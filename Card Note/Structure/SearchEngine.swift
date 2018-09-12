@@ -18,14 +18,14 @@ class SearchEngine{
     }
     
     class func loadCards(cards:[Card],keyWords:[String])->[Card]{
-            var cardList = cards
+        let cardList = cards
             var parsedCardlist = [Card]()
             for card in cardList{
                 for keyword in keyWords{
                     if card.getDescription().lowercased().contains(keyword) || card.getDefinition().lowercased().contains(keyword) || card.getTitle().lowercased().contains(keyword) || card.getTag().contains(keyword){
                         parsedCardlist.append(card)
                     }else{
-                       var locationCard = card
+                        let locationCard = card
                        if locationCard.ifHasChild(){
                             if loadCards(cards: locationCard.getChilds(), keyWords: keyWords).count > 0{
                                 parsedCardlist.append(locationCard)

@@ -13,14 +13,59 @@ import SCLAlertView
 import SwiftyJSON
 import SwiftMessages
 import Font_Awesome_Swift
+import Instructions
+extension CardViewController:CoachMarksControllerDataSource{
+    func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
+        return 4
+    }
+    
+    func coachMarksController(_ coachMarksController: CoachMarksController,
+                              coachMarkAt index: Int) -> CoachMark {
+        if index == 0{
+        return coachMarksController.helper.makeCoachMark(for:addCardButton)
+        }else if index == 1{
+            return coachMarksController.helper.makeCoachMark(for: addCardButton)
+        }else if index == 2{
+         return coachMarksController.helper.makeCoachMark(for: searchTextView)
+        }else{
+         return coachMarksController.helper.makeCoachMark(for: slideView)
+        }
+    }
+    
+    func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
+        let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
+        if index == 0{
+        coachViews.bodyView.hintLabel.text = "Welcome to Card Note. Ready for a walk?"
+        coachViews.bodyView.nextLabel.text = "Ok"
+        }else if index == 1{
+        coachViews.bodyView.hintLabel.text = "Click '+' to add a new card."
+        coachViews.bodyView.nextLabel.text = "Ok"
+        }else if index == 2{
+        coachViews.bodyView.hintLabel.text = "This is an search Bar for you to search your cards."
+        coachViews.bodyView.nextLabel.text = "OK"
+        }else if index == 3{
+        coachViews.bodyView.hintLabel.text = "This is a tool Bar to select your cards."
+        coachViews.bodyView.nextLabel.text = "OK"
+        }
+        
+        return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
+    }
+}
+
 class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate,UIDocumentInteractionControllerDelegate{
-    @IBOutlet weak var addCardButton: UIButton!
+    @IBOutlet weak var addCardButton: FloatButton!
     var scrollView:UIScrollView!
     var searchTextView:SearchBar = SearchBar()
     var slideView:UIView!
     var docController:UIDocumentInteractionController!
+    let coachMarksController = CoachMarksController()
     @IBAction func addNewCard(_ sender:UIButton){
-    self.performSegue(withIdentifier: "cardEditor", sender: CardEditor.type.add)
+        
+        let vc = storyboard?.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.type = CardEditor.type.add
+        vc.delegate = self
+        self.present(vc, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -38,74 +83,120 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadCard()
-        
     }
     
     override func viewDidLoad() {
-        addCardButton.setFAIcon(icon: .FAPlusCircle, iconSize: 50, forState: .normal)
-        addCardButton.setTitleColor(.black, for: .normal)
+       // self.view.backgroundColor = .clear
+        coachMarksController.dataSource = self
+        if !isFirstLaunch{
+            self.coachMarksController.start(on: self)
+        }
+        func createButtonUnderBar(title:String)->UIButton{
+            let filterButton = UIButton()
+            filterButton.frame = CGRect(x: 40, y: 10, width: 60, height: 30)
+            slideView.addSubview(filterButton)
+            let string = NSAttributedString(string: title, attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize: 18),NSAttributedStringKey.foregroundColor:Constant.Color.translusentGray])
+            filterButton.setAttributedTitle(string, for: .normal)
+            filterButton.setTitleColor(UIColor.flatGray, for: .normal)
+            filterButton.layer.cornerRadius = 2
+            filterButton.backgroundColor = .white
+            filterButton.layer.shadowOffset = CGSize(width: 0, height: 5)
+            filterButton.layer.shadowColor = Constant.Color.darkWhite.cgColor
+            filterButton.layer.shadowOpacity = 0.5
+            filterButton.layer.cornerRadius = filterButton.frame.height/2
+            return filterButton
+        }
         
-        //adjust distance
-        let y:Int = UIDevice.current.Xdistance()
+        addCardButton.setBackgroundImage(UIImage(named: "plusButton"), for: .normal)
+        addCardButton.setTitleColor(.clear, for: .normal)
+        addCardButton.frame.origin = CGPoint(x: self.view.frame.width - 50, y: self.view.frame.height - 200)
+        addCardButton.frame.size = CGSize(width: 50, height: 50)
+        addCardButton.yBottomOffSet = 49
+        
+        let gl = CAGradientLayer.init()
+        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100);
+        gl.startPoint = CGPoint(x:0, y:0);
+        gl.endPoint = CGPoint(x:1, y:1);
+        gl.colors = [Constant.Color.blueLeft.cgColor,Constant.Color.blueRight.cgColor]
+        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        gl.cornerRadius = 0
+        self.view.layer.addSublayer(gl)
+        
+       
         //addCardButton.frame.origin.y = CGFloat(y)
         self.view.bringSubview(toFront: addCardButton)
         
         //search Bar
-        searchTextView.frame = CGRect(x: 40, y: y, width: Int(UIScreen.main.bounds.width-80), height: 40)
+        searchTextView.frame = CGRect(x: 40, y: 80, width: Int(UIScreen.main.bounds.width-80), height: 40)
         self.view.addSubview(searchTextView)
         self.view.bringSubview(toFront: searchTextView)
         searchTextView.searchTextView.addTarget(self, action: #selector(textViewChange), for: .allEditingEvents)
         searchTextView.searchTextView.delegate = self
         //slideView
-        slideView = UIView(frame: CGRect(x: 0, y: searchTextView.frame.height + searchTextView.frame.origin.y, width: UIScreen.main.bounds.width, height: 50))
+        slideView = UIView(frame: CGRect(x: 0, y:0, width: UIScreen.main.bounds.width, height: 50))
         slideView.backgroundColor = .white
-        
-       // slideView.layer.shadowRadius = 1
-        //slideView.layer.shadowColor = UIColor.black.cgColor
-        //slideView.layer.shadowOpacity = 0.5
        
         //filter Button
-        let filterButton = UIButton()
-        filterButton.frame = CGRect(x: 40, y: 10, width: 60, height: 30)
+        let filterButton = createButtonUnderBar(title: "Filter")
+        let syncButton = createButtonUnderBar(title: "Sync")
+        filterButton.frame = CGRect(x: 40, y: 30, width: 60, height: 30)
+        syncButton.frame = CGRect(x: 110, y: 30, width: 60, height: 30)
+        syncButton.addTarget(self, action: #selector(syncCard), for: .touchDown)
         slideView.addSubview(filterButton)
-        self.view.addSubview(slideView)
-        let string = NSAttributedString(string: "Filter", attributes: [NSAttributedStringKey.font:UIFont(name: "AmericanTypewriter", size: 14)])
-        print(string)
-        filterButton.setAttributedTitle(string, for: .normal)
-        filterButton.setTitleColor(.black, for: .normal)
-        filterButton.layer.cornerRadius = 2
-        filterButton.backgroundColor = .white
-        filterButton.layer.shadowOffset = CGSize(width: 1, height: 1)
-        filterButton.layer.shadowColor = UIColor.black.cgColor
-        filterButton.layer.shadowOpacity = 0.5
+        slideView.addSubview(syncButton)
         
         scrollView = UIScrollView()
         scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         scrollView.isScrollEnabled = true
-        scrollView.frame = CGRect(x: 0, y: searchTextView.frame.origin.y + searchTextView.frame.height + 20, width: self.view.bounds.width, height: self.view.bounds.height-(slideView.frame.origin.y + slideView.frame.height + 10))
-        scrollView.contentSize = CGSize(width:self.view.bounds.width,height:10)
+        scrollView.frame = CGRect(x: 0, y: searchTextView.frame.origin.y + searchTextView.frame.height - 20, width: self.view.bounds.width, height: self.view.bounds.height-(searchTextView.frame.origin.y + searchTextView.frame.height))
+        scrollView.contentSize = CGSize(width:self.view.bounds.width,height:slideView.frame.height)
+        scrollView.addSubview(slideView)
         self.view.addSubview(scrollView)
         self.view.bringSubview(toFront: addCardButton)
-        self.view.bringSubview(toFront: slideView)
+       /// self.view.bringSubview(toFront: slideView)
         self.view.bringSubview(toFront: searchTextView)
+        var locationManager = CLLocationManager()
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
     }
     
     @objc func slide(gesture: UIPanGestureRecognizer){
+        /*
     let translation = gesture.translation(in: self.view)
         if (slideView.center.y + translation.y) >= searchTextView.frame.height + searchTextView.frame.origin.y - 50 && (slideView.center.y + translation.y) <= searchTextView.frame.origin.y + searchTextView.frame.height{
    // gesture.view?.center.x += translation.x
           slideView.center.y += translation.y
         }
         gesture.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
+ */
     }
     
     var lastScrollViewContentOffY:CGFloat = 0
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         lastScrollViewContentOffY = scrollView.contentOffset.y
     
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y <= 0{
+            slideView.frame.origin.y = scrollView.contentOffset.y
+        }else{
+            slideView.frame.origin.y = scrollView.contentOffset.y/2
+        }
+    }
+    
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if scrollView.contentOffset.y <= 0{
+            
+        }else if scrollView.contentOffset.y > 0 && scrollView.contentOffset.y < slideView.frame.height/2{
+             scrollView.contentOffset.y = 0
+    }else if scrollView.contentOffset.y >= self.slideView.frame.height/2 && scrollView.contentOffset.y <= self.slideView.frame.height{
+            scrollView.contentOffset.y = self.slideView.frame.height
+        }
+        
+        /*
         if lastScrollViewContentOffY - scrollView.contentOffset.y > -50 && lastScrollViewContentOffY - scrollView.contentOffset.y < 0{
             UIView.animate(withDuration: 0.5) {
                 self.slideView.frame.origin.y = self.searchTextView.frame.height + self.searchTextView.frame.origin.y - 50
@@ -123,14 +214,14 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 self.slideView.frame.origin.y = self.searchTextView.frame.height + self.searchTextView.frame.origin.y
             }
         }
+ */
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         let manager = FileManager.default
         var cardList:[Card]!
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-         url?.appendPathComponent(loggedID)
-        url?.appendPathComponent("card.txt")
+         url?.appendPathComponent("card.txt")
         if let dateRead = try? Data.init(contentsOf: url!){
             cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
             if cardList == nil{
@@ -173,28 +264,35 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
  */
     }
     
+    
+    func reload(){
+        
+    }
+    
     func loadCard(){
-        scrollView.contentSize = CGSize(width:self.view.bounds.width,height:50)
+        let contentOffSetY = scrollView.contentOffset.y
+        scrollView.contentSize = CGSize(width:self.view.bounds.width,height: scrollView.frame.height + 20)
         for subview in scrollView.subviews{
-            subview.removeFromSuperview()
+            if subview.isKind(of:CardView.self){
+                subview.removeFromSuperview()}
         }
         let manager = FileManager.default
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-         url?.appendPathComponent(loggedID)
         url?.appendPathComponent("card.txt")
-        
         if let dateRead = try? Data.init(contentsOf: url!){
             var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
             if cardList == nil{
                 cardList = [Card]()
+                
             }
+           
             
-            var cumulatedY = 50
+            var cumulatedY:CGFloat = 70
             for card in cardList!{
                 var cardView:CardView = CardView.getSingleCardView(card:card)
                 cardView.frame.origin.y = CGFloat(cumulatedY)
-                cumulatedY += Int(cardView.bounds.height
-                + 10)
+                cumulatedY += cardView.bounds.height
+                + 30
                 let tapGesture = UITapGestureRecognizer()
                 tapGesture.addTarget(self, action: #selector(tapped))
                 tapGesture.numberOfTapsRequired = 1
@@ -205,10 +303,12 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 gesture.addTarget(self, action: #selector(controllPanel))
                 cardView.addGestureRecognizer(gesture)
                 scrollView.addSubview(cardView)
-                scrollView.contentSize = CGSize(width: self.view.bounds.width, height: scrollView.contentSize.height + cardView.bounds.height + 10)
+                if cumulatedY > scrollView.contentSize.height{
+                scrollView.contentSize = CGSize(width: self.view.bounds.width, height: cumulatedY)
+                }
             }
-            
         }
+        scrollView.contentOffset.y = contentOffSetY
     }
     
    
@@ -234,8 +334,15 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         
             var filterdCardList = [Card]()
             for card in cardList{
-                if colorConstaints.contains(card.color!) && tagConstaints.contains(card.getTag()){
+                if colorConstaints.contains(card.color!) && tagConstaints.isEmpty{
                     filterdCardList.append(card)
+                }else if colorConstaints.contains(card.color!) && !tagConstaints.isEmpty{
+                    for tagConstriant in tagConstaints{
+                        if card.getTag().contains(tagConstriant){
+                            filterdCardList.append(card)
+                            break
+                        }
+                    }
                 }else if colorConstaints.isEmpty && tagConstaints.isEmpty{
                     filterdCardList.append(card)
                 }
@@ -267,7 +374,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         let selectedView = sender.view as! CardView
         let controllPanel = CardViewPanel.getSingleCardViewPanel(frame: CGRect(x:selectedView.frame.origin.x,y:selectedView.frame.origin.y,width:selectedView.frame.width,height:selectedView.frame.height))
         scrollView.addSubview(controllPanel)
-        controllPanel.animation = "squeezeLeft"
+        controllPanel.animation = "slideLeft"
         controllPanel.curve = "EaseIn"
         controllPanel.animate()
         controllPanel.delegate = self
@@ -281,11 +388,11 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     @objc func controllPanelEaseOut(_ sender:UISwipeGestureRecognizer){
       let panel = sender.view as! CardViewPanel
         panel.frame.origin.x = self.view.frame.width
-        panel.animation = "squeezeRight"
-        panel.curve = "EaseIn"
+        panel.animation = "slideRight"
+        panel.curve = "EaseOut"
         panel.animate()
         panel.animateNext {
-            panel.removeFromSuperview()
+        panel.removeFromSuperview()
         }
     }
     
@@ -333,11 +440,28 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     func deleteButtonClicked(_ controllPanel:CardViewPanel) {
         let cardView = controllPanel.controlledView as! CardView
         let alertView = SCLAlertView()
-        alertView.addButton("Delete") {
+        alertView.addButton("local repository") {
+            controllPanel.removeFromSuperview()
             self.deleteCard(card: cardView.card)
+            alertView.hideView()
+            self.loadCard()
         }
-         let responder = alertView.showWarning("Warning", subTitle: "Are you deleting this card?")
-    
+        alertView.addButton("local repository and iCloud") {
+             controllPanel.removeFromSuperview()
+            self.deleteCard(card: cardView.card)
+            self.loadCard()
+            Cloud.deleteRecordData(id: cardView.card.getId(), completionHandler: { (bool) in
+                DispatchQueue.main.async {
+                if bool{
+                   AlertView.show(success: "Succeed!")
+                }else{
+                    AlertView.show(error: "Error. The deleting operation failed.")
+                }
+                }
+            })
+            
+        }
+        let responder = alertView.showWarning("Warning", subTitle: "Are you deleting this card From?")
     }
     
     @objc private func shareCard(card:Card){
@@ -353,7 +477,6 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     @objc private func deleteCard(card:Card){
         let manager = FileManager.default
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent(loggedID)
         url?.appendPathComponent("card.txt")
         if let dateRead = try? Data.init(contentsOf: url!){
             var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
@@ -375,14 +498,40 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 print("Fail to delete Card")
             }
         }
-    
-    
+        
     }
     
     @objc func tapped(_ sender:UITapGestureRecognizer){
+        let vc = storyboard?.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
+        vc.delegate = self
+        vc.modalPresentationStyle = .overCurrentContext
         let card:Card = (sender.view as! CardView).card
-        sender.view?.hero.id = "batman"
-        self.performSegue(withIdentifier: "cardEditor", sender: card)
+        sender.view?.hero.id = card.getId()
+        vc.card = card
+        vc.type = CardEditor.type.save
+        self.present(vc, animated: true, completion: nil)
     }
     
+    @objc func syncCard(){
+        sync { (bool) in
+            if bool{
+                DispatchQueue.main.async {
+                    AlertView.show(success: "Sync Succeed.")
+                    self.loadCard()
+                }
+            }else{
+                DispatchQueue.main.async {
+                    AlertView.show(error: "Sync Failed. Check The Internet.")
+                }
+            }
+        }
+    }
+    
+    
+}
+
+extension CardViewController:CardEditorDelegate{
+    func cardEditor(DidFinishSaveCard card: Card) {
+        loadCard()
+    }
 }

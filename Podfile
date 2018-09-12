@@ -19,6 +19,11 @@ pod 'RAMPaperSwitch'
 pod 'SwiftyStoreKit'
 pod 'Mapbox-iOS-SDK', '~> 4.2'
 pod 'MapboxGeocoder.swift', '~> 0.9'
+pod 'Instructions', '~> 1.2.0'
+pod 'SwiftyJSON'
+pod 'JTAppleCalendar'
+pod 'BaiduMapKit'
+pod 'BMKLocationKit'
   # Pods for Card Note
 
 

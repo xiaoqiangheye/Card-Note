@@ -8,6 +8,7 @@
 
 import Foundation
 @objc protocol LocationListViewDelegate{
-    func cell(cellDidClicked cell:LocationListView.LocationCellView,Pois:AMapPOI)
+    @objc optional func cell(cellDidClicked cell:LocationListView.LocationCellView,Pois:AMapPOI)
+    @objc optional func cell(cellDidClicked cell:LocationListView.LocationCellView)
 }
 

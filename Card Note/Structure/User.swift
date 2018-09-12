@@ -74,8 +74,8 @@ class User:NSObject,URLSessionDelegate{
     static func uploadAttrUsingQCloud(url:URL){
         if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
-        print("userText/"  + loggedemail + "/" + url.lastPathComponent)
-        put.object =  "userText/"  + loggedemail + "/" + url.lastPathComponent
+        print("userText/"  + url.lastPathComponent)
+        put.object =  "userText/"  + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
         put.body = NSURL(fileURLWithPath: url.path)
         put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
@@ -89,11 +89,11 @@ class User:NSObject,URLSessionDelegate{
         }
     }
     
-    static func uploadPhotoUsingQCloud(email:String,url:URL){
+    static func uploadPhotoUsingQCloud(url:URL){
          if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
-        print("userImage/"  + email + "/" + url.lastPathComponent)
-        put.object =  "userImage/"  + email + "/" + url.lastPathComponent
+        print("userImage/" + url.lastPathComponent)
+        put.object =  "userImage/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
         put.body = NSURL(fileURLWithPath: url.path)
         put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
@@ -108,10 +108,10 @@ class User:NSObject,URLSessionDelegate{
     }
 
     
-    static func uploadAudioUsingQCloud(email:String,url:URL){
+    static func uploadAudioUsingQCloud(url:URL){
          if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
-        put.object = "userAudio/"  + email + "/" + url.lastPathComponent
+        put.object = "userAudio/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
         put.body = NSURL(fileURLWithPath: url.path)
         put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
@@ -125,10 +125,10 @@ class User:NSObject,URLSessionDelegate{
         }
     }
     
-    static func uploadMovieUsingQCloud(email:String,url:URL){
+    static func uploadMovieUsingQCloud(url:URL){
          if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
-        put.object = "userMovie/"  + email + "/" + url.lastPathComponent
+        put.object = "userMovie/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
         put.body = NSURL(fileURLWithPath: url.path)
         put.sendProcessBlock = {(bytesSent,totalBytesSent,totalBytesExpectedToSend) in
@@ -145,7 +145,7 @@ class User:NSObject,URLSessionDelegate{
     
     
     
-    static func downloadPhotosUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+    static func downloadPhotosUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
          if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
@@ -154,7 +154,7 @@ class User:NSObject,URLSessionDelegate{
         url.appendPathComponent(cardID + ".jpg")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
-        request.object = "userImage/" + email + "/" + cardID + ".jpg"
+        request.object = "userImage/" + cardID + ".jpg"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
                 completionHandler(true,nil)
@@ -170,7 +170,7 @@ class User:NSObject,URLSessionDelegate{
         }
     }
     
-    static func downloadMapUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+    static func downloadMapUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
          if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
@@ -179,7 +179,7 @@ class User:NSObject,URLSessionDelegate{
         url.appendPathComponent(cardID + ".jpg")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
-        request.object = "userImage/" + email + "/" + cardID + ".jpg"
+        request.object = "userImage/" + cardID + ".jpg"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
                 completionHandler(true,nil)
@@ -195,7 +195,7 @@ class User:NSObject,URLSessionDelegate{
         }
     }
     
-    static func downloadAudioUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+    static func downloadAudioUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
          if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
@@ -204,7 +204,7 @@ class User:NSObject,URLSessionDelegate{
         url.appendPathComponent(cardID + ".wav")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
-        request.object = "userAudio/" + email + "/" + cardID + ".wav"
+        request.object = "userAudio/" + cardID + ".wav"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
             print("download successfully, Object ID\(outputObject)")
@@ -220,7 +220,7 @@ class User:NSObject,URLSessionDelegate{
         }
     }
     
-    static func downloadMovieUsingQCloud(email:String,cardID:String,completionHandler:@escaping (Bool,Error?)->()){
+    static func downloadMovieUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
          if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
@@ -229,7 +229,7 @@ class User:NSObject,URLSessionDelegate{
         url.appendPathComponent(cardID + ".mov")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
-        request.object = "userMovie/" + email + "/" + cardID + ".mov"
+        request.object = "userMovie/" + cardID + ".mov"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
             completionHandler(true,nil)
@@ -255,7 +255,7 @@ class User:NSObject,URLSessionDelegate{
         url.appendPathComponent(cardID + ".rtf")
         request.downloadingURL = url
         request.bucket = "cardnote-1253464939"
-        request.object = "userText/" + loggedemail + "/" + cardID + ".rtf"
+        request.object = "userText/" + cardID + ".rtf"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
                 completionHandler(true,nil)

@@ -13,7 +13,7 @@ class MovieCard:Card{
     var path:String
     init(id:String) {
         self.path = Constant.Configuration.url.Movie.appendingPathComponent(id + ".mov").path
-        super.init(title: "", tag: "", description: "", id: id, definition: "", color: nil, cardType: Card.CardType.movie.rawValue, modifytime: "")
+        super.init(title: "", tag: nil, description: "", id: id, definition: "", color: nil, cardType: Card.CardType.movie.rawValue, modifytime: "")
     }
     
     override func encode(with aCoder: NSCoder) {
@@ -27,5 +27,9 @@ class MovieCard:Card{
         super.init(coder: aDecoder)
     }
     
-    
+    required init(from decoder: Decoder) throws {
+       self.path = ""
+       try super.init(from: decoder)
+       self.path = Constant.Configuration.url.Movie.appendingPathComponent(self.getId() + ".mov").path
+    }
 }

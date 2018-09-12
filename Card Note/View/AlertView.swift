@@ -26,7 +26,61 @@ class AlertView:UIView{
         view.configureContent(title: "Error", body: alert, iconText: "")
         
         // Show the message.
-        SwiftMessages.show(view: target)
+        SwiftMessages.show(view: view)
+    }
+    
+    class func show(error message:String){
+        let view = MessageView.viewFromNib(layout: .cardView)
+        // Theme message elements with the warning style.
+        view.configureTheme(.error)
+        
+        // Add a drop shadow.
+        view.configureDropShadow()
+        
+        view.button?.removeFromSuperview()
+        // Set message title, body, and icon. Here, we're overriding the default warning
+        // image with an emoji character.
+        
+        view.configureContent(title: "Error", body: message, iconText: "")
+        
+        // Show the message.
+        SwiftMessages.show(view: view)
+    }
+    
+    class func show(alert message: String){
+        let view = MessageView.viewFromNib(layout: .cardView)
+        // Theme message elements with the warning style.
+        view.configureTheme(.warning)
+        
+        // Add a drop shadow.
+        view.configureDropShadow()
+        
+        view.button?.removeFromSuperview()
+        // Set message title, body, and icon. Here, we're overriding the default warning
+        // image with an emoji character.
+        
+        view.configureContent(title: "Alert", body: message, iconText: "")
+        
+        // Show the message.
+        SwiftMessages.show(view: view)
+    }
+    
+    class func show(success message:String){
+        let view = MessageView.viewFromNib(layout: .cardView)
+        // Theme message elements with the warning style.
+        view.configureTheme(.success)
+        
+        // Add a drop shadow.
+        view.configureDropShadow()
+        
+        view.button?.removeFromSuperview()
+        // Set message title, body, and icon. Here, we're overriding the default warning
+        // image with an emoji character.
+        
+        view.configureContent(title: "Success", body: message, iconText: "")
+        
+        // Show the message.
+        SwiftMessages.show(view: view)
     }
     
    

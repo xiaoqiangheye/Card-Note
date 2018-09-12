@@ -13,11 +13,13 @@ import Font_Awesome_Swift
 import Hero
 class SignUpController:UIViewController,UITextFieldDelegate{
     var former = ""
+    var now = ""
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var username: UITextField!
     @IBOutlet weak var authCode: UITextField!
     @IBOutlet weak var identifyPassword: UITextField!
+    var continueButton:UIButton!
     override func viewDidLoad() {
         addBottomLine(email)
         addBottomLine(password)
@@ -26,12 +28,13 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         addBottomLine(username)
         
         //self gesture
-        
-        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(endEditing))
+        self.view.addGestureRecognizer(tapGesture)
         
         //resgister KeyBoard Notification
         let centerDefault = NotificationCenter.default
         centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        centerDefault.addObserver(self, selector: #selector(keyboadWillExit(aNotification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         //decoration of button
         for view in self.view.subviews{
@@ -43,7 +46,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         }
         
         //add exist view
-        if former != "ad" && former != "login"{
+        if now != "ad" && former != "login"{
         let existButton = UIButton()
         existButton.setFAIcon(icon: FAType.FAChevronCircleLeft, iconSize: 30, forState: .normal)
         existButton.setTitleColor(.white, for: .normal)
@@ -51,7 +54,33 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         existButton.addTarget(self, action: #selector(exit), for: .touchDown)
         self.view.addSubview(existButton)
         }
+        
+        //continueButton
+        continueButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        continueButton.frame.origin = CGPoint(x: self.view.frame.width - 50, y: self.view.frame.height - 50)
+        continueButton.setFAIcon(icon: .FAArrowCircleRight, iconSize: 30, forState: .normal)
+        continueButton.setTitleColor(.white, for: .normal)
+        self.view.addSubview(continueButton)
+        switch now{
+        case nil:
+            break
+        case "login":
+            continueButton.addTarget(self, action: #selector(login(_:)), for: .touchDown)
+        case "signUp":
+            continueButton.addTarget(self, action: #selector(verification(_:)), for: .touchDown)
+        case "verification":
+            continueButton.addTarget(self, action: #selector(toPassWord(_:)), for: .touchDown)
+        case "password":
+            continueButton.addTarget(self, action: #selector(toCompletion(_:)), for: .touchDown)
+        default:
+            break
+        }
     }
+    
+    @objc func endEditing(){
+        self.view.endEditing(true)
+    }
+    
     
     @objc func keyboardWillShow(aNotification: NSNotification){
         print("keyBoardShow")
@@ -64,12 +93,24 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         }
         for view in self.view.subviews{
             if view.isKind(of: UIButton.self) && view.frame.origin.y + view.frame.height > self.view.frame.height - height!{
-    UIView.setAnimationCurve(UIViewAnimationCurve.easeOut)
+                UIView.setAnimationCurve(UIViewAnimationCurve.easeOut)
                 UIView.animate(withDuration: 0.5) {
                     view.frame.origin.y = self.view.frame.height - height! - view.frame.height
                 }
             }
         }
+    }
+    
+    @objc func keyboadWillExit(aNotification:NSNotification){
+        print("keyBoardExit")
+        let userinfo: NSDictionary = aNotification.userInfo! as NSDictionary
+        let nsValue = userinfo.object(forKey: UIKeyboardFrameEndUserInfoKey)
+        let keyboardRec = (nsValue as AnyObject).cgRectValue
+        let height = keyboardRec?.size.height
+        guard let window = UIApplication.shared.keyWindow else {
+            return
+        }
+         continueButton.frame.origin = CGPoint(x: self.view.frame.width - 50, y: self.view.frame.height - 50)
     }
     
     @objc func exit(){
@@ -78,6 +119,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         }else{
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "first") as! SignUpController
             vc.former = "login"
+            vc.now = "first"
             self.present(vc, animated: true, completion: nil)
         }
     }
@@ -218,6 +260,8 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                     }else{
                         AlertView.show(self.view, alert: json!["error"].stringValue)
                     }
+                }else{
+                    AlertView.show(self.view, alert: "Connection Error.")
                 }
             })
         }else if password.text == ""{
@@ -229,14 +273,18 @@ class SignUpController:UIViewController,UITextFieldDelegate{
     
     @IBAction func toLoginController(_ sender: UIButton) {
        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyBoard.instantiateViewController(withIdentifier: "login")
+        let vc = storyBoard.instantiateViewController(withIdentifier: "login") as! SignUpController
+        vc.former = "ad"
+        vc.now = "login"
         self.present(vc, animated: true, completion: nil)
-        
-        
     }
     
     @IBAction func toSignUpController(_ sender: Any) {
-        performSegue(withIdentifier: "signUp", sender: "main")
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyBoard.instantiateViewController(withIdentifier: "username") as! SignUpController
+        vc.former = "ad"
+        vc.now = "signUp"
+        self.present(vc, animated: true, completion: nil)
     }
     
     @IBAction func verification(_ sender: Any) {
@@ -295,6 +343,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         let destinitation = segue.destination
         if destinitation.isKind(of: SignUpController.self){
             (destinitation as! SignUpController).former = sender as! String
+            (destinitation as! SignUpController).now = segue.identifier!
         }
     }
     

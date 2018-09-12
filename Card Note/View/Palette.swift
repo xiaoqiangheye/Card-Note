@@ -14,6 +14,7 @@ class Palette: UIView{
     var selectedColor:UIColor?
     var parentView:UIView?
     var viewController:UIViewController?
+    weak var delegate:PaletteProtocal?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .clear
@@ -25,9 +26,9 @@ class Palette: UIView{
     }
     
     func addColors(_ colors: [UIColor]){
-        var radius = Double(self.palette.frame.height/2)/2
+        let radius = Double(self.palette.frame.height/2)/2
         var radian:Double = 0.0
-        let eachR = 2 * M_PI / Double(colors.count)
+        let eachR = 2 * .pi / Double(colors.count)
         for color in colors{
             let x = radius * cos(radian)
             let y = radius * sin(radian)
@@ -55,10 +56,18 @@ class Palette: UIView{
         if parentView != nil{
             parentView?.backgroundColor = selectedColor
         }
+        if delegate != nil{
+            delegate?.palette?(didSelectColor: (sender.view?.backgroundColor)!)
+        }
         
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+
+@objc protocol PaletteProtocal:NSObjectProtocol{
+    @objc optional func palette(didSelectColor:UIColor)
 }

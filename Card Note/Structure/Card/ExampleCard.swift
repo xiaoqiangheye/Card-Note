@@ -12,15 +12,15 @@ import UIKit
 class ExampleCard:Card{
     init() {
         let date = NSDate()
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let strNowTime = timeFormatter.string(from: date as Date) as String
-        super.init(title: "", tag: "", description: "", id: UUID().uuidString, definition: "", color: nil, cardType: CardType.example.rawValue,modifytime:strNowTime)
+        let interval = date.timeIntervalSince1970
+        super.init(title: "Key", tag: nil, description: "", id: UUID().uuidString, definition: "Value", color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
        // self.example = example
     }
     
-    init(id:String){
-         super.init(title: "", tag: "", description: "", id: id, definition: "", color: nil, cardType: CardType.example.rawValue,modifytime:"")
+    init(id:String,title:String){
+        let date = NSDate()
+        let interval = date.timeIntervalSince1970
+         super.init(title: title, tag: nil, description: "", id: id, definition: "", color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
     }
     
     override func encode(with aCoder: NSCoder) {
@@ -58,5 +58,9 @@ class ExampleCard:Card{
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
+    
+    required init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
+    
 }

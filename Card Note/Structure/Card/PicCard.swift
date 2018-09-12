@@ -13,15 +13,13 @@ class PicCard:Card{
     var pic:UIImage!
     init(_ pic:UIImage) {
         self.pic = pic
-        super.init(title: "", tag: "", description: "", id: UUID().uuidString, definition: "", color: .clear, cardType: Card.CardType.picture.rawValue, modifytime: "")
+        super.init(title: "", tag: nil, description: "", id: UUID().uuidString, definition: "", color: .clear, cardType: Card.CardType.picture.rawValue, modifytime: "")
     }
     
     required init?(coder aDecoder: NSCoder) {
        // self.pic = aDecoder.decodeObject(forKey: "pic") as? UIImage
         super.init(coder: aDecoder)
-        let manager = FileManager.default
         var url = Constant.Configuration.url.PicCard
-        url.appendPathComponent(loggedID)
         url.appendPathComponent(self.getId() + ".jpg")
         let im = UIImage(named: (url.path))
         if im != nil{
@@ -37,7 +35,7 @@ class PicCard:Card{
                 }
             })
             */
-            User.downloadPhotosUsingQCloud(email: loggedemail, cardID: self.getId()) { (bool, error) in
+            User.downloadPhotosUsingQCloud(cardID: self.getId()) { (bool, error) in
                 if bool{
                     self.pic = UIImage(contentsOfFile: (url.path))
                 }
@@ -45,6 +43,24 @@ class PicCard:Card{
         }
        
        // fatalError("init(coder:) has not been implemented")
+    }
+    
+    required init(from decoder: Decoder) throws {
+       try super.init(from: decoder)
+        var url = Constant.Configuration.url.PicCard
+        url.appendPathComponent(self.getId() + ".jpg")
+        let im = UIImage(named: (url.path))
+        if im != nil{
+            self.pic = im
+        }else{
+            self.pic = #imageLiteral(resourceName: "bubble")
+            User.downloadPhotosUsingQCloud(cardID: self.getId()) { (bool, error) in
+                if bool{
+                    self.pic = UIImage(contentsOfFile: (url.path))
+                }
+            }
+        }
+        
     }
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)

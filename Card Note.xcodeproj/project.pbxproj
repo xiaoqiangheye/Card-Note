@@ -34,21 +34,25 @@
 		B60F40DA2074CFE700196DD5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40D92074CFE700196DD5 /* CardView.swift */; };
 		B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40DB2074D0AE00196DD5 /* Constant.swift */; };
 		B60F40E12074EB2900196DD5 /* CardEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60F40E02074EB2900196DD5 /* CardEditor.swift */; };
-		B61029682096D53F00DA91BB /* VoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B61029672096D53F00DA91BB /* VoiceView.xib */; };
 		B610298A20983D4C00DA91BB /* UIMapPIcker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610298920983D4C00DA91BB /* UIMapPIcker.swift */; };
 		B610298C209840CE00DA91BB /* UIMapPickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610298B209840CE00DA91BB /* UIMapPickerDelegate.swift */; };
 		B610298E2098614C00DA91BB /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610298D2098614C00DA91BB /* LocationListView.swift */; };
 		B6102990209891DA00DA91BB /* LocationListViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610298F209891DA00DA91BB /* LocationListViewDelegate.swift */; };
+		B612ABC721414D1B00EB5314 /* PlaceBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612ABC621414D1B00EB5314 /* PlaceBase.swift */; };
+		B612ABC921415DCB00EB5314 /* googleMapsSupportedLanguage.plist in Resources */ = {isa = PBXBuildFile; fileRef = B612ABC821415DCB00EB5314 /* googleMapsSupportedLanguage.plist */; };
 		B6155EBD208AEE840031F262 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6155EBC208AEE840031F262 /* SearchBar.swift */; };
+		B61A7419213EC6200080DBF1 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B61A7418213EC6200080DBF1 /* libstdc++.6.0.9.tbd */; };
+		B61A741B213EC95B0080DBF1 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B61A741A213EC95B0080DBF1 /* libc++.tbd */; };
 		B61D68F920961BFB00B69009 /* libonline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B61D68F820961BFB00B69009 /* libonline.a */; };
 		B61D68FB20961C0600B69009 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B61D68FA20961C0600B69009 /* libbase.a */; };
 		B61D690D2096217E00B69009 /* TranslationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61D690C2096217E00B69009 /* TranslationManager.swift */; };
-		B61F2E0A20FCF1CD00A6CD22 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B61F2E0920FCF1CC00A6CD22 /* libstdc++.6.0.9.tbd */; };
+		B61DAA1B2123D63E0004217B /* libocronline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B61DAA1A2123D63E0004217B /* libocronline.a */; };
+		B61DAA1D2123D7520004217B /* OCRManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61DAA1C2123D7520004217B /* OCRManager.swift */; };
+		B61DAA232123FBF20004217B /* OCRController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61DAA222123FBF20004217B /* OCRController.swift */; };
+		B61DAA2C21246C630004217B /* OCRResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61DAA2B21246C620004217B /* OCRResultController.swift */; };
 		B62EC9872081D59E004EE3C0 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62EC9862081D59E004EE3C0 /* UserView.swift */; };
 		B62EC9892081FF1A004EE3C0 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62EC9882081FF1A004EE3C0 /* UserViewController.swift */; };
 		B62EC98B20820168004EE3C0 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62EC98A20820168004EE3C0 /* User.swift */; };
-		B62EC9A5208207D5004EE3C0 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B62EC99820820761004EE3C0 /* SwiftyJSON.framework */; };
-		B62EC9A6208207D5004EE3C0 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B62EC99820820761004EE3C0 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B631B14D20CA4CB00026534F /* UsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B631B14C20CA4CB00026534F /* UsController.swift */; };
 		B6385A9620C65CDF00E022CB /* MovieCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6385A9520C65CDF00E022CB /* MovieCard.swift */; };
 		B6385AA720C65CF800E022CB /* ListCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6385AA620C65CF800E022CB /* ListCard.swift */; };
@@ -58,14 +62,27 @@
 		B64A18AF20F4FFF000833BE2 /* AccountPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64A18AE20F4FFF000833BE2 /* AccountPlanView.swift */; };
 		B64A18B220F5D77B00833BE2 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64A18B120F5D77B00833BE2 /* PurchaseManager.swift */; };
 		B64A18BB20F62B5000833BE2 /* PremiumController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64A18BA20F62B5000833BE2 /* PremiumController.swift */; };
+		B64DD43121104C1600BB0B66 /* ClassController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64DD43021104C1600BB0B66 /* ClassController.swift */; };
+		B64DD43B211183C200BB0B66 /* TagOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64DD43A211183C200BB0B66 /* TagOptionView.swift */; };
+		B64DD4442111A5F500BB0B66 /* TagInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64DD4432111A5F500BB0B66 /* TagInputView.swift */; };
+		B6555E3021273B840042C9C3 /* VoiceRecognitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6555E2F21273B840042C9C3 /* VoiceRecognitionController.swift */; };
+		B6555E39212961060042C9C3 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6555E38212961050042C9C3 /* LoadingView.swift */; };
+		B6555E3B212A8A8C0042C9C3 /* languageList.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6555E3A212A8A8A0042C9C3 /* languageList.plist */; };
+		B6555E3E212A97B30042C9C3 /* TranslationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6555E3D212A97B30042C9C3 /* TranslationController.swift */; };
+		B6555E47212AA0EA0042C9C3 /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6555E46212AA0EA0042C9C3 /* OptionViewController.swift */; };
 		B6613B09207B80A1001D117B /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B08207B80A1001D117B /* Palette.swift */; };
 		B6613B0B207CD440001D117B /* CardEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0A207CD440001D117B /* CardEditorView.swift */; };
 		B6613B0D20803A59001D117B /* Constaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0C20803A59001D117B /* Constaint.swift */; };
 		B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0E2080404B001D117B /* SearchEngine.swift */; };
+		B672D432211FE50200A51D9D /* AccountSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B672D431211FE50200A51D9D /* AccountSettingController.swift */; };
+		B672D43B2120176600A51D9D /* Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B672D43A2120176600A51D9D /* Cloud.swift */; };
+		B672D43D21202D3400A51D9D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B672D43C21202D3300A51D9D /* CloudKit.framework */; };
 		B6791227208DFFF100A417FD /* PicCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6791226208DFFF100A417FD /* PicCard.swift */; };
 		B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */; };
 		B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */; };
 		B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68ACBBE206BB1EF0085E5C5 /* Card.swift */; };
+		B68CA33B2117620A00E9A4D3 /* TimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CA33A2117620A00E9A4D3 /* TimeManager.swift */; };
+		B6948C30213936DE00C611CF /* MailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6948C2F213936DE00C611CF /* MailController.swift */; };
 		B696AF3F20AC38E1004C7E9E /* CardViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696AF3E20AC38E1004C7E9E /* CardViewDelegate.swift */; };
 		B6985A7D20BD55FB0014A89B /* AttributedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6985A7C20BD55FB0014A89B /* AttributedTextView.swift */; };
 		B6985A8E20BD7D460014A89B /* AttributedTextViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6985A8D20BD7D460014A89B /* AttributedTextViewDelegate.swift */; };
@@ -85,6 +102,7 @@
 		B6BA3ADB2064AF4C00290BBB /* Card.xib in Resources */ = {isa = PBXBuildFile; fileRef = B6BA3ADA2064AF4C00290BBB /* Card.xib */; };
 		B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADCA20A18317008B6761 /* TapBarController.swift */; };
 		B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BAADDC20A196F8008B6761 /* FilterView.swift */; };
+		B6CAA98E213E5045009CC4A4 /* UIMapPickerWithBaiduMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CAA98D213E5045009CC4A4 /* UIMapPickerWithBaiduMap.swift */; };
 		B6E46AEC20DF9DC400263EFB /* SwitchSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E46AEB20DF9DC400263EFB /* SwitchSetting.swift */; };
 		B6E46AF520DFA71A00263EFB /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E46AF420DFA71A00263EFB /* SettingController.swift */; };
 		B6E505072077D49F003504D8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E505062077D49F003504D8 /* Extension.swift */; };
@@ -97,62 +115,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B62EC99720820761004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2E4FEFDB19575BE100351305;
-			remoteInfo = "SwiftyJSON iOS";
-		};
-		B62EC99920820761004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2E4FEFE619575BE100351305;
-			remoteInfo = "SwiftyJSON iOS Tests";
-		};
-		B62EC99B20820761004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C7DFC5B1A9102BD005AA3F7;
-			remoteInfo = "SwiftyJSON macOS";
-		};
-		B62EC99D20820761004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9C7DFC651A9102BD005AA3F7;
-			remoteInfo = "SwiftyJSON macOS Tests";
-		};
-		B62EC99F20820761004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E4D7CCE81B9465A700EE7221;
-			remoteInfo = "SwiftyJSON watchOS";
-		};
-		B62EC9A120820761004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7236B4F61BAC14150020529B;
-			remoteInfo = "SwiftyJSON tvOS";
-		};
-		B62EC9A320820761004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A8580F741BCF5C5B00DA927B;
-			remoteInfo = "SwiftyJSON tvOS Tests";
-		};
-		B62EC9A7208207D5004EE3C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E4FEFDA19575BE100351305;
-			remoteInfo = "SwiftyJSON iOS";
-		};
 		B6BA3ABE2064AE5400290BBB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B6BA3A9E2064AE5300290BBB /* Project object */;
@@ -176,7 +138,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B62EC9A6208207D5004EE3C0 /* SwiftyJSON.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,23 +186,31 @@
 		B60F40D92074CFE700196DD5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		B60F40DB2074D0AE00196DD5 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		B60F40E02074EB2900196DD5 /* CardEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditor.swift; sourceTree = "<group>"; };
-		B61029672096D53F00DA91BB /* VoiceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VoiceView.xib; sourceTree = "<group>"; };
 		B610298920983D4C00DA91BB /* UIMapPIcker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIMapPIcker.swift; path = "Card Note/ViewController/Map/UIMapPIcker.swift"; sourceTree = SOURCE_ROOT; };
 		B610298B209840CE00DA91BB /* UIMapPickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIMapPickerDelegate.swift; sourceTree = "<group>"; };
 		B610298D2098614C00DA91BB /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
 		B610298F209891DA00DA91BB /* LocationListViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListViewDelegate.swift; sourceTree = "<group>"; };
+		B612ABC621414D1B00EB5314 /* PlaceBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceBase.swift; sourceTree = "<group>"; };
+		B612ABC821415DCB00EB5314 /* googleMapsSupportedLanguage.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = googleMapsSupportedLanguage.plist; sourceTree = "<group>"; };
+		B612ABCA214178E800EB5314 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B6155EBC208AEE840031F262 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		B61A7418213EC6200080DBF1 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = "libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
+		B61A741A213EC95B0080DBF1 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		B61D68F32096149900B69009 /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
 		B61D68F720961BF200B69009 /* FanYiSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FanYiSDK.h; sourceTree = "<group>"; };
 		B61D68F820961BFB00B69009 /* libonline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libonline.a; sourceTree = "<group>"; };
 		B61D68FA20961C0600B69009 /* libbase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbase.a; sourceTree = "<group>"; };
 		B61D690C2096217E00B69009 /* TranslationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationManager.swift; sourceTree = "<group>"; };
+		B61DAA192123D6350004217B /* OCRSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRSDK.h; sourceTree = "<group>"; };
+		B61DAA1A2123D63E0004217B /* libocronline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libocronline.a; sourceTree = "<group>"; };
+		B61DAA1C2123D7520004217B /* OCRManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRManager.swift; sourceTree = "<group>"; };
+		B61DAA222123FBF20004217B /* OCRController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRController.swift; sourceTree = "<group>"; };
+		B61DAA2B21246C620004217B /* OCRResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRResultController.swift; sourceTree = "<group>"; };
 		B61F2E0820FC775B00A6CD22 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		B61F2E0920FCF1CC00A6CD22 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "Card Note/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		B62EC9862081D59E004EE3C0 /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		B62EC9882081FF1A004EE3C0 /* UserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		B62EC98A20820168004EE3C0 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyJSON.xcodeproj; path = "../../../Downloads/SwiftyJSON-master/SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
 		B631B14C20CA4CB00026534F /* UsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsController.swift; sourceTree = "<group>"; };
 		B6385A9520C65CDF00E022CB /* MovieCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCard.swift; sourceTree = "<group>"; };
 		B6385AA620C65CF800E022CB /* ListCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCard.swift; sourceTree = "<group>"; };
@@ -252,14 +221,27 @@
 		B64A18B120F5D77B00833BE2 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		B64A18BA20F62B5000833BE2 /* PremiumController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumController.swift; sourceTree = "<group>"; };
 		B64BAD8B209C3FE200B9ED73 /* Card Note.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Card Note.entitlements"; sourceTree = "<group>"; };
+		B64DD43021104C1600BB0B66 /* ClassController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassController.swift; sourceTree = "<group>"; };
+		B64DD43A211183C200BB0B66 /* TagOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagOptionView.swift; sourceTree = "<group>"; };
+		B64DD4432111A5F500BB0B66 /* TagInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagInputView.swift; sourceTree = "<group>"; };
+		B6555E2F21273B840042C9C3 /* VoiceRecognitionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecognitionController.swift; sourceTree = "<group>"; };
+		B6555E38212961050042C9C3 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		B6555E3A212A8A8A0042C9C3 /* languageList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = languageList.plist; sourceTree = "<group>"; };
+		B6555E3D212A97B30042C9C3 /* TranslationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationController.swift; sourceTree = "<group>"; };
+		B6555E46212AA0EA0042C9C3 /* OptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionViewController.swift; sourceTree = "<group>"; };
 		B6613B08207B80A1001D117B /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		B6613B0A207CD440001D117B /* CardEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditorView.swift; sourceTree = "<group>"; };
 		B6613B0C20803A59001D117B /* Constaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constaint.swift; sourceTree = "<group>"; };
 		B6613B0E2080404B001D117B /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
+		B672D431211FE50200A51D9D /* AccountSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingController.swift; sourceTree = "<group>"; };
+		B672D43A2120176600A51D9D /* Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
+		B672D43C21202D3300A51D9D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B6791226208DFFF100A417FD /* PicCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicCard.swift; sourceTree = "<group>"; };
 		B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewItemController.swift; sourceTree = "<group>"; };
 		B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		B68ACBBE206BB1EF0085E5C5 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		B68CA33A2117620A00E9A4D3 /* TimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeManager.swift; sourceTree = "<group>"; };
+		B6948C2F213936DE00C611CF /* MailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailController.swift; sourceTree = "<group>"; };
 		B696AF3E20AC38E1004C7E9E /* CardViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewDelegate.swift; sourceTree = "<group>"; };
 		B6985A7C20BD55FB0014A89B /* AttributedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextView.swift; sourceTree = "<group>"; };
 		B6985A8D20BD7D460014A89B /* AttributedTextViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextViewDelegate.swift; sourceTree = "<group>"; };
@@ -285,6 +267,7 @@
 		B6BA3ADA2064AF4C00290BBB /* Card.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Card.xib; sourceTree = "<group>"; };
 		B6BAADCA20A18317008B6761 /* TapBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapBarController.swift; sourceTree = "<group>"; };
 		B6BAADDC20A196F8008B6761 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		B6CAA98D213E5045009CC4A4 /* UIMapPickerWithBaiduMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIMapPickerWithBaiduMap.swift; sourceTree = "<group>"; };
 		B6E46AEB20DF9DC400263EFB /* SwitchSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSetting.swift; sourceTree = "<group>"; };
 		B6E46AF420DFA71A00263EFB /* SettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
 		B6E505062077D49F003504D8 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -303,7 +286,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B61F2E0A20FCF1CD00A6CD22 /* libstdc++.6.0.9.tbd in Frameworks */,
+				B61A741B213EC95B0080DBF1 /* libc++.tbd in Frameworks */,
+				B61A7419213EC6200080DBF1 /* libstdc++.6.0.9.tbd in Frameworks */,
+				B672D43D21202D3400A51D9D /* CloudKit.framework in Frameworks */,
 				B6E8FA32208F171A00A0B22B /* WebKit.framework in Frameworks */,
 				B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */,
 				B605E11E208CB27C00F2C260 /* libz.tbd in Frameworks */,
@@ -317,11 +302,11 @@
 				B605E112208CB24A00F2C260 /* CoreLocation.framework in Frameworks */,
 				B605E110208CB24300F2C260 /* QuartzCore.framework in Frameworks */,
 				B6054A2B2100F3D800E7CFF6 /* libSpeechRecognition.a in Frameworks */,
+				B61DAA1B2123D63E0004217B /* libocronline.a in Frameworks */,
 				B605E10E208CB23A00F2C260 /* CoreGraphics.framework in Frameworks */,
 				B605E10C208CB23000F2C260 /* Foundation.framework in Frameworks */,
 				B605E10A208CB22900F2C260 /* UIKit.framework in Frameworks */,
 				B61D68F920961BFB00B69009 /* libonline.a in Frameworks */,
-				B62EC9A5208207D5004EE3C0 /* SwiftyJSON.framework in Frameworks */,
 				47495A0D87442A8C39A95B6F /* Pods_Card_Note.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,6 +336,7 @@
 				B610298920983D4C00DA91BB /* UIMapPIcker.swift */,
 				B6054A2D2102168D00E7CFF6 /* UIMapPickerWithMapBox.swift */,
 				B610298B209840CE00DA91BB /* UIMapPickerDelegate.swift */,
+				B6CAA98D213E5045009CC4A4 /* UIMapPickerWithBaiduMap.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -374,6 +360,9 @@
 		B605E108208CB22700F2C260 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B61A741A213EC95B0080DBF1 /* libc++.tbd */,
+				B61A7418213EC6200080DBF1 /* libstdc++.6.0.9.tbd */,
+				B672D43C21202D3300A51D9D /* CloudKit.framework */,
 				B61F2E0920FCF1CC00A6CD22 /* libstdc++.6.0.9.tbd */,
 				B60B995E209C8C23004BC2D4 /* StoreKit.framework */,
 				B6E8FA31208F171A00A0B22B /* WebKit.framework */,
@@ -407,7 +396,6 @@
 				B6A86DF52088F4EF00F2C6EC /* AlertView.swift */,
 				B6155EBC208AEE840031F262 /* SearchBar.swift */,
 				B610298D2098614C00DA91BB /* LocationListView.swift */,
-				B61029672096D53F00DA91BB /* VoiceView.xib */,
 				B610298F209891DA00DA91BB /* LocationListViewDelegate.swift */,
 				B6BAADDC20A196F8008B6761 /* FilterView.swift */,
 				B64489C220A2FB0100ED3400 /* CardViewPanelDelegate.swift */,
@@ -418,6 +406,9 @@
 				B6E46AEB20DF9DC400263EFB /* SwitchSetting.swift */,
 				B64A18AE20F4FFF000833BE2 /* AccountPlanView.swift */,
 				B6A68AB121076A09009EDA4B /* FloatButton.swift */,
+				B64DD43A211183C200BB0B66 /* TagOptionView.swift */,
+				B64DD4432111A5F500BB0B66 /* TagInputView.swift */,
+				B6555E38212961050042C9C3 /* LoadingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -440,6 +431,14 @@
 				B6E46AF420DFA71A00263EFB /* SettingController.swift */,
 				B64A18A520F4DDAD00833BE2 /* AccountPlanController.swift */,
 				B64A18BA20F62B5000833BE2 /* PremiumController.swift */,
+				B64DD43021104C1600BB0B66 /* ClassController.swift */,
+				B672D431211FE50200A51D9D /* AccountSettingController.swift */,
+				B61DAA222123FBF20004217B /* OCRController.swift */,
+				B61DAA2B21246C620004217B /* OCRResultController.swift */,
+				B6555E2F21273B840042C9C3 /* VoiceRecognitionController.swift */,
+				B6555E3D212A97B30042C9C3 /* TranslationController.swift */,
+				B6555E46212AA0EA0042C9C3 /* OptionViewController.swift */,
+				B6948C2F213936DE00C611CF /* MailController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -451,9 +450,14 @@
 				B6613B0C20803A59001D117B /* Constaint.swift */,
 				B6613B0E2080404B001D117B /* SearchEngine.swift */,
 				B62EC98A20820168004EE3C0 /* User.swift */,
+				B602B1572093244300CD8A40 /* RecordManager.swift */,
 				B605E0F2208CA90000F2C260 /* CardParser.swift */,
+				B6FB6C9621032E7400915B3B /* SpeechManager.swift */,
 				B6FDCEE520BAFD3400BEBD35 /* ImageManager.swift */,
 				B64A18B120F5D77B00833BE2 /* PurchaseManager.swift */,
+				B68CA33A2117620A00E9A4D3 /* TimeManager.swift */,
+				B672D43A2120176600A51D9D /* Cloud.swift */,
+				B612ABC621414D1B00EB5314 /* PlaceBase.swift */,
 			);
 			path = Structure;
 			sourceTree = "<group>";
@@ -470,24 +474,20 @@
 			path = Translation;
 			sourceTree = "<group>";
 		};
-		B62EC98D20820760004EE3C0 /* Products */ = {
+		B61DAA112123D6100004217B /* OCR */ = {
 			isa = PBXGroup;
 			children = (
-				B62EC99820820761004EE3C0 /* SwiftyJSON.framework */,
-				B62EC99A20820761004EE3C0 /* SwiftyJSON iOS Tests.xctest */,
-				B62EC99C20820761004EE3C0 /* SwiftyJSON.framework */,
-				B62EC99E20820761004EE3C0 /* SwiftyJSON macOS Tests.xctest */,
-				B62EC9A020820761004EE3C0 /* SwiftyJSON.framework */,
-				B62EC9A220820761004EE3C0 /* SwiftyJSON.framework */,
-				B62EC9A420820761004EE3C0 /* SwiftyJSON tvOS Tests.xctest */,
+				B61DAA192123D6350004217B /* OCRSDK.h */,
+				B61DAA1A2123D63E0004217B /* libocronline.a */,
+				B61DAA1C2123D7520004217B /* OCRManager.swift */,
 			);
-			name = Products;
+			path = OCR;
 			sourceTree = "<group>";
 		};
 		B6BA3A9D2064AE5300290BBB = {
 			isa = PBXGroup;
 			children = (
-				B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */,
+				B612ABCA214178E800EB5314 /* MyPlayground.playground */,
 				B6BA3AA82064AE5300290BBB /* Card Note */,
 				B6BA3AC02064AE5400290BBB /* Card NoteTests */,
 				B6BA3ACB2064AE5400290BBB /* Card NoteUITests */,
@@ -512,12 +512,11 @@
 			children = (
 				B64BAD8B209C3FE200B9ED73 /* Card Note.entitlements */,
 				B61D68F32096149900B69009 /* bridge.h */,
+				B61DAA112123D6100004217B /* OCR */,
 				B61D68DE209613BB00B69009 /* Translation */,
 				B6BA3AA92064AE5300290BBB /* AppDelegate.swift */,
 				B60F40DB2074D0AE00196DD5 /* Constant.swift */,
 				B6E505062077D49F003504D8 /* Extension.swift */,
-				B602B1572093244300CD8A40 /* RecordManager.swift */,
-				B6FB6C9621032E7400915B3B /* SpeechManager.swift */,
 				B60F40DF2074D5E400196DD5 /* Structure */,
 				B60F40DE2074D5D200196DD5 /* ViewController */,
 				B60F40DD2074D5C100196DD5 /* View */,
@@ -525,6 +524,8 @@
 				B6BA3AB32064AE5300290BBB /* Assets.xcassets */,
 				B6BA3AB52064AE5300290BBB /* LaunchScreen.storyboard */,
 				B6BA3AB82064AE5300290BBB /* Info.plist */,
+				B6555E3A212A8A8A0042C9C3 /* languageList.plist */,
+				B612ABC821415DCB00EB5314 /* googleMapsSupportedLanguage.plist */,
 				B6BA3AB02064AE5300290BBB /* Card_Note.xcdatamodeld */,
 				B6BA3ADA2064AF4C00290BBB /* Card.xib */,
 			);
@@ -581,7 +582,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B62EC9A8208207D5004EE3C0 /* PBXTargetDependency */,
 			);
 			name = "Card Note";
 			productName = "Card Note";
@@ -640,6 +640,9 @@
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
@@ -647,7 +650,7 @@
 								enabled = 1;
 							};
 							com.apple.iCloud = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -674,12 +677,6 @@
 			mainGroup = B6BA3A9D2064AE5300290BBB;
 			productRefGroup = B6BA3AA72064AE5300290BBB /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = B62EC98D20820760004EE3C0 /* Products */;
-					ProjectRef = B62EC98C20820760004EE3C0 /* SwiftyJSON.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				B6BA3AA52064AE5300290BBB /* Card Note */,
@@ -689,58 +686,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		B62EC99820820761004EE3C0 /* SwiftyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SwiftyJSON.framework;
-			remoteRef = B62EC99720820761004EE3C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B62EC99A20820761004EE3C0 /* SwiftyJSON iOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SwiftyJSON iOS Tests.xctest";
-			remoteRef = B62EC99920820761004EE3C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B62EC99C20820761004EE3C0 /* SwiftyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SwiftyJSON.framework;
-			remoteRef = B62EC99B20820761004EE3C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B62EC99E20820761004EE3C0 /* SwiftyJSON macOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SwiftyJSON macOS Tests.xctest";
-			remoteRef = B62EC99D20820761004EE3C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B62EC9A020820761004EE3C0 /* SwiftyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SwiftyJSON.framework;
-			remoteRef = B62EC99F20820761004EE3C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B62EC9A220820761004EE3C0 /* SwiftyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SwiftyJSON.framework;
-			remoteRef = B62EC9A120820761004EE3C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B62EC9A420820761004EE3C0 /* SwiftyJSON tvOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SwiftyJSON tvOS Tests.xctest";
-			remoteRef = B62EC9A320820761004EE3C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		B6BA3AA42064AE5300290BBB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
@@ -748,9 +693,10 @@
 			files = (
 				B6BA3AB72064AE5300290BBB /* LaunchScreen.storyboard in Resources */,
 				B6BA3AB42064AE5300290BBB /* Assets.xcassets in Resources */,
-				B61029682096D53F00DA91BB /* VoiceView.xib in Resources */,
+				B6555E3B212A8A8C0042C9C3 /* languageList.plist in Resources */,
 				B6BA3AAF2064AE5300290BBB /* Main.storyboard in Resources */,
 				B6BA3ADB2064AF4C00290BBB /* Card.xib in Resources */,
+				B612ABC921415DCB00EB5314 /* googleMapsSupportedLanguage.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -782,6 +728,8 @@
 				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Font-Awesome-Swift/Font_Awesome_Swift.framework",
 				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
+				"${BUILT_PRODUCTS_DIR}/Instructions/Instructions.framework",
+				"${BUILT_PRODUCTS_DIR}/JTAppleCalendar/JTAppleCalendar.framework",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
 				"${BUILT_PRODUCTS_DIR}/MapboxGeocoder.swift/MapboxGeocoder.framework",
@@ -791,6 +739,7 @@
 				"${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework",
 				"${BUILT_PRODUCTS_DIR}/Spring/Spring.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftMessages/SwiftMessages.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyStoreKit/SwiftyStoreKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -799,6 +748,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Font_Awesome_Swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Instructions.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JTAppleCalendar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
 				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxGeocoder.framework",
@@ -808,6 +759,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Spring.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftMessages.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyStoreKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -823,10 +775,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Card Note/Pods-Card Note-resources.sh",
 				"${PODS_ROOT}/AMap2DMap/MAMapKit.framework/AMap.bundle",
+				"${PODS_ROOT}/BaiduMapKit/BaiduMapKit/BaiduMapAPI_Map.framework/mapapi.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/mapapi.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -894,6 +848,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B64DD43B211183C200BB0B66 /* TagOptionView.swift in Sources */,
+				B6555E3E212A97B30042C9C3 /* TranslationController.swift in Sources */,
 				B6BA3AAC2064AE5300290BBB /* ViewController.swift in Sources */,
 				B62EC9892081FF1A004EE3C0 /* UserViewController.swift in Sources */,
 				B64489D220A2FB0100ED3400 /* CardViewPanelDelegate.swift in Sources */,
@@ -903,47 +859,61 @@
 				B610298A20983D4C00DA91BB /* UIMapPIcker.swift in Sources */,
 				B602B1542092041C00CD8A40 /* SharedCard.swift in Sources */,
 				B60F40E12074EB2900196DD5 /* CardEditor.swift in Sources */,
+				B6555E47212AA0EA0042C9C3 /* OptionViewController.swift in Sources */,
 				B610298C209840CE00DA91BB /* UIMapPickerDelegate.swift in Sources */,
 				B6E46AF520DFA71A00263EFB /* SettingController.swift in Sources */,
 				B6A86DF22088243200F2C6EC /* OrientationController.swift in Sources */,
 				B696AF3F20AC38E1004C7E9E /* CardViewDelegate.swift in Sources */,
 				B6E46AEC20DF9DC400263EFB /* SwitchSetting.swift in Sources */,
+				B6CAA98E213E5045009CC4A4 /* UIMapPickerWithBaiduMap.swift in Sources */,
+				B61DAA232123FBF20004217B /* OCRController.swift in Sources */,
 				B602B1582093244300CD8A40 /* RecordManager.swift in Sources */,
 				B64A18A620F4DDAD00833BE2 /* AccountPlanController.swift in Sources */,
 				B605E0F3208CA90000F2C260 /* CardParser.swift in Sources */,
 				B64A18BB20F62B5000833BE2 /* PremiumController.swift in Sources */,
 				B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */,
+				B6555E3021273B840042C9C3 /* VoiceRecognitionController.swift in Sources */,
 				B6BA3AAA2064AE5300290BBB /* AppDelegate.swift in Sources */,
 				B6385A9620C65CDF00E022CB /* MovieCard.swift in Sources */,
 				B6985A8E20BD7D460014A89B /* AttributedTextViewDelegate.swift in Sources */,
 				B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */,
+				B672D432211FE50200A51D9D /* AccountSettingController.swift in Sources */,
 				B6385AA720C65CF800E022CB /* ListCard.swift in Sources */,
 				B6FF866420A1B9B8000D0B51 /* CardViewPanel.swift in Sources */,
 				B6155EBD208AEE840031F262 /* SearchBar.swift in Sources */,
 				B62EC98B20820168004EE3C0 /* User.swift in Sources */,
 				B602B1562093232600CD8A40 /* VoiceCard.swift in Sources */,
+				B61DAA2C21246C630004217B /* OCRResultController.swift in Sources */,
+				B64DD43121104C1600BB0B66 /* ClassController.swift in Sources */,
 				B631B14D20CA4CB00026534F /* UsController.swift in Sources */,
+				B6948C30213936DE00C611CF /* MailController.swift in Sources */,
 				B6BA3AB22064AE5300290BBB /* Card_Note.xcdatamodeld in Sources */,
 				B64489D420A41FCC00ED3400 /* ShareView.swift in Sources */,
 				B6A86DF42088D6E200F2C6EC /* AdViewController.swift in Sources */,
 				B605E0FF208CAAFF00F2C260 /* MapCard.swift in Sources */,
 				B62EC9872081D59E004EE3C0 /* UserView.swift in Sources */,
+				B61DAA1D2123D7520004217B /* OCRManager.swift in Sources */,
+				B64DD4442111A5F500BB0B66 /* TagInputView.swift in Sources */,
 				B6791227208DFFF100A417FD /* PicCard.swift in Sources */,
 				B605E101208CAB0D00F2C260 /* TextCard.swift in Sources */,
 				B6985A7D20BD55FB0014A89B /* AttributedTextView.swift in Sources */,
+				B6555E39212961060042C9C3 /* LoadingView.swift in Sources */,
 				B6102990209891DA00DA91BB /* LocationListViewDelegate.swift in Sources */,
 				B6E505072077D49F003504D8 /* Extension.swift in Sources */,
 				B6A86DE9208822DF00F2C6EC /* SignUpController.swift in Sources */,
 				B64A18AF20F4FFF000833BE2 /* AccountPlanView.swift in Sources */,
 				B6FB6C9721032E7400915B3B /* SpeechManager.swift in Sources */,
+				B672D43B2120176600A51D9D /* Cloud.swift in Sources */,
 				B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */,
 				B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */,
 				B605E0FC208CAADE00F2C260 /* ExampleCard.swift in Sources */,
+				B68CA33B2117620A00E9A4D3 /* TimeManager.swift in Sources */,
 				B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */,
 				B6EC1F3E20D3AAFB00E04C4F /* CardEditorDelegate.swift in Sources */,
 				B610298E2098614C00DA91BB /* LocationListView.swift in Sources */,
 				B60F40DA2074CFE700196DD5 /* CardView.swift in Sources */,
 				B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */,
+				B612ABC721414D1B00EB5314 /* PlaceBase.swift in Sources */,
 				B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */,
 				B6613B0D20803A59001D117B /* Constaint.swift in Sources */,
 				B64A18B220F5D77B00833BE2 /* PurchaseManager.swift in Sources */,
@@ -973,11 +943,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B62EC9A8208207D5004EE3C0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "SwiftyJSON iOS";
-			targetProxy = B62EC9A7208207D5004EE3C0 /* PBXContainerItemProxy */;
-		};
 		B6BA3ABF2064AE5400290BBB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B6BA3AA52064AE5300290BBB /* Card Note */;
@@ -1125,6 +1090,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Card Note/Card Note.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3KSH8TJ2RK;
@@ -1146,6 +1112,9 @@
 					"$(PROJECT_DIR)/Card\\ Note/**",
 					"$(PROJECT_DIR)/**",
 					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/OCR",
+					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -1159,7 +1128,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Card Note/bridge.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
 		};
@@ -1170,6 +1139,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Card Note/Card Note.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -1193,6 +1163,9 @@
 					"$(PROJECT_DIR)/Card\\ Note/**",
 					"$(PROJECT_DIR)/**",
 					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/OCR",
+					"$(PROJECT_DIR)/Card\\ Note",
+					"$(PROJECT_DIR)",
 				);
 				"LIBRARY_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
@@ -1210,7 +1183,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Card Note/bridge.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
 		};

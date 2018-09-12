@@ -15,6 +15,7 @@ class Constraint{
         case color
         case tag
     }
+    
     init(_ type:Constraint.type!, _ value: Any) {
         self.type = type
         self.value = value

@@ -13,15 +13,28 @@ class SettingController:UIViewController{
     var scrollView:UIScrollView!
     var titleLabel:UILabel!
     var backButton:UIButton!
+    //var backGround:UIView!
     private var cumulatedHeight:CGFloat = 0
     
     override func viewDidLoad() {
-    titleLabel = UILabel(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width * 0.7, height: 50))
-    titleLabel.center.x = UIScreen.main.bounds.width/2
-    titleLabel.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
-    titleLabel.textColor = .black
-    titleLabel.textAlignment = .center
-    self.view.addSubview(titleLabel)
+        let gl = CAGradientLayer.init()
+        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100);
+        gl.startPoint = CGPoint(x:0, y:0);
+        gl.endPoint = CGPoint(x:1, y:1);
+        gl.colors = [Constant.Color.blueLeft.cgColor,Constant.Color.blueRight.cgColor]
+        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        gl.cornerRadius = 0
+        self.view.layer.addSublayer(gl)
+        self.view.backgroundColor = .white
+        
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width * 0.7, height: 50))
+        titleLabel.center.x = UIScreen.main.bounds.width/2
+        titleLabel.center.y = 50
+        titleLabel.font = UIFont.systemFont(ofSize: 20)
+        titleLabel.textColor = .white
+        titleLabel.textAlignment = .center
+        titleLabel.text = ""
+        self.view.addSubview(titleLabel)
         
     backButton = UIButton(frame: CGRect(x: 10, y: 50, width: 30, height: 30))
     backButton.setFAIcon(icon: FAType.FAChevronCircleLeft, iconSize: 30, forState: .normal)

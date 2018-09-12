@@ -33,5 +33,9 @@ class SharedCard:Card{
         //fatalError("init(coder:) has not been implemented")
     }
     
+    required init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
+    
 }
 

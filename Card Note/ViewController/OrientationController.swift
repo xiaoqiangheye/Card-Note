@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class OrientationController:UIViewController{
-    
     override func viewDidLoad() {
         let signUpView = UserView.signUpView()
         self.view.addSubview(signUpView)
