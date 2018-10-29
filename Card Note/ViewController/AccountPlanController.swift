@@ -12,13 +12,16 @@ import Font_Awesome_Swift
 
 
 class AccountPlanController:UIViewController,UIScrollViewDelegate{
-    var scrollView:UIScrollView!
-    var titleLabel:UILabel!
-    var backButton:UIButton!
-    var backGround:UIView!
+    private var scrollView:UIScrollView!
+    private var titleLabel:UILabel!
+    private var backButton:UIButton!
+    private var backGround:UIView!
+    private var basicView:AccountPlanView!
+    private var premiumView:AccountPlanView!
+    private var planLabel:UILabel!
     override func viewDidLoad() {
         let gl = CAGradientLayer.init()
-        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100);
+        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100)
         gl.startPoint = CGPoint(x:0, y:0);
         gl.endPoint = CGPoint(x:1, y:1);
         gl.colors = [Constant.Color.blueLeft.cgColor,Constant.Color.blueRight.cgColor]
@@ -36,42 +39,26 @@ class AccountPlanController:UIViewController,UIScrollViewDelegate{
         titleLabel.text = "Account Plan"
         self.view.addSubview(titleLabel)
         
-        //set up the scrollView
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 100))
-        scrollView.isScrollEnabled = true
-        scrollView.isPagingEnabled = true
-        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width * 3, height: UIScreen.main.bounds.height)
-        scrollView.delegate = self
-         self.hero.isEnabled = true
-        //set up the account plan page
-        let basicView = AccountPlanView(plan: .basic)
-        basicView.center = CGPoint(x: UIScreen.main.bounds.width/2, y: scrollView.frame.height/2)
-        scrollView.addSubview(basicView)
+        planLabel = UILabel(frame: CGRect(x: 0, y:100, width: UIScreen.main.bounds.width, height: 50))
+        planLabel.text = "Current Plan: \(Constant.Configuration.AccountPlan.capitalized)"
+        planLabel.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.8)
+        planLabel.textAlignment = .center
+        planLabel.addBottomLine()
+        self.view.addSubview(planLabel)
         
-        let premiumView = AccountPlanView(plan: .premium)
+        //set up the account plan page
+        basicView = AccountPlanView(plan: .basic)
+        basicView.center = CGPoint(x: UIScreen.main.bounds.width/2, y: UIScreen.main.bounds.height/2)
+        basicView.frame.origin.y = 160
+        self.view.addSubview(basicView)
+        
+        premiumView = AccountPlanView(plan: .premium)
         premiumView.hero.id = "premium"
-        premiumView.center = CGPoint(x: UIScreen.main.bounds.width + UIScreen.main.bounds.width/2, y: scrollView.frame.height/2)
+        premiumView.frame.origin = CGPoint(x: UIScreen.main.bounds.width/2, y: basicView.frame.origin.y + basicView.frame.height + 50)
+        premiumView.center.x = UIScreen.main.bounds.width/2
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(premiumTaped))
         premiumView.addGestureRecognizer(tapGesture)
-        scrollView.addSubview(premiumView)
-        
-        //adjust scrollView width
-        scrollView.contentSize.width = UIScreen.main.bounds.width * 2
-        scrollView.contentSize.height = UIScreen.main.bounds.height - 100
-        
-        switch Constant.Configuration.AccountPlan{
-        case PurchaseManager.Product.premium_one_month.rawValue:
-            scrollView.contentOffset.x = UIScreen.main.bounds.width
-        case PurchaseManager.Product.premium_6_months.rawValue:
-            scrollView.contentOffset.x = UIScreen.main.bounds.width
-        case PurchaseManager.Product.premium_12_months.rawValue:
-            scrollView.contentOffset.x = UIScreen.main.bounds.width
-        case "basic": break
-        default:
-            break
-        }
-        self.view.addSubview(scrollView)
-        
+        self.view.addSubview(premiumView)
         
         
         backButton = UIButton(frame: CGRect(x: 10, y: 50, width: 30, height: 30))
@@ -96,4 +83,35 @@ class AccountPlanController:UIViewController,UIScrollViewDelegate{
         super.viewDidAppear(animated)
         
     }
+    
+    var lastContentOffSetY:CGFloat = 0
+    var currentContentOffSetY:CGFloat = 0
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        lastContentOffSetY = currentContentOffSetY
+        currentContentOffSetY = scrollView.contentOffset.y
+        if lastContentOffSetY < currentContentOffSetY{
+         
+        }else if lastContentOffSetY > currentContentOffSetY{
+          
+        }
+    }
+    
+    func createAnimation (keyPath: String, toValue: CGFloat) -> CABasicAnimation {
+        //创建动画对象
+        let scaleAni = CABasicAnimation()
+        //设置动画属性
+        scaleAni.keyPath = keyPath
+        
+        //设置动画的起始位置。也就是动画从哪里到哪里。不指定起点，默认就从positoin开始
+        scaleAni.toValue = toValue
+        
+        //动画持续时间
+        scaleAni.duration = 0.1;
+        
+        //动画重复次数
+        scaleAni.repeatCount = 1
+        
+        return scaleAni;
+    }
+    
 }

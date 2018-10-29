@@ -56,9 +56,7 @@ class TextCard:Card{
        // fatalError("init(coder:) has not been implemented")
     }
     
-    required init(from decoder: Decoder) throws {
-         try super.init(from: decoder)
-    }
+   
     
    
     override func encode(with aCoder: NSCoder) {

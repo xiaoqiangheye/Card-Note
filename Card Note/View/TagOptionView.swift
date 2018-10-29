@@ -53,9 +53,16 @@ class TagOptionView:UIView,UIScrollViewDelegate{
     
     @objc func createTag(){
        let addTagView =  AddTagView.show(superView:self.superview!)
+        exitButton.isEnabled = false
         addTagView.addTagCompletionHandler = {[unowned self] tag in
-        let tagView = TagView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 30), tag:tag)
+            let tagView:TagView
+            if self.tagColor != nil{
+                tagView = TagView(frame: CGRect(x: 0, y: 0, width: self.frame.width * 0.8, height: 30), tag: tag, colors: self.tagColor!)
+            }else{
+        tagView = TagView(frame: CGRect(x: 0, y: 0, width: self.frame.width * 0.8, height: 30), tag: tag, colors: Constant.Color.blueLeft)
+            }
         self.tags.insert(tagView)
+        self.exitButton.isEnabled = true
         self.scrollView.addSubview(tagView)
         self.reloadTag()
         }

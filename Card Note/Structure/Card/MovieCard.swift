@@ -7,8 +7,6 @@
 //
 
 import Foundation
-
-
 class MovieCard:Card{
     var path:String
     init(id:String) {
@@ -27,9 +25,4 @@ class MovieCard:Card{
         super.init(coder: aDecoder)
     }
     
-    required init(from decoder: Decoder) throws {
-       self.path = ""
-       try super.init(from: decoder)
-       self.path = Constant.Configuration.url.Movie.appendingPathComponent(self.getId() + ".mov").path
-    }
 }

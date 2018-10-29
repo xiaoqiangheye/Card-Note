@@ -177,10 +177,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         }
        
         textView.backgroundColor = .clear
-        UIView.animate(withDuration: 0.5, animations: {
-            self.scrollView.frame.origin.y = 0
-        }, completion: nil)
-        textView.resignFirstResponder()
         attributedView?.removeFromSuperview()
         attributedView = nil
     }
@@ -199,7 +195,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                      self.attributedView?.reset()
                      self.attributedView?.update(at: textView.selectedRange.location - 1)
                 }else if character == "." && currentSelectedLocation >= 2{
-                    if let lastCharacter = Int(String(textView.text[textView.text.index(textView.text.startIndex, offsetBy: currentSelectedLocation - 2)])){
+                    if Int(String(textView.text[textView.text.index(textView.text.startIndex, offsetBy: currentSelectedLocation - 2)])) != nil{
                         var range = NSRange()
                         let attributeOfLigature = (textView.attributedText.attribute(NSAttributedStringKey.ligature, at: currentSelectedLocation - 1, effectiveRange: &range)) == nil ? 0 : 1
                         let attributeOfFont = (textView.attributedText.attribute(NSAttributedStringKey.ligature, at: currentSelectedLocation - 1, effectiveRange: &range)) as? UIFont
@@ -261,7 +257,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             }
         }
         
-        let y = scrollView.contentOffset.y
         let frame = textView.frame
         
         //定义一个constrainSize值用于计算textview的高度
@@ -269,73 +264,25 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         let constrainSize=CGSize(width:frame.size.width,height:CGFloat(MAXFLOAT))
         
         //获取textview的真实高度
-        var size = textView.sizeThatFits(constrainSize)
+        let size = textView.sizeThatFits(constrainSize)
         
         //如果textview的高度大于最大高度高度就为最大高度并可以滚动，否则不能滚动
         if textView.superview != nil{
-            if let cardView = textView.superview as? CardView.TextView{
+            if (textView.superview as? CardView.TextView) != nil{
                 textView.frame.size.height = size.height
                 textView.superview?.frame.size.height = size.height
-                reLoad()
-                /*
-                var origin = (textView.superview?.frame.origin.y)! + (textView.superview?.frame.height)! + 20
-                guard let index = subCards.index(of: cardView) else{return}
-                if index < subCards.count - 1{
-                for i in index + 1...subCards.endIndex - 1{
-                      let card = subCards[i]
-                        card.frame.origin.y = origin
-                        origin = card.frame.origin.y + card.frame.height + 20
-                }
-                }
-                 cardBackGround.frame.size.height = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
-                 scrollView.contentSize.height = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
-                 scrollView.contentOffset.y = y
-                */
-        
-            }else if let cardView = textView.superview as? CardView.ExaView{
+               reLoad()
+            }else if (textView.superview as? CardView.ExaView) != nil{
                 textView.frame.size.height = size.height
                 textView.superview?.frame.size.height = textView.frame.origin.y + textView.frame.height
             }
             else if textView == definition{
                 textView.frame.size.height = size.height
-                reLoad()
+               reLoad()
             }
         }
         
       //Mode Caculation
-        if textView.text.count > 0{
-            if attributedView?.textMode == Constant.TextMode.UnorderedListMode && lastSelectedLocation - currentSelectedLocation == -1 && currentCharacter == "\n"{
-                attributedView?.setUnorderedList()
-            }
-            /*
-            else if (attributedView?.textMode == Constant.TextMode.UnorderedListMode || attributedView?.textMode == Constant.TextMode.OrderedListMode) && lastSelectedLocation > currentSelectedLocation{
-                attributedView?.textMode = Constant.TextMode.UnorderedListEndMode
-                attributedView?.setOrderedList()
-                attributedView?.setOrderedList()
-            }
-             */
-                
-            else if attributedView?.textMode == Constant.TextMode.OrderedListMode && lastSelectedLocation - currentSelectedLocation == -1 && currentCharacter == "\n"{
-                attributedView?.setOrderedList()
-            }
-             attributedView?.isUnorderedListAtCurrentSelectedLine()
-             attributedView?.isOrderedListAtSelectedLocation()
-          
-            
-            if lastCharacter == "\u{2022}" && lastSelectedLocation - currentSelectedLocation == 1{
-                attributedView?.textMode = Constant.TextMode.OrderedListEndMode
-                attributedView?.setUnorderedList()
-                /*
-                let attributedString = NSMutableAttributedString(attributedString: textView.attributedText)
-                let attributedSpace = NSAttributedString(string: " ")
-                attributedString.insert(attributedSpace, at: textView.selectedRange.location)
-                textView.attributedText = attributedString
-                textView.selectedRange.location += 1
-                */
-                attributedView?.setUnorderedList()
-            }
-        }
-        
     }
     
     
@@ -386,10 +333,15 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     
-    func setColor(color:UIColor){
+    private func setColor(color:UIColor){
+        var backGroundHeight:CGFloat = 100
+        if UIDevice.current.isX(){
+            backGroundHeight = 120
+        }
+        
         gl.removeFromSuperlayer()
         gl = CAGradientLayer.init()
-        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100);
+        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:backGroundHeight)
         gl.startPoint = CGPoint(x:0, y:0);
         gl.endPoint = CGPoint(x:1, y:1);
         gl.colors = [color.cgColor,getRightColorFromLeftGradient(left: color).cgColor]
@@ -403,25 +355,38 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     var gl:CAGradientLayer!
     override func viewDidLoad() {
         self.hero.isEnabled = true
-        self.view.hero.id = "batman"
+        if self.card != nil{
+        self.view.hero.id = self.card?.getId()
+        }
         self.view.backgroundColor = .clear
-        
+        var backGroundHeight:CGFloat = 100
+        if UIDevice.current.isX(){
+            backGroundHeight = 120
+        }
         //backGround
         gl = CAGradientLayer.init()
-        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100);
+        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:backGroundHeight)
+
         gl.startPoint = CGPoint(x:0, y:0);
         gl.endPoint = CGPoint(x:1, y:1);
         if card != nil{
-            gl.colors = [card?.getColor().cgColor,getRightColorFromLeftGradient(left: (card?.getColor())!).cgColor]
+            gl.colors = [(card?.getColor().cgColor)!,getRightColorFromLeftGradient(left: (card?.getColor())!).cgColor]
         }else{
-             gl.colors = [Constant.Color.blueLeft.cgColor,Constant.Color.blueRight.cgColor]
+            gl.colors = [Constant.Color.blueLeft.cgColor,Constant.Color.blueRight.cgColor]
         }
         gl.locations = [NSNumber(value:0),NSNumber(value:1)]
         gl.cornerRadius = 0
         
-        cardColor = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100))
+       
+        cardColor = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: backGroundHeight))
         cardColor.layer.addSublayer(gl)
         
+        let saveButton = UIButton(frame: CGRect(x: 0, y: 20, width: 100, height: 30))
+        saveButton.setTitle("Save", for: .normal)
+        saveButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        saveButton.setTitleColor(.white, for: .normal)
+        saveButton.setTitleColor(.white, for: .focused)
+        saveButton.addTarget(self, action: #selector(willExitandSave), for: .touchDown)
         
         
         doneButton = UIButton()
@@ -445,8 +410,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         */
         //mode button
         
-        modeButton = UIButton(frame: CGRect(x: self.view.frame.width - 50, y: 50, width: 30, height: 30))
-        modeButton.center.y = 50
+        modeButton = UIButton(frame: CGRect(x: self.view.frame.width - 50, y: 20, width: 30, height: 30))
+       // modeButton.center.y = backGroundHeight/2
         modeButton.setBackgroundImage(UIImage(named: "edit"), for: .normal)
         modeButton.setTitleColor(.clear, for: .normal)
         modeButton.addTarget(self, action: #selector(modeChanged), for: .touchDown)
@@ -463,11 +428,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         
         
         cardTitle = UITextView()
-        cardTitle.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: 50)
+        cardTitle.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: 40)
         cardTitle.textColor = .white
         cardTitle.backgroundColor = .clear
         cardTitle.center.x = self.view.bounds.width/2
-        cardTitle.center.y = 50
+        cardTitle.center.y = cardColor.frame.height - 40
         cardTitle.layer.cornerRadius = 10
         cardTitle.textAlignment = .center
         cardTitle.font = UIFont.boldSystemFont(ofSize: 20)
@@ -482,7 +447,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         tag.layer.cornerRadius = 10
         */
         
-        tagInputView = TagInputView(frame: CGRect(x: 0, y: 100 - 15, width: self.view.bounds.width*0.9, height: 50), tags:[String]())
+        tagInputView = TagInputView(frame: CGRect(x: 0, y: backGroundHeight - 15, width: self.view.bounds.width*0.9, height: 50), tags:[String]())
         tagInputView.delegate = self
         tagInputView.center.x = self.view.frame.width/2
         if card != nil{
@@ -493,64 +458,26 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             color = Constant.Color.blueLeft
         }
         definitionLabel = UILabel()
-        definitionLabel.font =  UIFont.systemFont(ofSize: 20)
+        definitionLabel.font =  UIFont.boldSystemFont(ofSize: 20)
         definitionLabel.text = "Definition"
         definitionLabel.frame = CGRect(x:20, y: tagInputView.frame.origin.y + tagInputView.frame.height + 20, width: self.view.bounds.width, height: 20)
-        definitionLabel.textColor = .black
+        definitionLabel.textColor = UIColor(red: 132/255, green: 141/255, blue: 163/255, alpha: 1)
         
         definition = UITextView()
-        definition.frame = CGRect(x: 0, y: definitionLabel.frame.origin.y + definitionLabel.frame.height + 20, width: self.view.bounds.width*0.8, height: 100)
+        definition.frame = CGRect(x: 20, y: definitionLabel.frame.origin.y + definitionLabel.frame.height + 20, width: self.view.bounds.width - 40, height: 100)
         definition.font = UIFont.systemFont(ofSize: 18)
-        definition.textColor = .black
-        definition.backgroundColor = .black
-        definition.center.x = self.view.bounds.width/2
+        definition.textColor = UIColor(red: 188/255, green: 188/255, blue: 188/255, alpha: 1)
+        definition.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 0.8)
+       // definition.center.x = self.view.bounds.width/2
         definition.layer.cornerRadius = 10
         definition.isScrollEnabled = false
-        definition.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
+       // definition.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
         if self.card != nil{
             definition.text = card?.getDefinition()
             let constrainSize = CGSize(width:definition.frame.size.width,height:CGFloat(MAXFLOAT))
             definition.sizeThatFits(constrainSize)
         }
       
-        /*
-        let descriptionLabel = UILabel()
-        descriptionLabel.font =  UIFont(name: "ChalkboardSE-Bold", size: 20)
-        descriptionLabel.text = "Description"
-        descriptionLabel.textColor = .black
-        descriptionLabel.frame = CGRect(x: 20, y: definition.frame.origin.y + definition.frame.height + 20, width: self.view.bounds.width, height: 20)
-        
-        descriptions.frame = CGRect(x:0, y: descriptionLabel.frame.height + descriptionLabel.frame.origin.y + 20, width: self.view.bounds.width*0.8, height: 200)
-        descriptions.font = UIFont(name: "ChalkboardSE-Regular", size: 18)
-        descriptions.textColor = .black
-        descriptions.backgroundColor = .clear
-        descriptions.center.x = self.view.bounds.width/2
-        descriptions.layer.cornerRadius = 10
-        descriptions.backgroundColor = UIColor(red: 54/255, green: 61/255, blue: 90/255, alpha: 0.2)
- 
-        
-        let contentLabel = UILabel()
-       contentLabel.font =  UIFont(name: "ChalkboardSE-Bold", size: 20)
-       contentLabel.text = "Content"
-       contentLabel.textColor = .black
-       contentLabel.frame = CGRect(x: 20, y: descriptions.frame.origin.y + descriptions.frame.height + 20, width: self.view.bounds.width, height: 20)
-        
-        */
-    
-        /*
-        cardBackGround = UIView()
-        cardBackGround.frame = CGRect(x: 0, y: CGFloat(-UIDevice.current.Xdistance()), width: self.view.bounds.width, height:  self.view.bounds.height)
-        cardBackGround.backgroundColor = .white
-        cardBackGround.addSubview(cardColor)
-        cardBackGround.addSubview(cardTitle)
-        cardBackGround.addSubview(definition)
-        //cardBackGround.addSubview(descriptions)
-        cardBackGround.addSubview(definitionLabel)
-        cardBackGround.addSubview(tagInputView)
-       */
-        
-       
-        
        // cardBackGround.layer.cornerRadius = 15
         let tapGesture = UITapGestureRecognizer()
         tapGesture.numberOfTapsRequired = 1
@@ -558,9 +485,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         tapGesture.addTarget(self, action: #selector(showPalette(_:)))
        cardColor.addGestureRecognizer(tapGesture)
         
-       // let swipe = UISwipeGestureRecognizer(target: self, action: #selector(viewSwiped))
-        //cardColor.addGestureRecognizer(swipe)
-         //cardTitle.addGestureRecognizer(swipe)
+
         let pan = UIPanGestureRecognizer(target: self, action: #selector(viewPaned))
         cardColor.addGestureRecognizer(pan)
       //cardTitle.addGestureRecognizer(pan)
@@ -575,6 +500,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         scrollView.contentSize.height = self.view.bounds.height
         scrollView.contentSize.width = self.view.bounds.width
         scrollView.addSubview(cardColor)
+        scrollView.addSubview(saveButton)
         if self.type == .add{
         scrollView.addSubview(doneButton)
         }
@@ -586,11 +512,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         scrollView.addSubview(modeButton)
         
         let endEditingGesture = UITapGestureRecognizer()
-        endEditingGesture.numberOfTapsRequired = 1
-        endEditingGesture.numberOfTouchesRequired = 1
-        endEditingGesture.addTarget(self, action: #selector(endEditing))
-        endEditingGesture.addTarget(self, action: #selector(turnOffToolBox))
-        endEditingGesture.addTarget(self, action: #selector(autoAddTextViewAtBottom))
+       endEditingGesture.addTarget(self, action: #selector(endEditing))
+       endEditingGesture.addTarget(self, action: #selector(autoAddTextViewAtBottom))
+       endEditingGesture.addTarget(self, action: #selector(turnOffToolBox))
         scrollView.addGestureRecognizer(endEditingGesture)
         
         if card != nil{
@@ -604,12 +528,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         
     let centerDefault = NotificationCenter.default
         centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        
+        centerDefault.addObserver(self, selector: #selector(keyboardWillExit), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
          pickerView = UIPickerView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width/2, height: 300))
          pickerView.dataSource = self
          pickerView.backgroundColor = UIColor.white
-         //将delegate设置成自己
          pickerView.delegate = self
          pickerView.selectRow(0, inComponent: 0, animated: true)
         
@@ -619,10 +542,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         showPalette.numberOfTouchesRequired = 1
         pickerColorView.addGestureRecognizer(showPalette)
         
+        //addButtonSetting
+        addButtonSetting()
+        
     }
     
     
-    @objc func modeChanged(){
+    @objc private func modeChanged(){
         if isEditMode{
             isEditMode = false
             modeButton.setBackgroundImage(UIImage(named:"edit"), for: .normal)
@@ -644,23 +570,29 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
  
     
-    @objc func viewSwiped(gesture:UISwipeGestureRecognizer){
+    @objc private func viewSwiped(gesture:UISwipeGestureRecognizer){
         if gesture.state == .ended && gesture.direction == .down{
           self.dismiss(animated: true, completion: nil)
         }
     }
     
     
+    @objc private func willExitandSave(){
+        self.dismiss(animated: true) {
+            self.save(UIView())
+        }
+    }
+    
     var isSaved = false
-    @objc func viewPaned(gesture:UIPanGestureRecognizer){
+    @objc private func viewPaned(gesture:UIPanGestureRecognizer){
         if gesture.state == .changed{
             self.view.center.x += gesture.translation(in: gesture.view).x
             self.view.center.y += gesture.translation(in: gesture.view).y
             gesture.setTranslation(CGPoint(x: 0, y: 0), in: gesture.view)
             if gesture.velocity(in: gesture.view).y > 100 && isSaved == false{
-             isSaved = true
+                isSaved = true
                 self.dismiss(animated: true) {
-                    self.save(gesture.view)
+                    self.save(UIView())
                 }
             }
         }else if gesture.state == .cancelled || gesture.state == .ended{
@@ -672,7 +604,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     
     //color picker
-    @objc func getPickerViewValue(sender:UIButton){
+    @objc private func getPickerViewValue(sender:UIButton){
         ifPaletteShowed = false
         if attributedView != nil{
            /*deprecated
@@ -691,8 +623,17 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     
+    @objc private func keyboardWillExit(aNotification:NSNotification){
+        print("keyboard will hide")
+        UIView.animate(withDuration: 0.5, animations: {
+            self.scrollView.frame.origin.y = 0
+        }, completion: nil)
+    }
     
-    @objc func keyboardWillShow(aNotification: NSNotification){
+    
+    
+    @objc private func keyboardWillShow(aNotification: NSNotification){
+        if addButtonStateisOpen{turnOffToolBox()}
         print("keyBoardShow")
         let userinfo: NSDictionary = aNotification.userInfo! as NSDictionary
         let nsValue = userinfo.object(forKey: UIKeyboardFrameEndUserInfoKey)
@@ -718,7 +659,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         if selectedView != nil{
         //adjust the offset of the scrollview
         var relativeHeight:CGFloat!
-        
         if !(selectedView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedView?.superview?.isKind(of: CardView.SubCardView.self))! && !(selectedView?.superview?.isKind(of: CardView.PicView.self))! && !(selectedView?.superview?.isKind(of: CardView.ExaView.self))! && !(selectedView?.superview?.isKind(of: CardView.VoiceCardView.self))!{
             relativeHeight = (selectedView?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedView?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
         }else{
@@ -745,9 +685,16 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     @objc func endEditing(){
         self.view.endEditing(true)
+        for sub in subCards{
+            if sub.isKind(of: CardView.TextView.self){
+                let sub = sub as! CardView.TextView
+                sub.textView.resignFirstResponder()
+                
+            }
+        }
     }
     
-    @objc func showPalette(_ sender:UIGestureRecognizer){
+    @objc private func showPalette(_ sender:UIGestureRecognizer){
         if !ifPaletteShowed{
         //let location = sender.location(in: cardBackGround)
         let location = sender.location(in:sender.view)
@@ -775,12 +722,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     //cardView LongTap
-    @objc func longTap(_ sender:UILongPressGestureRecognizer){
+    @objc private func longTap(_ sender:UILongPressGestureRecognizer){
       
     }
     
     
-    func deleteButtonClicked(view:CardView) {
+    internal func deleteButtonClicked(view:CardView) {
         var index = 0
         view.removeFromSuperview()
         let fileManager = FileManager.default
@@ -884,8 +831,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 let voiceCardView = CardView.getSingleVoiceView(card: voiceCard)
                 voiceCardView.title.delegate = self
                 voiceCardView.hero.id = voiceCard.getId()
-                let gesture = UITapGestureRecognizer(target: self, action: #selector(voiceCardTapped(gesture:)))
-                voiceCardView.addGestureRecognizer(gesture)
                 voiceCardView.delegate = self
                 voiceCardView.addGestureRecognizer(panGesture)
                 if voiceCard.voiceManager!.state == .willRecord || voiceCard.voiceManager!.state == .recording || voiceCard.voiceManager!.state == .pausedRecording{
@@ -938,9 +883,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
          let cardView = CardView.getSubCardView(card)
          cardView.delegate = self
          cardView.frame.origin.y = cumulatedHeight
-         cardView.layer.shadowOpacity = 0.5
-         cardView.layer.shadowColor = UIColor.black.cgColor
-         cardView.layer.shadowOffset = CGSize(width:1, height:1)
         // cardView.title.delegate = self
          //cardView.content.delegate = self
         let tapGesture = UITapGestureRecognizer()
@@ -964,7 +906,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     func reLoad(){
-       
         //definition.text = card?.getDefinition()
         //cardTitle.text = card?.getTitle()
         //tagInputView.loadTag(tags: (card?.getTag())!)
@@ -986,8 +927,25 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 mutable.append(NSAttributedString(string: "\n"))
                 mutable.append(nxtView.textView.attributedText)
                 view.textView.attributedText = mutable
-                view.textView.sizeToFit()
+                let frame = view.textView.frame
+                
+                //定义一个constrainSize值用于计算textview的高度
+                
+                let constrainSize=CGSize(width:frame.size.width,height:CGFloat(MAXFLOAT))
+                
+                //获取textview的真实高度
+                let size = view.textView.sizeThatFits(constrainSize)
+                view.textView.frame.size = size
+                
                 nxtView.removeFromSuperview()
+                let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+                var url = Constant.Configuration.url.attributedText
+                url.appendPathComponent(view.card.getId() + ".rtf")
+                do{
+                    try data?.write(to: url)
+                }catch let error{
+                    print(error.localizedDescription)
+                }
                 subCards.remove(at: index + 1)
             }
             UIView.animate(withDuration: 0.5) {
@@ -1099,10 +1057,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             //let timeFormatter = DateFormatter()
            // timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             //let strNowTime = timeFormatter.string(from: date as Date) as String
-            let card = Card(title: cardTitle.text, tag: tagInputView?.tags, description:"", id: UUID().uuidString, definition: definition.text, color: color, cardType:Card.CardType.card.rawValue,modifytime:String(interval))
+            let card = Card(title: cardTitle.text, tag: tagInputView?.tags.sorted(), description:"", id: UUID().uuidString, definition: definition.text, color: color, cardType:Card.CardType.card.rawValue,modifytime:String(interval))
             card.addChildNotes(childs)
             self.card = card
-             if !isSubCard{
+             if !isSubCard && card.getId() != "first"{
                 Cloud.addCard(card: card) { (bool) in
                     if bool{
                         DispatchQueue.main.async {
@@ -1114,15 +1072,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         }
                     }
                 }
-            /*deprecated
-            User.addCard(email: loggedemail, card: card, completionHandler: { (json:JSON?) in
-                if json != nil{
-                    if json!["ifSuccess"].boolValue{
-                        print("Add Card SuccessFul")
-                    }
-                }
-            })
-              */
+          
         let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
             url?.appendPathComponent("card.txt")
@@ -1144,7 +1094,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             
         }else if self.type == CardEditor.type.save{
             let manager = FileManager.default
-           // var subCards:[Card] = [Card]()
+          
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
             url?.appendPathComponent("card.txt")
             if let dateRead = try? Data.init(contentsOf: url!){
@@ -1156,22 +1106,21 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                     self.card?.setTitle(cardTitle.text)
                     self.card?.setColor(color)
                     self.card?.setDefinition(definition.attributedText.string)
-                    //self.card?.setDescription(descriptions.attributedText.string)
-                    self.card?.setTag(tagInputView!.tags)
+                   
+                    self.card?.setTag(tagInputView!.tags.sorted())
                     var childs = [Card]()
                     for card in self.subCards
                     {
                         childs.append(card.card)
                         if card.isKind(of: CardView.PicView.self){
                             let manager = FileManager.default
-                            let url = Constant.Configuration.url.PicCard
+                            var url = Constant.Configuration.url.PicCard
+                            url.appendPathComponent(card.card.getId() + ".jpg")
                             let picView = card as! CardView.PicView
                             if picView.commentView.text != nil{
                                 card.card.setDescription(picView.commentView.text!)
                             }
                             if manager.fileExists(atPath: (url.path)){
-                            
-                             //User.uploadImageWithAF(email:loggedemail,image:image,cardID:card.card.getId())
                                 User.uploadPhotoUsingQCloud(url: url)
                             }
                         }else if card.isKind(of: CardView.ExaView.self){
@@ -1190,8 +1139,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             var url = Constant.Configuration.url.Audio
                             url.appendPathComponent(card.card.getId() + ".wav")
                             if manager.fileExists(atPath: (url.path)){
-                        
-                               // User.uploadAudioWithAF(email: loggedemail, filePath: (url?.path)!, cardID: card.card.getId())
                                 User.uploadAudioUsingQCloud(url: url)
                             }
                         }else if card.isKind(of: CardView.MapCardView.self){
@@ -1199,8 +1146,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             var url = Constant.Configuration.url.Map
                             url.appendPathComponent(card.card.getId() + ".jpg")
                             if manager.fileExists(atPath: (url.path)){
-                           
-                               // User.uploadImageWithAF(email: loggedemail, image: image!, cardID: card.card.getId())
                                 User.uploadPhotoUsingQCloud(url: url)
                             }
                         }else if card.isKind(of: CardView.MovieView.self){
@@ -1224,7 +1169,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                     let date = NSDate()
                     let interval = date.timeIntervalSince1970
                     self.card?.updateTime(String(interval))
-                     if !isSubCard{
+                     if !isSubCard && card?.getId() != "first"{
                         Cloud.updateCard(card:self.card!){ (bool) in
                             if bool{
                                print("update card Success")
@@ -1297,8 +1242,24 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
    
     
-    @IBAction func addButton(_ sender: UIButton) {
-        
+    @IBAction private func addButton(_ sender: UIButton) {
+        if !addButtonStateisOpen{
+            addButtonStateisOpen = true
+            addButton.removeFromSuperview()
+            self.view.addSubview(toolBox)
+            self.view.bringSubview(toFront: toolBox)
+            self.toolBox.center = self.view.center
+            self.toolBox.animation = "fadeIn"
+            self.toolBox.curve = "easeOut"
+            self.toolBox.duration = 0.5
+            self.toolBox.x = (self.addButton.center.x - self.toolBox.center.x)
+            self.toolBox.y = (self.addButton.center.y - self.toolBox.center.y)
+            self.toolBox.animate()
+        }
+    }
+    
+    
+    private func addButtonSetting(){
         func createButtonWithLabel(title:String,frame:CGRect,icon:FAType)->UIView{
             let subCardLabel = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height - 20))
             subCardLabel.textAlignment = .center
@@ -1340,25 +1301,23 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             return button
         }
         
-        if !addButtonStateisOpen{
-        addButtonStateisOpen = true
-            addSubCard = createButtonWithLabel(title: "SubCard", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),image:UIImage(named:"subCard")!)
-        let subCardtapGesture = UITapGestureRecognizer()
-        subCardtapGesture.numberOfTapsRequired = 1
-        subCardtapGesture.numberOfTouchesRequired = 1
-        subCardtapGesture.addTarget(self, action: #selector(addCard))
-        addSubCard.addGestureRecognizer(subCardtapGesture)
-        
-       
-            addExa = createButtonWithLabel(title: "Key-Value", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),image:UIImage(named:"keyValue")!)
-        let exaTapGesture = UITapGestureRecognizer()
-        exaTapGesture.numberOfTapsRequired = 1
-        exaTapGesture.numberOfTouchesRequired = 1
-        exaTapGesture.addTarget(self, action: #selector(addExample))
-        addExa.addGestureRecognizer(exaTapGesture)
-        
+            addSubCard = createButtonWithLabel(title: "SubCard", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"subCard")!)
+            let subCardtapGesture = UITapGestureRecognizer()
+            subCardtapGesture.numberOfTapsRequired = 1
+            subCardtapGesture.numberOfTouchesRequired = 1
+            subCardtapGesture.addTarget(self, action: #selector(addCard))
+            addSubCard.addGestureRecognizer(subCardtapGesture)
             
-            addPicCard = createButtonWithLabel(title: "Photo", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),image:UIImage(named:"pic")!)
+            
+            addExa = createButtonWithLabel(title: "Key-Value", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"keyValue")!)
+            let exaTapGesture = UITapGestureRecognizer()
+            exaTapGesture.numberOfTapsRequired = 1
+            exaTapGesture.numberOfTouchesRequired = 1
+            exaTapGesture.addTarget(self, action: #selector(addExample))
+            addExa.addGestureRecognizer(exaTapGesture)
+            
+            
+            addPicCard = createButtonWithLabel(title: "Photo", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"pic")!)
             let picGesture = UITapGestureRecognizer()
             picGesture.numberOfTapsRequired = 1
             picGesture.numberOfTouchesRequired = 1
@@ -1366,49 +1325,50 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             addPicCard.addGestureRecognizer(picGesture)
             
             
-            addText = createButtonWithLabel(title: "Text", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),image:UIImage(named:"text")!)
-        let addtextGesture = UITapGestureRecognizer()
+            addText = createButtonWithLabel(title: "Text", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"text")!)
+            let addtextGesture = UITapGestureRecognizer()
             addtextGesture.numberOfTapsRequired = 1
             addtextGesture.numberOfTouchesRequired = 1
             addtextGesture.addTarget(self, action: #selector(addTextView))
             addText.addGestureRecognizer(addtextGesture)
             
-            addVoiceView = createButtonWithLabel(title: "Voice", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),image:UIImage(named:"voice")!)
-           let addVoiceGesture = UITapGestureRecognizer()
+            addVoiceView = createButtonWithLabel(title: "Voice", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"voice")!)
+            let addVoiceGesture = UITapGestureRecognizer()
             addVoiceGesture.numberOfTapsRequired = 1
             addVoiceGesture.numberOfTouchesRequired = 1
             addVoiceGesture.addTarget(self, action: #selector(addVoice))
             addVoiceView.addGestureRecognizer(addVoiceGesture)
             
-            addMapView = createButtonWithLabel(title: "Location", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50),image:UIImage(named:"map")!)
+            addMapView = createButtonWithLabel(title: "Location", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"map")!)
             let addMapGesture = UITapGestureRecognizer()
             addMapGesture.numberOfTapsRequired = 1
             addMapGesture.numberOfTouchesRequired = 1
             addMapGesture.addTarget(self, action: #selector(addMap))
             addMapView.addGestureRecognizer(addMapGesture)
             
-            addMovieView = createButtonWithLabel(title: "Video", frame: CGRect(x: sender.center.x, y: sender.center.y, width: 50, height: 50), image:UIImage(named:"movie")!)
+            addMovieView = createButtonWithLabel(title: "Video", frame: CGRect(x: 0, y: 0, width: 50, height: 50), image:UIImage(named:"movie")!)
             let addVideoGesture = UITapGestureRecognizer()
             addVideoGesture.numberOfTapsRequired = 1
             addVideoGesture.numberOfTouchesRequired = 1
             addVideoGesture.addTarget(self, action: #selector(addVideo))
             addMovieView.addGestureRecognizer(addVideoGesture)
             
-        addButtonList.append(addSubCard)
-        addButtonList.append(addExa)
-        addButtonList.append(addPicCard)
-        addButtonList.append(addText)
-        addButtonList.append(addVoiceView)
-        addButtonList.append(addMapView)
-        addButtonList.append(addMovieView)
-        self.addButton.removeFromSuperview()
-        toolBox = SpringView(frame: CGRect(x: addButton.frame.origin.x, y: addButton.frame.origin.y, width: 0, height: 0))
-        toolBox.alpha = 1
-        toolBox.backgroundColor = .white
-        self.toolBox.clipsToBounds = true
-        self.toolBox.layer.cornerRadius = 10
-        self.view.addSubview(toolBox)
-             var index = 0
+            //ocr
+            
+            
+            addButtonList.append(addSubCard)
+            addButtonList.append(addExa)
+            addButtonList.append(addPicCard)
+            addButtonList.append(addText)
+            addButtonList.append(addVoiceView)
+            //addButtonList.append(addMapView)
+            addButtonList.append(addMovieView)
+            toolBox = SpringView(frame: CGRect(x: addButton.frame.origin.x, y: addButton.frame.origin.y, width: 0, height: 0))
+            self.toolBox.frame = CGRect(x: 0, y: 0, width: 220, height: 160)
+            toolBox.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 253/255, alpha: 1)
+            self.toolBox.clipsToBounds = true
+            self.toolBox.layer.cornerRadius = 10
+            var index = 0
             for addButton in self.addButtonList{
                 let line = index/3
                 let mode = index%3
@@ -1416,15 +1376,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 self.toolBox.addSubview(addButton)
                 index += 1
             }
-            UIView.setAnimationCurve(.easeOut)
-            UIView.animate(withDuration: 0.2, animations: {
-                self.toolBox.frame = CGRect(x: 0, y: 0, width: 220, height: 220)
-                self.toolBox.center = self.view.center
-               
-            }) { (bool) in
-                
-            }
-        }
     }
     
     
@@ -1432,23 +1383,20 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     @objc func turnOffToolBox(){
          if addButtonStateisOpen{
             addButtonStateisOpen = false
-            for addButton in self.addButtonList{
-                addButton.removeFromSuperview()
-            }
             self.toolBox.animation = "fadeOut"
             self.toolBox.curve = "easeOut"
             self.toolBox.duration = 0.5
             self.toolBox.x = self.addButton.center.x - self.toolBox.center.x
             self.toolBox.y = self.addButton.center.y - self.toolBox.center.y
-            self.toolBox.scaleX = 0.3
-            self.toolBox.scaleY = 0.3
+            self.toolBox.scaleX = 0.1
+            self.toolBox.scaleY = 0.1
             self.toolBox.animate()
             self.toolBox.animateNext {
                  self.toolBox.center = self.addButton.center
-                 self.addButtonList.removeAll()
                  self.toolBox.removeFromSuperview()
                  self.view.addSubview(self.addButton)
             }
+          
             
             /*
             UIView.setAnimationCurve(.easeOut)
@@ -1468,14 +1416,14 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
 /** all cardView
  */
     
-    func cardViewAddPanGesture(_ view:CardView){
+    internal func cardViewAddPanGesture(_ view:CardView){
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(cardViewPanned))
         panGesture.delegate = self
         view.addGestureRecognizer(panGesture)
     }
     
     var theLastOrigin:CGPoint?
-    @objc func cardViewPanned(gesture:UIPanGestureRecognizer){
+    @objc internal func cardViewPanned(gesture:UIPanGestureRecognizer){
         //get index
         
         let view = gesture.view as! CardView
@@ -1499,17 +1447,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             addButton.setFAIcon(icon: FAType.FATrashO, forState: .normal)
             */
         }else if gesture.state == .ended{
-            /*one way to delete card
-            addButton.setFAIcon(icon: FAType.FAPlusCircle, forState: .normal)
-            
-            var frame = view.superview?.convert(view.frame, to: self.view)
-            print(addButton.frame.origin.y)
-            if (frame?.intersects(addButton.frame))!{
-                view.removeFromSuperview()
-                subCards.remove(at: index)
-            }
-            */
-            
             var subCardIndex = 0
             for subCard in subCards{
                 if (view.center.y) < subCard.center.y{
@@ -1537,7 +1474,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
 /** picView
  
  */
-    @objc func addPic(){
+    @objc private func addPic(){
         let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
@@ -1567,7 +1504,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     
     
-    @objc func updatePic(_ sender:UITapGestureRecognizer){
+    @objc private func updatePic(_ sender:UITapGestureRecognizer){
         selectedPictureView = (sender.view as! CardView.PicView)
         let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -1577,6 +1514,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             self.picTureAction = "updatePic"
             cameraPicker.delegate = self
             cameraPicker.sourceType = .savedPhotosAlbum
+            cameraPicker.allowsEditing = true
             //在需要的地方present出来
             self.present(cameraPicker, animated: true, completion: nil)
         }
@@ -1585,6 +1523,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             self.picTureAction = "updatePic"
             cameraPicker.delegate = self
             cameraPicker.sourceType = .camera
+            cameraPicker.allowsEditing = true
             self.present(cameraPicker, animated: true, completion: nil)
         }
         alertSheet.addAction(cancelAction)
@@ -1595,7 +1534,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    
+   internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         //获得照片
         if picTureAction == "addPic"{
         print("get Photo")
@@ -1662,11 +1602,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
    
     
-    @objc func addCard(){
+    @objc private func addCard(){
         let date = NSDate()
         let interval = date.timeIntervalSince1970
         let card = Card(title: "title", tag: nil, description: "", id: UUID().uuidString, definition: "definition", color: color, cardType: Card.CardType.card.rawValue, modifytime:String(interval))
         let cardView = CardView.getSubCardView(card)
+        cardView.hero.id = cardView.card.getId()
         cardView.delegate = self
         cardViewAddPanGesture(cardView)
         let tapGesture = UITapGestureRecognizer()
@@ -1687,11 +1628,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         subCards.append(cardView)
     }
     
-    @objc func performCardEditor(_ sender:UITapGestureRecognizer){
-    
+    @objc private func performCardEditor(_ sender:UITapGestureRecognizer){
         let card = (sender.view as! CardView).card
         let story = UIStoryboard(name: "Main", bundle: nil)
         let vc = story.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
+        //vc.hero.isEnabled = true
+        //vc.view.hero.id = card?.getId()
         vc.card = card
         vc.isSubCard = true
         vc.delegate = self
@@ -1699,16 +1641,17 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         self.present(vc, animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destination:CardEditor = segue.destination as! CardEditor
         destination.loadCard(card: sender as! Card)
     }
     
-    @objc func addExample(){
+    @objc private func addExample(){
         let exampleCard = ExampleCard()
         let exaView = CardView.singleExampleView(card:exampleCard)
         cardViewAddPanGesture(exaView)
          exaView.textView.delegate = self
+         exaView.title.delegate = self
          exaView.delegate = self
         if subCards.count < 1{
             exaView.frame.origin.y = definition.frame.origin.y + definition.frame.height + 20
@@ -1722,26 +1665,39 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         scrollView.contentSize.height = exaView.frame.origin.y + exaView.frame.height + 20
     }
     
-    @objc func addTextView(){
+    @objc private func addTextView(){
+        if addButtonStateisOpen{turnOffToolBox()}
         let textCard = TextCard()
         let textView = CardView.getSingleTextView(card:textCard)
         cardViewAddPanGesture(textView)
         textView.textView.delegate = self
         textView.delegate = self
-
         if subCards.count < 1{
             textView.frame.origin.y = definition.frame.origin.y + definition.frame.height + 20
+            scrollView.contentSize.height = textView.frame.origin.y + textView.frame.height + 20
             self.scrollView.addSubview(textView)
+             subCards.append(textView)
         }else if subCards.count >= 1{
+            if (subCards.last?.isKind(of: CardView.TextView.self))!{
+                let text = subCards.last as! CardView.TextView
+                selectedView = text.textView
+                text.textView.becomeFirstResponder()
+            }else{
             textView.frame.origin.y = (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! + 20
+            scrollView.contentSize.height = textView.frame.origin.y + textView.frame.height + 20
             self.scrollView.addSubview(textView)
+             subCards.append(textView)
+            }
         }
-        subCards.append(textView)
      //   cardBackGround.frame.size.height = textView.frame.origin.y + textView.frame.height + 20
-        scrollView.contentSize.height = textView.frame.origin.y + textView.frame.height + 20
+        
     }
     
-    @objc func autoAddTextViewAtBottom(gesture:UITapGestureRecognizer){
+    @objc private func autoAddTextViewAtBottom(gesture:UITapGestureRecognizer){
+        if addButtonStateisOpen{
+            turnOffToolBox()
+            return
+        }
            let location = gesture.location(in: scrollView)
     print("x:\(location.x),y:\(location.y)")
      //   print("last height:\((subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)!)")
@@ -1769,14 +1725,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
           //  cardBackGround.frame.size.height = view.frame.origin.y + view.frame.height
             scrollView.contentSize.height = view.frame.origin.y + view.frame.height
             view.textView.becomeFirstResponder()
-        }else if subCards.count > 0 && (subCards.last?.isKind(of: CardView.TextView.self))!{
-             let textView = subCards.last as! CardView.TextView
-            textView.textView.becomeFirstResponder()
         }
         
     }
     
-    @objc func addVideo(){
+    @objc private func addVideo(){
         let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
@@ -1804,14 +1757,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         self.present(alertSheet, animated: true, completion: nil)
     }
     
-    @objc func addVoice(){
+    @objc private func addVoice(){
         let voiceCard = VoiceCard(id: UUID().uuidString,title:"record")
         let voiceView = CardView.getSingleVoiceView(card: voiceCard)
         voiceView.hero.id = voiceCard.getId()
         voiceView.delegate = self
+        voiceView.title.delegate = self
         cardViewAddPanGesture(voiceView)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(voiceCardTapped))
-        voiceView.addGestureRecognizer(tapGesture)
         if subCards.count < 1{
             voiceView.frame.origin.y = definition.frame.origin.y + definition.frame.height + 20
             self.scrollView.addSubview(voiceView)
@@ -1824,17 +1776,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         scrollView.contentSize.height = voiceView.frame.origin.y + voiceView.frame.height + 20
     }
     
-    @objc func voiceCardTapped(gesture:UITapGestureRecognizer){
-       let vc = VoiceRecognitionController()
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.loadVoiceCardView(voiceCard: (gesture.view as! CardView.VoiceCardView).card as! VoiceCard)
-        vc.hero.isEnabled = true
-        vc.superCard.hero.id = (gesture.view as! CardView.VoiceCardView).card.getId()
-        vc.delegate = self
-        self.present(vc, animated: true, completion: nil)
-    }
     
-    @objc func addMap(){
+    @objc private func addMap(){
         let picker = UIMapPickerWithBaiduMap()
         picker.delegate = self
         mapAction = "add"
@@ -1842,7 +1785,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         self.present(picker, animated: false, completion: nil)
     }
     
-    @objc func updateMap(_ sender:UITapGestureRecognizer){
+    @objc private func updateMap(_ sender:UITapGestureRecognizer){
         let mapView = sender.view as! CardView.MapCardView
         let picker = UIMapPickerWithBaiduMap()
          picker.action = UIMapPickerWithBaiduMap.Action.update
@@ -1856,7 +1799,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         
     }
     
-    func UIMapDidSelected(image: UIImage, place: Placemark?) {
+    private func UIMapDidSelected(image: UIImage, place: Placemark?) {
         if mapAction == "add"{
             let id = UUID().uuidString
             let imageData = UIImageJPEGRepresentation(image, 0.5)
@@ -1865,7 +1808,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             try? manager.createDirectory(atPath: (url.path), withIntermediateDirectories: true, attributes: nil)
             url.appendPathComponent(id + ".jpg")
             do{
-                try? imageData?.write(to: url)
+                try imageData?.write(to: url)
             }catch let err{
                 print(err.localizedDescription)
             }
@@ -1908,7 +1851,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         }
     }
     
-    func UIMapDidSelected(image: UIImage, name: String, address: String, coordinate: CLLocationCoordinate2D) {
+    private func UIMapDidSelected(image: UIImage, name: String, address: String, coordinate: CLLocationCoordinate2D) {
         if mapAction == "add"{
             let id = UUID().uuidString
             let imageData = UIImageJPEGRepresentation(image, 0.5)
@@ -1945,7 +1888,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             mapCard.neibourAddress = name
             mapCard.latitude = CGFloat(coordinate.latitude)
             mapCard.longitude = CGFloat(coordinate.longitude)
-            let manager = FileManager.default
+            
              var url = Constant.Configuration.url.Map
             url.appendPathComponent(mapCard.getId() + ".jpg")
             let imageData = UIImageJPEGRepresentation(image, 0.5)
@@ -1962,7 +1905,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         if mapAction == "add"{
         let id = UUID().uuidString
         let imageData = UIImageJPEGRepresentation(image, 0.5)
-        let manager = FileManager.default
         var url = Constant.Configuration.url.Map
             url.appendPathComponent(id + ".jpg")
         do{
@@ -2013,49 +1955,108 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     //gesture Delegate
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self){
+        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && gestureRecognizer.view == cardColor{
             let gesture = gestureRecognizer as! UIPanGestureRecognizer
             if gesture.velocity(in: gesture.view).y < 500{
                return true
             }else{
                return false
             }
-        }else{
-             return true
-        }
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if (gestureRecognizer.view?.isKind(of: UIScrollView.self))! || (gestureRecognizer.view?.isKind(of: CardView.self))! {
-            return false
+        }else if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && (gestureRecognizer.view?.isKind(of: CardView.self))!{
+            let view = gestureRecognizer.view as! CardView
+            if view.isEditMode{
+                return true
+            }else{
+                return false
+            }
         }else{
             return true
         }
     }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer.view?.isKind(of: CardView.self))! && (otherGestureRecognizer.view?.isKind(of: UIScrollView.self))! {
+           return false
+        }else if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self){
+            return true
+    }else{
+            return true
+        }
+    }
+    
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer.view?.isKind(of: CardView.self))!{
+            let cardView = gestureRecognizer.view as! CardView
+            if cardView.isEditMode{
+                return true
+            }else{
+                return false
+            }
+        }else{
+            return true
+        }
+    }
+    
+    
+    
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer.view?.isKind(of: CardView.self))! && (otherGestureRecognizer.view?.isKind(of: UIScrollView.self))!{
+            let cardView = gestureRecognizer.view as! CardView
+            if !cardView.isEditMode{
+                return true
+            }else{
+                return false
+            }
+        }else if (gestureRecognizer.view?.isKind(of: CardView.self))! && (otherGestureRecognizer.view?.isKind(of: ProgressBar.self))!{
+            return true
+        }else{
+            return false
+        }
+    }
+    
+  
+    
+    
 }
 
 extension CardEditor:CardViewDelegate{
-    func cardView(commentHide picView: CardView.PicView) {
+    internal func voiceView(recognition cardView: CardView.VoiceCardView) {
+        cardView.hero.id = cardView.card.getId()
+        let vc = VoiceRecognitionController()
+        vc.modalPresentationStyle = .currentContext
+        vc.loadVoiceCardView(voiceCard: cardView.card as! VoiceCard)
+        vc.hero.isEnabled = true
+        vc.superCard.hero.id = cardView.card.getId()
+        vc.delegate = self
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    internal func cardView(commentHide picView: CardView.PicView) {
         reLoad()
     }
     
-    func cardView(commentShowed picView: CardView.PicView) {
+    internal func cardView(commentShowed picView: CardView.PicView) {
         reLoad()
         picView.commentView.becomeFirstResponder()
     }
     
-    func picView(extractText:CardView.PicView){
+    internal func picView(extractText:CardView.PicView){
         let vc = OCRController()
-        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalPresentationStyle = .currentContext
+        vc.hero.isEnabled = true
+        vc.image = extractText.image.image
+        extractText.hero.id = extractText.card.getId()
         self.present(vc, animated: true){
-            vc.loadPic(pic: extractText.image.image!)
+            vc.imageView.hero.id = extractText.hero.id
         }
     }
     
-    func cardView(translate view: CardView,text:String) {
+    internal func cardView(translate view: CardView,text:String) {
         endEditing()
         let vc = TranslationController()
-        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalPresentationStyle = .currentContext
         self.present(vc, animated: true){
            vc.originalText.text = text
             if text.count > 0{

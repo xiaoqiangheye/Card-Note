@@ -75,6 +75,7 @@ class OCRController:UIViewController,PointDelegate{
     var heightRatioToView:CGFloat = 1
     var backButton:UIButton!
     var ocrbutton:UIButton!
+    var image:UIImage!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.8)
@@ -83,20 +84,33 @@ class OCRController:UIViewController,PointDelegate{
         backButton.setTitleColor(.white, for: .normal)
         backButton.addTarget(self, action: #selector(dismissView), for: .touchDown)
         self.view.addSubview(backButton)
+        
         imageView = UIImageView()
-        extractButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
-        extractButton.backgroundColor = Constant.Color.themeColor
-        extractButton.setTitle("Clip", for: .normal)
-        extractButton.setTitleColor(.white, for: .normal)
-        extractButton.layer.cornerRadius = 10
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        imageView.addGestureRecognizer(tapGesture)
+        
+        extractButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        extractButton.backgroundColor = .white
+        extractButton.setFAIcon(icon: .FACut, iconSize:30,forState: .normal)
+        extractButton.setTitleColor(Constant.Color.themeColor, for: .normal)
+        extractButton.layer.cornerRadius = 25
         extractButton.addTarget(self, action: #selector(extractText), for: .touchDown)
         
-        ocrbutton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
-        ocrbutton.backgroundColor = Constant.Color.themeColor
-        ocrbutton.setTitle("Extract", for: .normal)
+        ocrbutton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        ocrbutton.backgroundColor = .white
+        ocrbutton.setImage(UIImage(named: "ocr"), for: .normal)
+        ocrbutton.imageView?.frame.size = CGSize(width: 30, height: 30)
         ocrbutton.setTitleColor(.white, for: .normal)
-        ocrbutton.layer.cornerRadius = 10
+        ocrbutton.layer.cornerRadius = 25
         ocrbutton.addTarget(self, action: #selector(recognize), for: .touchDown)
+        
+        if image != nil{
+            loadPic(pic: image)
+        }
+    }
+    
+    @objc private func imageViewTapped(){
+        
     }
     
     @objc func dismissView(){
@@ -126,21 +140,27 @@ class OCRController:UIViewController,PointDelegate{
     
     @objc func recognize(){
         print("start to recognize")
+        let processController = LoadingViewController()
+        processController.setAlert("Extracting Text...")
+        processController.modalPresentationStyle = .overCurrentContext
+        self.present(processController, animated: false, completion: nil)
         OCRManager.ocr(usingAPI: imageView.image!) { [unowned self] (error, strings) in
             if error == nil{
                 if strings.count == 0{
                     DispatchQueue.main.async {
-                AlertView.show(alert: "There is no text recognized.")
+                    processController.dismiss(animated: true, completion: nil)
+                AlertView.show(alert: "No text recognized.")
                     }
                     return
                 }
                 DispatchQueue.main.async {
+                    processController.dismiss(animated: false, completion: nil)
                     let vc = OCRResultController()
                     vc.strings = strings
                     self.present(vc, animated: true, completion: nil)
                 }
             }else{
-                AlertView.show(alert: "Check the Internet.")
+                AlertView.show(alert: "Seems no internet.")
                 print(error?.localizedDescription)
             }
         }

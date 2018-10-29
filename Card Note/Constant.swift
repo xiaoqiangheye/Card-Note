@@ -11,8 +11,8 @@ import UIKit
 
 class Constant{
     struct Configuration{
-        static let version = 1.0
-        static let sharedSecret = "95b689872bae44ff9de22d57f3b5510c"
+        static let VERSION = 1.2
+        static let SHARE_SECREAT_KET = "95b689872bae44ff9de22d57f3b5510c"
         struct url {
             static let manager = FileManager.default
             static var url = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)
@@ -25,7 +25,11 @@ class Constant{
             static let temporary:URL = url.appendingPathComponent("temp")
             static let attributedText = url.appendingPathComponent("attr")
         }
-        static var AccountPlan:String = ""
+        static var AccountPlan:String = "basic"
+        struct Cloud{
+            static let SYNC_ONLY_WITH_WIFI = "auto-sync-if-wifi-presents"
+            static let AUTO_SYNC = "auto-sync"
+        }
     }
     
     enum TextMode {

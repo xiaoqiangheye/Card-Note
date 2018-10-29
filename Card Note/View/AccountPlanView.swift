@@ -13,69 +13,51 @@ import Font_Awesome_Swift
 
 class AccountPlanView:UIView{
     var title:UILabel!
-    var price:UILabel!
-    var advantageView:UIView!
+    var advantageView:UITextView!
+    var logo:UIImageView!
     private let ADVANTAGE_BASIC = ["10 Notes Most", "Limited Time for voice record", "Non-Cloud Storage", "Non-Sync", "Translation across different languages", "Voice,Photo,Video Record","Map Record"]
     private let ADVANTAGE_PREMIUM = ["Limitless Notes", "Limitless Time for voice record", "Cloud Storage", "Auto-Sync", "Limitless Devices", "Translation across different languages", "Voice,Photo,Video Record" ,"Voice to Text Conversion","Map Record"]
     init(plan:Plan) {
-        super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.6))
-        title = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 30))
+        super.init(frame: CGRect(x: 0, y: 10, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.5))
+        logo = UIImageView(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
+        logo.image = UIImage(named: "white_version_logo")
+        self.addSubview(logo)
+        
+        //title
+        title = UILabel(frame: CGRect(x: 40, y: 10, width: UIScreen.main.bounds.width * 0.8, height: 30))
         title.textColor = .white
-        title.font = UIFont.systemFont(ofSize: 20)
-        title.textAlignment = .center
-        price = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 50))
-        price.textColor = .white
-        price.font = UIFont.systemFont(ofSize: 20)
-        price.textAlignment = .left
-        advantageView = UIView(frame: CGRect(x: 0, y: 80, width: UIScreen.main.bounds.width * 0.8, height: 320))
-        advantageView.backgroundColor = .flatWhite
+        title.font = UIFont.boldSystemFont(ofSize: 20)
+        title.textAlignment = .left
+        
+
+        advantageView = UITextView(frame: CGRect(x: 20, y: 40, width: self.frame.width, height: self.frame.height - 40))
+        advantageView.isEditable = false
+        advantageView.isSelectable = false
+        advantageView.backgroundColor = .clear
+        advantageView.textColor = .white
+        advantageView.font = UIFont.systemFont(ofSize: 15)
+        advantageView.textAlignment = .left
+       // advantageView = UIView(frame: CGRect(x: 0, y: 80, width: UIScreen.main.bounds.width * 0.8, height: 320))
+      //  advantageView.backgroundColor = .flatWhite
         self.addSubview(title)
-        self.addSubview(price)
         self.addSubview(advantageView)
         
         //self decoration
         self.layer.cornerRadius = 10
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = CGSize(width: 1, height: 1)
-        self.layer.shadowOpacity = 0.8
+        self.layer.shadowOffset = CGSize(width: 0, height: 10)
+        self.layer.shadowOpacity = 0.5
         
         switch plan{
         case Plan.basic:
             self.backgroundColor = Constant.Color.themeColor
+            self.layer.shadowColor = Constant.Color.themeColor.cgColor
             title.text = "Basic"
-            var cumulatedHeight = 0
-            for advantage in ADVANTAGE_BASIC{
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 20))
-            label.textColor = .black
-            label.font = UIFont.systemFont(ofSize: 15)
-            label.text = advantage
-            label.numberOfLines = 3
-            label.textAlignment = .center
-            label.backgroundColor = UIColor.flatWhite
-            label.frame.size.height = UILabel.heightWithConstrainedWidth(width: UIScreen.main.bounds.width * 0.8, font: label.font, str: label.text as! NSString) + 20
-            label.frame.origin.y = CGFloat(cumulatedHeight)
-            cumulatedHeight += Int(label.frame.height)
-            advantageView.addSubview(label)
-            }
-            
+            advantageView.text = "Unlimited note cards\nNo AI Support\nMay have Ads"
         case Plan.premium:
-            self.backgroundColor = Constant.Color.themeColor
-            title.text = "Professional"
-            var cumulatedHeight = 0
-            for advantage in ADVANTAGE_PREMIUM{
-                let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 20))
-                label.textColor = .black
-                label.textAlignment = .center
-                label.font = UIFont(name: "ChalkboardSE-Light", size: 15)
-                label.text = advantage
-                label.numberOfLines = 3
-                label.backgroundColor = UIColor.flatWhite
-                label.lineBreakMode = .byWordWrapping
-                label.frame.size.height = UILabel.heightWithConstrainedWidth(width: UIScreen.main.bounds.width * 0.8, font: label.font, str: label.text as! NSString) + 20
-                label.frame.origin.y = CGFloat(cumulatedHeight)
-                cumulatedHeight += Int(label.frame.height)
-                advantageView.addSubview(label)
-            }
+            self.backgroundColor = UIColor.flatPurple
+            self.layer.shadowColor = UIColor.flatPurple.cgColor
+            title.text = "Premium"
+            advantageView.text = "Unlimited note cards\nAI Support\n\t-OCR\n\t-Translation\n\t-Voice Recognition\nNo Ads"
         }
     }
     

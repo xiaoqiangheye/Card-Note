@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		28788993A11B70793DD30336 /* Pods_Card_NoteUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBECEEB608B44188F61CFEE6 /* Pods_Card_NoteUITests.framework */; };
 		47495A0D87442A8C39A95B6F /* Pods_Card_Note.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC3FFE3C7B0DB43D6B8966D /* Pods_Card_Note.framework */; };
+		9A01D07A216843450051D3F5 /* MindMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A01D079216843450051D3F5 /* MindMapController.swift */; };
+		9A4DAEE6214B7E790046403C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4DAEE5214B7E790046403C /* ProgressBar.swift */; };
+		9A4DAEE8214F3C830046403C /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4DAEE7214F3C830046403C /* LoadingViewController.swift */; };
+		9A7ABE9C216DB3DF00EC5115 /* ImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */; };
 		AF6650BF4C280AB47837768B /* Pods_Card_NoteTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCB930C37325DE33FEA805C /* Pods_Card_NoteTests.framework */; };
 		B602B1542092041C00CD8A40 /* SharedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1532092041C00CD8A40 /* SharedCard.swift */; };
 		B602B1562093232600CD8A40 /* VoiceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1552093232600CD8A40 /* VoiceCard.swift */; };
@@ -72,7 +76,7 @@
 		B6555E47212AA0EA0042C9C3 /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6555E46212AA0EA0042C9C3 /* OptionViewController.swift */; };
 		B6613B09207B80A1001D117B /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B08207B80A1001D117B /* Palette.swift */; };
 		B6613B0B207CD440001D117B /* CardEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0A207CD440001D117B /* CardEditorView.swift */; };
-		B6613B0D20803A59001D117B /* Constaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0C20803A59001D117B /* Constaint.swift */; };
+		B6613B0D20803A59001D117B /* Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0C20803A59001D117B /* Constraint.swift */; };
 		B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0E2080404B001D117B /* SearchEngine.swift */; };
 		B672D432211FE50200A51D9D /* AccountSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B672D431211FE50200A51D9D /* AccountSettingController.swift */; };
 		B672D43B2120176600A51D9D /* Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B672D43A2120176600A51D9D /* Cloud.swift */; };
@@ -161,6 +165,10 @@
 		6D367C44CB37801228D2000E /* Pods-Card Note.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Card Note.release.xcconfig"; path = "Pods/Target Support Files/Pods-Card Note/Pods-Card Note.release.xcconfig"; sourceTree = "<group>"; };
 		7AC3FFE3C7B0DB43D6B8966D /* Pods_Card_Note.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Card_Note.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		848138D52FA7C090148B80D7 /* Pods-Card NoteTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Card NoteTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Card NoteTests/Pods-Card NoteTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9A01D079216843450051D3F5 /* MindMapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapController.swift; sourceTree = "<group>"; };
+		9A4DAEE5214B7E790046403C /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		9A4DAEE7214F3C830046403C /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageController.swift; sourceTree = "<group>"; };
 		AF6D09AFA1C8271D5CA99BB1 /* Pods-Card NoteUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Card NoteUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Card NoteUITests/Pods-Card NoteUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B602B1532092041C00CD8A40 /* SharedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedCard.swift; sourceTree = "<group>"; };
 		B602B1552093232600CD8A40 /* VoiceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCard.swift; sourceTree = "<group>"; };
@@ -231,7 +239,7 @@
 		B6555E46212AA0EA0042C9C3 /* OptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionViewController.swift; sourceTree = "<group>"; };
 		B6613B08207B80A1001D117B /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		B6613B0A207CD440001D117B /* CardEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEditorView.swift; sourceTree = "<group>"; };
-		B6613B0C20803A59001D117B /* Constaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constaint.swift; sourceTree = "<group>"; };
+		B6613B0C20803A59001D117B /* Constraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		B6613B0E2080404B001D117B /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		B672D431211FE50200A51D9D /* AccountSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingController.swift; sourceTree = "<group>"; };
 		B672D43A2120176600A51D9D /* Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
@@ -409,6 +417,7 @@
 				B64DD43A211183C200BB0B66 /* TagOptionView.swift */,
 				B64DD4432111A5F500BB0B66 /* TagInputView.swift */,
 				B6555E38212961050042C9C3 /* LoadingView.swift */,
+				9A4DAEE5214B7E790046403C /* ProgressBar.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -439,6 +448,9 @@
 				B6555E3D212A97B30042C9C3 /* TranslationController.swift */,
 				B6555E46212AA0EA0042C9C3 /* OptionViewController.swift */,
 				B6948C2F213936DE00C611CF /* MailController.swift */,
+				9A4DAEE7214F3C830046403C /* LoadingViewController.swift */,
+				9A01D079216843450051D3F5 /* MindMapController.swift */,
+				9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -447,7 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				B605E0FD208CAAE600F2C260 /* Card */,
-				B6613B0C20803A59001D117B /* Constaint.swift */,
+				B6613B0C20803A59001D117B /* Constraint.swift */,
 				B6613B0E2080404B001D117B /* SearchEngine.swift */,
 				B62EC98A20820168004EE3C0 /* User.swift */,
 				B602B1572093244300CD8A40 /* RecordManager.swift */,
@@ -856,6 +868,7 @@
 				B6A86DF62088F4EF00F2C6EC /* AlertView.swift in Sources */,
 				B6613B09207B80A1001D117B /* Palette.swift in Sources */,
 				B61D690D2096217E00B69009 /* TranslationManager.swift in Sources */,
+				9A4DAEE6214B7E790046403C /* ProgressBar.swift in Sources */,
 				B610298A20983D4C00DA91BB /* UIMapPIcker.swift in Sources */,
 				B602B1542092041C00CD8A40 /* SharedCard.swift in Sources */,
 				B60F40E12074EB2900196DD5 /* CardEditor.swift in Sources */,
@@ -875,10 +888,12 @@
 				B6555E3021273B840042C9C3 /* VoiceRecognitionController.swift in Sources */,
 				B6BA3AAA2064AE5300290BBB /* AppDelegate.swift in Sources */,
 				B6385A9620C65CDF00E022CB /* MovieCard.swift in Sources */,
+				9A7ABE9C216DB3DF00EC5115 /* ImageController.swift in Sources */,
 				B6985A8E20BD7D460014A89B /* AttributedTextViewDelegate.swift in Sources */,
 				B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */,
 				B672D432211FE50200A51D9D /* AccountSettingController.swift in Sources */,
 				B6385AA720C65CF800E022CB /* ListCard.swift in Sources */,
+				9A4DAEE8214F3C830046403C /* LoadingViewController.swift in Sources */,
 				B6FF866420A1B9B8000D0B51 /* CardViewPanel.swift in Sources */,
 				B6155EBD208AEE840031F262 /* SearchBar.swift in Sources */,
 				B62EC98B20820168004EE3C0 /* User.swift in Sources */,
@@ -902,6 +917,7 @@
 				B6E505072077D49F003504D8 /* Extension.swift in Sources */,
 				B6A86DE9208822DF00F2C6EC /* SignUpController.swift in Sources */,
 				B64A18AF20F4FFF000833BE2 /* AccountPlanView.swift in Sources */,
+				9A01D07A216843450051D3F5 /* MindMapController.swift in Sources */,
 				B6FB6C9721032E7400915B3B /* SpeechManager.swift in Sources */,
 				B672D43B2120176600A51D9D /* Cloud.swift in Sources */,
 				B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */,
@@ -915,7 +931,7 @@
 				B60F40DC2074D0AE00196DD5 /* Constant.swift in Sources */,
 				B612ABC721414D1B00EB5314 /* PlaceBase.swift in Sources */,
 				B6BAADCB20A18317008B6761 /* TapBarController.swift in Sources */,
-				B6613B0D20803A59001D117B /* Constaint.swift in Sources */,
+				B6613B0D20803A59001D117B /* Constraint.swift in Sources */,
 				B64A18B220F5D77B00833BE2 /* PurchaseManager.swift in Sources */,
 				B6613B0B207CD440001D117B /* CardEditorView.swift in Sources */,
 				B6054A2E2102168D00E7CFF6 /* UIMapPickerWithMapBox.swift in Sources */,

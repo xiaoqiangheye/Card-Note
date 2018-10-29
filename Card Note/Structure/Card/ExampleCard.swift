@@ -17,6 +17,12 @@ class ExampleCard:Card{
        // self.example = example
     }
     
+    init(key:String,value:String){
+        let date = NSDate()
+        let interval = date.timeIntervalSince1970
+        super.init(title: key, tag: nil, description: "", id: UUID().uuidString, definition: value, color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
+    }
+    
     init(id:String,title:String){
         let date = NSDate()
         let interval = date.timeIntervalSince1970

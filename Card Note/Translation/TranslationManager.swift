@@ -7,26 +7,51 @@
 //
 
 import Foundation
+import SwiftyJSON
 class TranslationManager{
-    class func gTranslate(text:String,toLanguage:String,completionHandler:@escaping (String?)->()){
-        let strToTranslate = "他们是这样说的";
-        let googleTransBaseUrl = "http://translate.google.cn/translate_a/t?";
-        var googleTransUrl = googleTransBaseUrl
-        googleTransUrl  += "&client=" + "t"
-        googleTransUrl += "&text=" + strToTranslate
-        googleTransUrl += "&hl=" + "zh-CN"
-        googleTransUrl += "&sl=" + "auto"// source   language
-        googleTransUrl += "&tl=" + toLanguage  // to       language
-        googleTransUrl += "&ie=" + "UTF-8"   // input    encode
-        googleTransUrl += "&oe=" + "UTF-8"    // output   encode
-        var request = URLRequest(url: URL(string: googleTransUrl)!)
-        request.httpMethod = "GET"
-        let urlsession = URLSession.shared
-        let dataTask = urlsession.dataTask(with: request) { (data, response, error) in
-            
+    class func gTranslate(text:String,toLanguage:String,fromLanguage:String,completionHandler:@escaping (String?)->()){
+        var url = "https://translation.googleapis.com/language/translate/v2?"
+        let q = text.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        let target = toLanguage
+        let format = "text"
+        let source = fromLanguage
+        let model = "nmt"
+        let key = "AIzaSyDp4psXj4wq5o3lMW64o-qjI_YynH8scIQ"
+        
+        url.append("q=\(q)&")
+        url.append("key=\(key)&")
+        if fromLanguage != "auto"{
+        url.append("source=\(source)&")
+        }
+        url.append("format=\(format)&")
+        url.append("model=\(model)&")
+        url.append("target=\(target)")
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "POST"
+        let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if error == nil && data != nil{
+                do{
+                    let json = try JSON(data: data!)
+                    print(String(data: data!, encoding: String.Encoding.utf8))
+                    let list = json["data"]
+                    let translations = list["translations"].arrayValue
+                    if translations.count > 0{
+                        let text = translations[0]["translatedText"].stringValue
+                        completionHandler(text)
+                    }else{
+                        completionHandler(nil)
+                    }
+                }catch let error{
+                    print(error.localizedDescription)
+                    completionHandler(nil)
+                }
+            }else{
+                completionHandler(nil)
+            }
         }
         dataTask.resume()
     }
+    
     
     class func translate(text:String,from:String,to:String,completionHandler:@escaping (String?)->()){
         let yd = YDTranslateInstance.shared()

@@ -45,23 +45,7 @@ class PicCard:Card{
        // fatalError("init(coder:) has not been implemented")
     }
     
-    required init(from decoder: Decoder) throws {
-       try super.init(from: decoder)
-        var url = Constant.Configuration.url.PicCard
-        url.appendPathComponent(self.getId() + ".jpg")
-        let im = UIImage(named: (url.path))
-        if im != nil{
-            self.pic = im
-        }else{
-            self.pic = #imageLiteral(resourceName: "bubble")
-            User.downloadPhotosUsingQCloud(cardID: self.getId()) { (bool, error) in
-                if bool{
-                    self.pic = UIImage(contentsOfFile: (url.path))
-                }
-            }
-        }
-        
-    }
+   
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         aCoder.encode(pic, forKey: "pic")

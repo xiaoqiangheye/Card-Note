@@ -23,7 +23,10 @@ class Cloud{
         cardRecord["cardID"] = card.getId()
         }
         
-        cardRecord["content"] = CardParser.CardToJSON(card)
+        let string = CardParser.CardToJSON(card)
+        if string != nil{
+            cardRecord["content"] = string
+        }
         creatRecord(record: cardRecord) { (bool) in
             completionHandler(bool)
         }
@@ -42,8 +45,11 @@ class Cloud{
             }else{
     // Modify the record
                 record!["cardID"] = card.getId()
-                record!["content"] = CardParser.CardToJSON(card)
-                creatRecord(record: record!, completionHandler: { (bool) in
+                let string = CardParser.CardToJSON(card)
+                if string != nil{
+                record!["content"] = string
+                }
+             creatRecord(record: record!, completionHandler: { (bool) in
                     completionHandler(bool)
                 })
     }
@@ -87,7 +93,6 @@ class Cloud{
                 print("selectData failure！" + (error?.localizedDescription)!)
             } else {
                 print("selectData success！")
-                CardParser.JSONToCard(card!["content"]!)
             }
         }
     }

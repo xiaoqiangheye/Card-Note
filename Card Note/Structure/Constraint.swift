@@ -10,13 +10,13 @@ import Foundation
 import Font_Awesome_Swift
 class Constraint{
     var type:Constraint.type!
-    var value:Any!
+    var value:Any
     enum type{
         case color
         case tag
     }
     
-    init(_ type:Constraint.type!, _ value: Any) {
+    init(_ type:Constraint.type, _ value: Any) {
         self.type = type
         self.value = value
     }

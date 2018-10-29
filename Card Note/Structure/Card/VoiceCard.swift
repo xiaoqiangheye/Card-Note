@@ -44,18 +44,7 @@ class VoiceCard:Card{
         // fatalError("init(coder:) has not been implemented")
     }
     
-    required init(from decoder: Decoder) throws {
-        try super.init(from: decoder)
-        self.voiceManager = RecordManager(userID: loggedID, fileName: "\(self.getId()).wav")
-        voicepath.append(contentsOf: "/\(self.getId()).wav")
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let state = try container.decodeIfPresent(String.self, forKey: .state)
-        if state != nil{
-            self.voiceManager?.state = RecordManager.State(rawValue:state!)!
-        }else{
-            self.voiceManager?.state = RecordManager.State.willRecord
-        }
-    }
+  
     
     
     

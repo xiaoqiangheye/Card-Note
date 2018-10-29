@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Xkh-ER-z3I">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Xkh-ER-z3I">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -51,7 +51,7 @@
                         <viewLayoutGuide key="safeArea" id="qvp-zZ-Mja"/>
                     </view>
                     <connections>
-                        <segue destination="UkG-Ey-Caz" kind="presentation" identifier="main" id="sSv-fo-Ha4"/>
+                        <segue destination="UkG-Ey-Caz" kind="presentation" identifier="main" animates="NO" id="sSv-fo-Ha4"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="login" id="Amp-bM-zxj"/>
                     </connections>
                 </viewController>
@@ -754,8 +754,7 @@
         <image name="white_version_logo" width="192" height="192"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7BT-Lm-uln"/>
-        <segue reference="eQh-sG-F0D"/>
-        <segue reference="bnS-Y1-Ljq"/>
+        <segue reference="sSv-fo-Ha4"/>
+        <segue reference="GcU-bD-YTj"/>
     </inferredMetricsTieBreakers>
 </document>

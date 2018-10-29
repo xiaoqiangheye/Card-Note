@@ -34,7 +34,7 @@ class OCRManager:NSObject,URLSessionDelegate{
     }
     
     class func ocr(usingAPI image:UIImage, completionhandler:@escaping (Error?,[String])->()){
-       // var url = "http://openapi.youdao.com/ocrapi"
+       // var url = "https://openapi.youdao.com/ocrapi"
         let appKey = "2d2825c13e5826fe"
         let detectType = "10012"
         let imageType = "1"
@@ -46,7 +46,7 @@ class OCRManager:NSObject,URLSessionDelegate{
         // 将Data转化成 base64的字符串
         let imageBase64String = imageData.base64EncodedString()
         let sign = md5String(str: appKey + imageBase64String + salt + "mhsFOp6A1xfbvrjHuuhOxkiBsHpPSXLv")
-        let url = NSURL.init(string:"http://openapi.youdao.com/ocrapi")
+        let url = NSURL.init(string:"https://openapi.youdao.com/ocrapi")
         let request = NSMutableURLRequest.init(url: url! as URL)
         request.httpMethod = "POST"
         let session = URLSession.shared

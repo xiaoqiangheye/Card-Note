@@ -34,14 +34,7 @@ class MapCard:Card{
         
     }
     
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: MapCard.CodingKeys.self)
-        formalAddress = try container.decode(String.self, forKey: MapCard.CodingKeys.formalAddress)
-        neibourAddress = try container.decode(String.self, forKey: .neibourAddress)
-        latitude = try container.decode(CGFloat.self, forKey: .latitude)
-        longitude = try container.decode(CGFloat.self, forKey: .longitude)
-    }
-    
+   
     init(poi:AMapPOI?,formalAddress:String,id:String) {
         self.poi = poi
         if poi == nil{

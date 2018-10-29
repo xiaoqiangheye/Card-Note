@@ -27,16 +27,14 @@ var isFirstLaunch = true
 class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,BMKGeneralDelegate,BMKLocationAuthDelegate{
     func signature(with fileds: QCloudSignatureFields!, request: QCloudBizHTTPRequest!, urlRequest urlRequst: NSMutableURLRequest!, compelete continueBlock: QCloudHTTPAuthentationContinueBlock!) {
         let credential = QCloudCredential()
-        credential.secretID = "AKIDCRdjfPSdQAkAORR6f3FSYVGrJnAZvyWx"
-        credential.secretKey = "QMCrKbgdQQK6h5HH5h9S9g1AA2lLjvuh"
+        credential.secretID = Bundle.main.infoDictionary?["QCloudSecretID"] as! String
+        credential.secretKey = Bundle.main.infoDictionary?["QCloudSecretKey"] as! String
         let creation = QCloudAuthentationV5Creator.init(credential: credential)
         let sig = creation?.signature(forData: urlRequst)
         continueBlock(sig,nil)
     }
     
-    
     var window: UIWindow?
-    
     func createDirectory(){
         let array = [Constant.Configuration.url.attributedText,Constant.Configuration.url.Audio,Constant.Configuration.url.Card,Constant.Configuration.url.Map,Constant.Configuration.url.Movie,Constant.Configuration.url.PicCard]
         for url in array{
@@ -100,6 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
         
         //map setting
         //gao de
+        /* temporarily banned
         AMapServices.shared().apiKey = "cd1079b6f89a637f97e367d5b2baa101"
         let mapManager = BMKMapManager()
          BMKLocationAuth.sharedInstance()?.checkPermision(withKey: "gB7SGt9F65EgmkiWWcaHtLaxssYpyCLx", authDelegate: self)
@@ -113,8 +112,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
         } else {
             NSLog("经纬度类型设置失败");
         }
+        */
         
-    
         //directory setting
         createDirectory()
         
@@ -131,13 +130,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
             //other setting
             //auto sync opened
-            UserDefaults.standard.set(true, forKey: "auto-sync")
+            UserDefaults.standard.set(true, forKey: Constant.Configuration.Cloud.AUTO_SYNC)
             //auto sync if Wifi presents
-            UserDefaults.standard.set(true, forKey: "auto-sync-if-wifi-presents")
-            //password enabled to unLock the note book
-            UserDefaults.standard.set(true, forKey: "key-to-unlock")
+            UserDefaults.standard.set(true, forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
             //account Plan
             UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue,forKey: "accountPlan")
+            //create a new clasic card
+            
+            let newOrientationCard = Card(title: "Your First Card", tag: nil, description: "", id: "first", definition: "Start your first trip", color: Constant.Color.blueLeft, cardType: Card.CardType.card.rawValue, modifytime: String(NSTimeIntervalSince1970))
+           let exaCard = ExampleCard(key: "First Term", value: "This is an Key-Value card for you to take notes. In classes, you can write important terms into this card. The key is the term and the value is the definition of the term.")
+            newOrientationCard.addChildNote(exaCard)
+            let manager = FileManager.default
+            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
+            url?.appendPathComponent("card.txt")
+            
+            var cardList = [Card]()
+            cardList.append(newOrientationCard)
+            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList as Any)
+            do{
+                try datawrite.write(to: url!)
+            }catch{
+                print("fail to add")
+            }
            // PurchaseManager.restore()
         }else
         {

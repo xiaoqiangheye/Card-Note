@@ -72,7 +72,6 @@ class User:NSObject,URLSessionDelegate{
     }
     
     static func uploadAttrUsingQCloud(url:URL){
-        if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         print("userText/"  + url.lastPathComponent)
         put.object =  "userText/"  + url.lastPathComponent
@@ -86,11 +85,9 @@ class User:NSObject,URLSessionDelegate{
             print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
-        }
     }
     
     static func uploadPhotoUsingQCloud(url:URL){
-         if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         print("userImage/" + url.lastPathComponent)
         put.object =  "userImage/" + url.lastPathComponent
@@ -104,12 +101,10 @@ class User:NSObject,URLSessionDelegate{
              print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
-        }
     }
 
     
     static func uploadAudioUsingQCloud(url:URL){
-         if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         put.object = "userAudio/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
@@ -122,11 +117,9 @@ class User:NSObject,URLSessionDelegate{
             print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
-        }
     }
     
     static func uploadMovieUsingQCloud(url:URL){
-         if isPremium(){
         let put = QCloudCOSXMLUploadObjectRequest<AnyObject>()
         put.object = "userMovie/" + url.lastPathComponent
         put.bucket = "cardnote-1253464939"
@@ -139,14 +132,12 @@ class User:NSObject,URLSessionDelegate{
             print("finish Upload")
         }
         QCloudCOSTransferMangerService.defaultCOSTransferManager().uploadObject(put)
-        }
     }
     
     
     
     
     static func downloadPhotosUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
-         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = Constant.Configuration.url.PicCard
@@ -167,11 +158,9 @@ class User:NSObject,URLSessionDelegate{
              NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
         QCloudCOSXMLService.defaultCOSXML().getObject(request)
-        }
     }
     
     static func downloadMapUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
-         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = Constant.Configuration.url.Map
@@ -192,11 +181,9 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
-        }
     }
     
     static func downloadAudioUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
-         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = Constant.Configuration.url.Audio
@@ -217,11 +204,9 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
-        }
     }
     
     static func downloadMovieUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
-         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
        var url = Constant.Configuration.url.Movie
@@ -243,11 +228,9 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
-        }
     }
     
     static func downloadAttrUsingQCloud(cardID:String,completionHandler:@escaping (Bool,Error?)->()){
-         if isPremium(){
         let request = QCloudGetObjectRequest()
         let manager = FileManager.default
         var url = Constant.Configuration.url.attributedText
@@ -268,7 +251,6 @@ class User:NSObject,URLSessionDelegate{
             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
         QCloudCOSXMLService.defaultCOSXML().getObject(request)
-        }
     }
     
    

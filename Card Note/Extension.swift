@@ -47,6 +47,14 @@ extension UIDevice{
         }
         return 0
     }
+    
+    public func isX()->Bool{
+        if UIScreen.main.bounds.height == 812 {
+            return true
+        }else{
+            return false
+        }
+    }
 }
 
 extension UIColor{
@@ -268,16 +276,15 @@ func sync(completionHandler:@escaping (Bool)->()){
                     ifSuccessArray.append(bool)
                 })
             }
-            
-            
+        }
+        if ifSuccessArray.contains(false){
+            completionHandler(false)
+        }else{
+            completionHandler(true)
         }
     }
     
-    if ifSuccessArray.contains(false){
-        completionHandler(false)
-    }else{
-        completionHandler(true)
-    }
+   
     /*deprecated Login/Sign up Function in 8.13.2000
     User.getUserCards(email: loggedemail, completionHandler: { (json:JSON?) in
         if json != nil{
@@ -632,6 +639,24 @@ func getRightColorFromLeftGradient(left:UIColor)->UIColor{
         return .white
     }
 }
+
+
+extension UIViewController {
+    class func currentViewController(base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return currentViewController(base: nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            return currentViewController(base: tab.selectedViewController)
+        }
+        if let presented = base?.presentedViewController {
+            return currentViewController(base: presented)
+        }
+        return base
+    }
+}
+
+
 
 
 

@@ -17,17 +17,7 @@ class CardParser{
         return string3
     }
     
-    class func JSONToCard(bycoder json:String)->Card?{
-    let data = json.data(using: .utf8)
-        let coder = JSONDecoder()
-        do{
-        let card = try coder.decode(Card.self, from: data!)
-            return card}
-        catch let e{
-            print(e.localizedDescription)
-            return nil
-        }
-    }
+   
     
     class func CardToJson(bycoder card:Card)->Data?{
         let coder = JSONEncoder()
@@ -66,6 +56,7 @@ class CardParser{
                 card = Card(title: title, tag: tags, description: description, id: id, definition: definition, color: color, cardType: type, modifytime: modifytime)
             }else if type == "example"{
                 card = ExampleCard(id: id, title: title)
+                card.setDefinition(definition)
                 card.updateTime(modifytime)
                 let manager = FileManager.default
                 var url = Constant.Configuration.url.attributedText
@@ -92,12 +83,11 @@ class CardParser{
                 }
             }else if type == "picture"{
                 let manager = FileManager.default
-                var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                url?.appendPathComponent(loggedID)
-                url?.appendPathComponent(id + ".jpg")
-                if manager.fileExists(atPath: (url?.path)!){
+                var url = Constant.Configuration.url.PicCard
+                url.appendPathComponent(id + ".jpg")
+                if manager.fileExists(atPath: (url.path)){
                     // manager.createDirectory(atPath: url?.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-                   let image = UIImage(contentsOfFile: (url?.path)!)
+                   let image = UIImage(contentsOfFile: (url.path))
                     if image != nil{
                         card = PicCard(image!)
                     }else{
@@ -177,12 +167,7 @@ class CardParser{
                         }
                     }
                 }
-            let parentCard = json["parentcard"].rawString()
-            if parentCard != nil{
-                let prCard = JSONToCard(parentCard!)
-                
-            }
-            
+          
             let subCardsArray = json["subcard"].array
             if subCardsArray != nil{
             var subcards:[Card] = [Card]()
@@ -273,7 +258,7 @@ class CardParser{
         string.append("}")
        // for card.getChilds()
         let json = JSON(string)
-        if json != nil{
+        if json != JSON.null{
         return json.rawString()
         }else{
         return nil

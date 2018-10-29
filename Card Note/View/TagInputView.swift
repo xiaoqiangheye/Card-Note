@@ -15,18 +15,21 @@ class TagInputView:UIView,TapOptionViewDelegate{
     private var deleteButton:UIButton!
     var plusButton:UIButton!
     weak var delegate:TagInputViewDelegate?
-    var tagList:[UILabel] = [UILabel]()
-    var tags:[String] = [String]()
-    class TagLabel:UILabel{
+    var tagList:[TagLabel] = [TagLabel]()
+    var tags:Set<String> = Set<String>()
+    var selectedTag:TagLabel?
+    class TagLabel:UIButton{
+        override var canBecomeFirstResponder: Bool {
+            return true
+        }
+        
         init(text:String,font:UIFont) {
             super.init(frame:CGRect(x: -1, y: -1, width: 30, height: 30))
-            self.font = font
+            
             //self.clipsToBounds = true
-            self.text = text
+            self.setTitle(text, for: .normal)
            // self.backgroundColor = .white
-            self.textColor = .gray
-            self.numberOfLines = 1
-            self.textAlignment = .center
+            self.setTitleColor(.gray, for: .normal)
            // self.layer.borderWidth = 1
             self.sizeToFit()
             self.frame.size.width += 30
@@ -48,12 +51,6 @@ class TagInputView:UIView,TapOptionViewDelegate{
     init(frame: CGRect,tags:[String]) {
         super.init(frame: frame)
         
-        deleteButton = UIButton(frame: CGRect(x: self.frame.width - 30, y: self.frame.height - 30, width: 30, height: 30))
-        deleteButton.setFAIcon(icon: .FACheckCircle, iconSize: 30, forState: .normal)
-        deleteButton.setTitleColor(.gray, for: .normal)
-        deleteButton.alpha = 0.8
-        deleteButton.addTarget(self, action: #selector(popTag), for: .touchDown)
-        
         //plus button
         plusButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         plusButton.setFAIcon(icon: .FAPlusCircle, iconSize: 30, forState: .normal)
@@ -66,6 +63,7 @@ class TagInputView:UIView,TapOptionViewDelegate{
     }
     
     @objc func showOptionView(){
+        let tags = self.tags.sorted()
         let tagOptionView = TagOptionView(frame: CGRect(x: 0, y: 0, width: 150, height: 150), existingTags: tags,color:plusButton.titleColor(for: .normal)!)
         tagOptionView.delegate = self
         tagOptionView.center = CGPoint(x: self.center.x, y: self.center.y + 75)
@@ -91,15 +89,16 @@ class TagInputView:UIView,TapOptionViewDelegate{
             
         }
         tagList.removeAll()
-        self.tags = tags
-        if tags.count == 0{return}
+        self.tags.removeAll()
+        self.tags = self.tags.union(tags)
         for tag in tags{
            let tagLabel = TagLabel(text: tag, font: UIFont.systemFont(ofSize: 18))
+            tagLabel.isUserInteractionEnabled = true
+            tagLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap)))
              tagList.append(tagLabel)
             if cumulatedX + tagLabel.frame.width > self.frame.width + 10{
                 for tag in tagList{
                     if tag.frame.origin.y == cumulatedY{
-                        print(tag.text)
                         tag.frame.origin.x += (self.frame.width - cumulatedX + 10)/2
                     }else if tag.frame.origin.y > cumulatedY{
                         break
@@ -125,9 +124,40 @@ class TagInputView:UIView,TapOptionViewDelegate{
         
     }
     
+    @objc private func tap(gesture:UIGestureRecognizer){
+        if gesture.state == .ended{
+            selectedTag = gesture.view as? TagLabel
+            selectedTag?.becomeFirstResponder()
+            let menu = UIMenuController.shared
+            menu.menuItems = [UIMenuItem(title: "Delete", action: #selector(deleteTag))]
+            menu.setTargetRect((selectedTag?.bounds)!, in: selectedTag!)
+            menu.setMenuVisible(true, animated: true)
+        }
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(deleteTag){
+            return true
+        }else{
+            return false
+        }
+    }
+    
+    
+    @objc private func deleteTag(){
+        if selectedTag != nil{
+            self.tags.remove((selectedTag?.title(for: .normal))!)
+            loadTag(tags: self.tags.sorted())
+            if delegate != nil{
+                delegate?.tagDidFinishRemoving?(tag: (selectedTag?.title(for: .normal))!)
+            }
+        }
+    }
+    
     @objc func addTag(_ tag:String){
-         tags.append(tag)
+         tags.insert(tag)
          let tagLabel = TagLabel(text: tag, font: UIFont.systemFont(ofSize: 18))
+        tagLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(gesture:))))
          tagList.append(tagLabel)
          if cumulatedX + tagLabel.frame.width > self.frame.width{
             cumulatedX = 0
@@ -149,13 +179,7 @@ class TagInputView:UIView,TapOptionViewDelegate{
         }
     }
     
-    @objc func popTag(){
-        if tagList.count > 0{
-        tags.removeLast()
-        tagList.last?.removeFromSuperview()
-        tagList.remove(at: tagList.count - 1)
-        }
-    }
+   
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -167,4 +191,5 @@ class TagInputView:UIView,TapOptionViewDelegate{
 @objc protocol TagInputViewDelegate:NSObjectProtocol{
     @objc optional func tagDidFinishAdding(tag:String)
     @objc optional func tagsDidFinishLoading(tags:[String])
+    @objc optional func tagDidFinishRemoving(tag:String)
 }

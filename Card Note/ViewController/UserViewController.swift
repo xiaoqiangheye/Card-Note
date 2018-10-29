@@ -174,6 +174,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         })
         language.frame.origin.y = 30
         language.center.x = scrollView.bounds.width/4
+        language.hero.id = "language"
         self.scrollView.addSubview(language)
         self.scrollView.contentSize.height += language.frame.height + 20
         
@@ -190,6 +191,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         
         sync.frame.origin.y = 30
         sync.center.x = scrollView.bounds.width/4*3
+        sync.hero.id = "sync"
         self.scrollView.addSubview(sync)
        // self.scrollView.contentSize.height += sync.frame.height + 20
         
@@ -203,6 +205,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         })
         account.frame.origin.y = sync.frame.origin.y + sync.frame.height + 30
         account.center.x = scrollView.bounds.width/4
+        account.hero.id = "accountPlan"
         self.scrollView.addSubview(account)
         self.scrollView.contentSize.height += account.frame.height + 30
         
@@ -216,6 +219,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         })
         help.frame.origin.y = sync.frame.origin.y + sync.frame.height + 30
         help.center.x = scrollView.bounds.width/4*3
+        help.hero.id = "help"
         self.scrollView.addSubview(help)
         //self.scrollView.contentSize.height += help.frame.height + 20
         
@@ -229,6 +233,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         })
         aboutUs.frame.origin.y = help.frame.origin.y + help.frame.height + 30
         aboutUs.center.x = scrollView.bounds.width/4
+        aboutUs.hero.id  = "aboutUs"
         self.scrollView.addSubview(aboutUs)
         self.scrollView.contentSize.height += aboutUs.frame.height + 30
         
@@ -242,6 +247,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         })
         rateUs.frame.origin.y = help.frame.origin.y + help.frame.height + 30
         rateUs.center.x = scrollView.bounds.width/4*3
+        rateUs.hero.id = "rateUs"
         self.scrollView.addSubview(rateUs)
        // self.scrollView.contentSize.height += rateUs.frame.height
         
@@ -266,9 +272,9 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             //设置代理
             controller.mailComposeDelegate = self
             //设置主题
-            controller.setSubject("标题")
+            controller.setSubject("Title")
+            controller.setToRecipients(["support@cardnotebook.com"])
             //设置抄送人
-            controller.setCcRecipients(["support@cardnotebook.com"])
             //设置密送人
             //添加图片附件
             //            var path = NSBundle.mainBundle().pathForResource("hangge.png", ofType: "")
@@ -276,7 +282,11 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             //            controller.addAttachmentData(myData, mimeType: "image/png", fileName: "swift.png")
             
             //设置邮件正文内容（支持html）
-            controller.setMessageBody("", isHTML: false)
+            let infoDictionary = Bundle.main.infoDictionary
+            let appVersion = infoDictionary!["CFBundleShortVersionString"] as! String
+            let iosVersion = UIDevice.current.systemVersion //iOS版本
+            let string = "version:\(appVersion)\niOS version:\(iosVersion)"
+            controller.setMessageBody(string, isHTML: false)
             
             //打开界面
             self.present(controller, animated: true, completion: nil)
@@ -287,15 +297,17 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     
     @objc func accountPlans(){
         let accountPlanController = AccountPlanController()
+        accountPlanController.hero.isEnabled = true
+        accountPlanController.view.hero.id = "accountPlan"
         self.present(accountPlanController, animated: true, completion: nil)
     }
     
     @objc func syncSetting(){
         let settingController = SettingController()
         settingController.view.backgroundColor = .white
+        settingController.hero.isEnabled = true
+        settingController.view.hero.id = "sync"
         settingController.setTitle("Sync")
-       
-        
         let sync_under_wifi = SwitchSetting(title: "Sync only with Wifi", description: "Sync your notes to the cloud only if wifi presents.", tintColor:Constant.Color.themeColor, onSwitch: {
             UserDefaults.standard.set(true, forKey: "auto-sync-if-wifi-presents")
         }) {
@@ -324,7 +336,8 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         
         settingController.addSettingView(view: auto_sync)
         settingController.addSettingView(view: sync_under_wifi)
-        self.present(settingController, animated: true) {}
+        self.present(settingController, animated: true) {
+        }
     }
     
     @objc func languageSetting(){
@@ -345,6 +358,14 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
 
 extension UserViewController:UINavigationControllerDelegate,MFMailComposeViewControllerDelegate{
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        
+        if result == .cancelled{
+            controller.dismiss(animated: true, completion: nil)
+        }else if result == .failed{
+            AlertView.show(error: "Mail sent failed-" + (error?.localizedDescription)!)
+        }else if result == .sent{
+            AlertView.show(success: "Sent")
+        }else if result == .saved{
+             controller.dismiss(animated: true, completion: nil)
+        }
     }
 }

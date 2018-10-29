@@ -35,7 +35,7 @@ class RecordManager {
     }
     
     //开始录音
-    func beginRecord() {
+    func beginRecord()->Bool{
         let session = AVAudioSession.sharedInstance()
         //设置session类型
         do {
@@ -68,8 +68,12 @@ class RecordManager {
             recorder = try AVAudioRecorder(url: url, settings: recordSetting)
             recorder?.isMeteringEnabled = true
             recorder!.prepareToRecord()
-            recorder!.record()
+            if recorder!.record(){
             print("开始录音")
+                return true
+            }else{
+            return false
+            }
             /*
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
                 if (self.recorder!.currentTime) >= TimeInterval(self.maxTime){
@@ -79,6 +83,7 @@ class RecordManager {
             */
         } catch let err {
             print("录音失败:\(err.localizedDescription)")
+            return false
         }
         
     }
@@ -147,11 +152,20 @@ class RecordManager {
         }
     }
     
+    func continueToPlayAtTime(interVal:TimeInterval){
+        if player != nil{
+            if !(player?.isPlaying)!{
+                player?.play(atTime: interVal)
+                state = State.playing
+            }
+        }
+    }
+    
     func pause(){
         if player != nil{
             if (player?.isPlaying)!{
                 player?.pause()
-                state = State.stopplaying
+                state = State.haveRecord
             }
         }
     }

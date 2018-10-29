@@ -154,13 +154,21 @@ class TranslationController:UIViewController{
     }
     
     private func translate(from:String,to:String,text:String){
-        let from = languageDictionary![from] as! String
+        var f = ""
+        if from != "Auto"{
+        f = languageDictionary![from] as! String
+        }else{
+        f = "auto"
+        }
         let to = languageDictionary![to] as! String
         if from == to{
             self.translatedText.text = self.originalText.text
             return
         }
         
+        
+        //textporarily disable youdao translate
+        /*
         TranslationManager.translate(text: text, from: from, to: to) {[unowned self] (string) in
             if string == nil{
                 //error
@@ -169,6 +177,21 @@ class TranslationController:UIViewController{
                self.translatedText.text = string
               self.copyButton.isHidden = false
            // self.view.addSubview(self.translatedText)
+            }
+        }
+        */
+        TranslationManager.gTranslate(text: text, toLanguage: to, fromLanguage: f) {[unowned self] (string) in
+            if string == nil{
+                //error
+                DispatchQueue.main.async {
+                AlertView.show(error: "Translation Failed. An Unknown Error Occur.")
+                }
+            }else{
+                DispatchQueue.main.async {
+                self.translatedText.text = string
+                self.copyButton.isHidden = false
+                }
+                // self.view.addSubview(self.translatedText)
             }
         }
     }

@@ -36,7 +36,6 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         let node = audioEngine.inputNode
         let recordingFormat = node.outputFormat(forBus: 0)
         node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, time) in
@@ -196,15 +195,15 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         }else if manager?.state == .willRecord{
             loadingView?.startAnimation()
             recordandRecognizeSpeech()
-            manager?.beginRecord()
-            var stopRecordThreshold = 0
-            var startRecordThreshold = 0
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+            if (manager?.beginRecord())!{
+                var stopRecordThreshold = 0
+                timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
                 guard (manager?.recorder) != nil else{
                     timer.invalidate()
                     return
                 }
                 
+            
                 if !(manager?.recorder?.isRecording)!{
                     timer.invalidate()
                 }
@@ -221,25 +220,25 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
                         stopRecordThreshold = 0
                     }
                 }else if Int(power) > -30 && (self.recognitionTask?.state == .completed) && (manager?.recorder?.isRecording)!{
-                   
                         print("start the sentence")
                         self.recordandRecognizeSpeech()
-                       self.loadingView?.startAnimation()
-                        startRecordThreshold = 0
-                    
+                        self.loadingView?.startAnimation()
                 }
                 
-            })
+                })
            
-            sender.setFAIcon(icon: .FAStopCircle, forState: .normal)
+                sender.setFAIcon(icon: .FAStopCircle, forState: .normal)
+            }
+                
         }else if manager?.state == .haveRecord{
             let play = manager?.play()
             if play!{
                 sender.setFAIcon(icon: .FAPauseCircle, forState: .normal)
-                 recognizeFileButton.isHidden = false
-                voiceCardView.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [unowned self](timer) in
+                recognizeFileButton.isHidden = false
+                voiceCardView.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [unowned self] (timer) in
                     self.voiceCardView.timerLable.text = String(Int((card.voiceManager?.player?.currentTime)!)) + "/" + String(Int((card.voiceManager?.player?.duration)!))
                     self.voiceCardView.progressBar.progress =  Float((card.voiceManager?.player?.currentTime)!)/Float((card.voiceManager?.player?.duration)!)
+                    self.voiceCardView.progressBar.slideButton.center.x = self.voiceCardView.progressBar.frame.width * CGFloat(self.voiceCardView.progressBar.progress)
                     if !(manager?.player?.isPlaying)!{
                         manager?.state = .haveRecord
                         self.voiceCardView.timer?.invalidate()

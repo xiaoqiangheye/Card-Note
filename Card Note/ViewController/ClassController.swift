@@ -13,6 +13,10 @@ import Spring
 class ClassController:UIViewController,UIScrollViewDelegate{
     var scrollView:UIScrollView!
     var tagList = [TagView]()
+    override func viewDidAppear(_ animated: Bool) {
+        loadTags()
+    }
+    
     override func viewDidLoad() {
         let gl = CAGradientLayer.init()
         gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100);
@@ -52,11 +56,12 @@ class ClassController:UIViewController,UIScrollViewDelegate{
     
     
     func reload(){
-        var cumulatedHeight:CGFloat = 0
+        var cumulatedHeight:CGFloat = 20
          UIView.animate(withDuration: 0.2) {
             for tag in self.tagList{
             tag.frame.origin.y = cumulatedHeight
             cumulatedHeight += 100 + 20
+            self.scrollView.contentSize.height = tag.frame.origin.y + tag.frame.height + 20
             }
          }
     }
@@ -91,7 +96,7 @@ class ClassController:UIViewController,UIScrollViewDelegate{
             tagView.center.x = self.view.frame.width/2
             self.scrollView.addSubview(tagView)
             cumulatedHeight += 100 + 20
-            scrollView.contentSize.height += 100 + 20
+            scrollView.contentSize.height = tagView.frame.origin.y + tagView.frame.height + 20
         }
     }
     
@@ -291,17 +296,18 @@ class AddTagView:UIView{
         addTagView.addSubview(titleLabel)
         
         addTagView.tagTextField = UITextField(frame: CGRect(x: 20, y: 50, width: 160, height: 30))
-        addTagView.tagTextField.backgroundColor = Constant.Color.blueRight
-        addTagView.tagTextField.textColor = .white
+        addTagView.tagTextField.backgroundColor = .clear
+        addTagView.tagTextField.textColor = .black
         addTagView.tagTextField.textAlignment = .center
         addTagView.tagTextField.layer.cornerRadius = 10
+        addTagView.tagTextField.addBottomLine()
         addTagView.tagTextField.text = ""
         addTagView.tagTextField.font = UIFont.systemFont(ofSize: 20)
         
         
         let OK = UIButton(frame: CGRect(x: 0, y: 100, width: 30, height: 30))
         OK.center.x = addTagView.frame.width/4
-        OK.setFAIcon(icon: .FACheck, iconSize: 30, forState: .normal)
+        OK.setFAIcon(icon: .FACheck, iconSize: 20, forState: .normal)
         OK.addTarget(nil, action: #selector(addTagAction), for: .touchDown)
         OK.setFATitleColor(color: .white)
         OK.backgroundColor = Constant.Color.themeColor
@@ -311,7 +317,7 @@ class AddTagView:UIView{
         
         let cancel = UIButton(frame: CGRect(x: 0, y: 100, width: 30, height: 30))
         cancel.center.x = addTagView.frame.width/4*3
-        cancel.setFAIcon(icon: .FATimes, iconSize: 30, forState: .normal)
+        cancel.setFAIcon(icon: .FATimes, iconSize: 20, forState: .normal)
         cancel.addTarget(addTagView, action: #selector(dismissAddTagView), for: .touchDown)
         cancel.setFATitleColor(color: .white)
         cancel.backgroundColor = .red

@@ -13,70 +13,106 @@ class PremiumController:UIViewController{
     var titleLabel:UILabel!
     var backButton:UIButton!
     var advantageView:UIView!
-    var one_month_price:String = "¥12"
-    var six_month_price:String = "¥60"
-    var year_price:String = "¥108"
-    private let ADVANTAGE_PREMIUM = ["Limitless Notes", "Limitless Time for voice record", "Cloud Storage", "Auto-Sync", "Limitless Devices", "Translation across different languages", "Voice, Photo, Video Record" ,"Voice to Text Conversion","Map Record"]
+    var one_month_price:String = "¥12.00"
+    var six_month_price:String = "¥60.00"
+    var year_price:String = "¥108.00"
+    private var logo:UIImageView!
+    private var termOfServiecTextView:UITextView!
+    private let TERM_OF_SERVICE = "* Please note that The Premium Plan is a subscription that will be renewed automatically unless you turn off auto-renew 24 hours before the end of the period. If you want to cancel the subscription, please turn off subscription 24 hours before the period ends, or the period will be renewed and you will be charged. If you cancel the current period, the period will automatically ends on the end date, and the period will not be renewed."
+    private let ADVANTAGE_PREMIUM = ["Limitless Notes", "Limitless Time for voice record", "Cloud Storage", "Auto-Sync", "Limitless Devices", "Translation across different languages", "Voice, Photo, Video Record" ,"Voice to Text Conversion"]
     override func viewDidLoad() {
         //backButton
         backButton = UIButton(frame: CGRect(x: 10, y: 50, width: 30, height: 30))
-        backButton.setFAIcon(icon: FAType.FAChevronCircleLeft, iconSize: 30, forState: .normal)
-        backButton.setTitleColor(.black, for: .normal)
+        backButton.setFAIcon(icon: FAType.FATimes, iconSize: 30, forState: .normal)
+        backButton.setTitleColor(.white, for: .normal)
         backButton.addTarget(self, action: #selector(dismissView), for: .touchDown)
         self.view.addSubview(backButton)
         self.view.bringSubview(toFront: backButton)
         
+        
+        //logo
+        logo = UIImageView(frame: CGRect(x: 0, y: 50, width: 30, height: 30))
+        logo.image = UIImage(named: "white_version_logo")
+        logo.center.x = self.view.frame.width/2
+        self.view.addSubview(logo)
+        
         //titleLabel
-        titleLabel = UILabel(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width, height: 30))
+        titleLabel = UILabel(frame: CGRect(x: 0, y: 80, width: UIScreen.main.bounds.width, height: 30))
         titleLabel.textColor = .white
         titleLabel.font = UIFont(name: "ChalkboardSE-Bold", size: 20)
         titleLabel.textAlignment = .center
-        titleLabel.text = "Professional"
-        advantageView = UIView(frame: CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: 400))
-        advantageView.backgroundColor = .flatWhite
+        titleLabel.text = "Go Premium!"
+        advantageView = UIView(frame: CGRect(x: 0, y: 120, width: UIScreen.main.bounds.width, height: 160))
+        advantageView.backgroundColor = .clear
+        
+        
         self.hero.isEnabled = true
         self.view.hero.id = "premium"
         self.view.addSubview(titleLabel)
         self.view.addSubview(advantageView)
         self.view.backgroundColor = UIColor.flatPurple
-        titleLabel.text = "Professional"
+        
         var cumulatedHeight = 0
         for advantage in ADVANTAGE_PREMIUM{
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 20))
-            label.textColor = .black
+            label.textColor = .white
             label.textAlignment = .center
             label.font = UIFont(name: "ChalkboardSE-Light", size: 15)
             label.text = advantage
             label.numberOfLines = 3
-            label.backgroundColor = UIColor.flatWhite
+            label.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 0.2)
             label.lineBreakMode = .byWordWrapping
-            label.frame.size.height = UILabel.heightWithConstrainedWidth(width: UIScreen.main.bounds.width * 0.8, font: label.font, str: label.text as! NSString) + 20
+            label.frame.size.height = UILabel.heightWithConstrainedWidth(width: UIScreen.main.bounds.width * 0.8, font: label.font, str: label.text! as NSString) + 20
             label.frame.origin.y = CGFloat(cumulatedHeight)
             cumulatedHeight += Int(label.frame.height)
+            advantageView.frame.size.height = CGFloat(cumulatedHeight)
             advantageView.addSubview(label)
         }
         
+        termOfServiecTextView = UITextView(frame: CGRect(x: 0, y: advantageView.frame.height + advantageView.frame.origin.y, width: UIScreen.main.bounds.width * 0.8, height: 150))
+        termOfServiecTextView.font = UIFont.systemFont(ofSize: 10)
+        termOfServiecTextView.textColor = Constant.Color.darkWhite
+        termOfServiecTextView.text = TERM_OF_SERVICE
+        termOfServiecTextView.backgroundColor = .clear
+        termOfServiecTextView.center.x = self.view.frame.width/2
+        termOfServiecTextView.frame.size.height = termOfServiecTextView.contentSize.height
+         self.view.addSubview(termOfServiecTextView)
+        
+        
         
         //purchase Button
-         let One_month_button = UIButton(frame: CGRect(x: 0, y: advantageView.frame.origin.y + advantageView.frame.height + 20, width: UIScreen.main.bounds.width * 0.8, height: 50))
-        One_month_button.backgroundColor = UIColor.purple
+         let One_month_button = UIButton(frame: CGRect(x: 0, y:termOfServiecTextView.frame.origin.y + termOfServiecTextView.frame.height + 20, width: 100, height: 100))
+        One_month_button.titleLabel?.numberOfLines = 2
+        One_month_button.titleLabel?.textAlignment = .center
+        One_month_button.backgroundColor = .white
         One_month_button.addTarget(self, action: #selector(self.purchaseOneMonth), for: .touchDown)
-        One_month_button.center.x = UIScreen.main.bounds.width/2
-        One_month_button.setTitle(self.one_month_price + "/month", for: .normal)
-         let six_months_button = UIButton(frame: CGRect(x: 0, y: One_month_button.frame.origin.y + One_month_button.frame.height + 20, width: UIScreen.main.bounds.width * 0.8, height: 50))
-        six_months_button.backgroundColor = UIColor.purple
+        One_month_button.center.x = UIScreen.main.bounds.width/6*1
+        One_month_button.setTitle(self.one_month_price + "/MONTH", for: .normal)
+        One_month_button.layer.cornerRadius = 15
+        One_month_button.setTitleColor(.black, for: .normal)
+         let six_months_button = UIButton(frame: CGRect(x: 0, y:termOfServiecTextView.frame.origin.y + termOfServiecTextView.frame.height + 20, width: 100, height: 100))
+        six_months_button.titleLabel?.numberOfLines = 2
+        six_months_button.titleLabel?.textAlignment = .center
+        six_months_button.backgroundColor = .white
         six_months_button.addTarget(self, action: #selector(self.purchaseSixMonths), for: .touchDown)
-        six_months_button.center.x = UIScreen.main.bounds.width/2
-            six_months_button.setTitle(self.six_month_price + "/6 months", for: .normal)
-        let year_button = UIButton(frame: CGRect(x: 0, y: six_months_button.frame.origin.y + six_months_button.frame.height + 20, width: UIScreen.main.bounds.width * 0.8, height: 50))
+        six_months_button.center.x = UIScreen.main.bounds.width/6*3
+        six_months_button.setTitle(self.six_month_price + "/HALF YEAR", for: .normal)
+        six_months_button.layer.cornerRadius = 15
+        six_months_button.setTitleColor(.black, for: .normal)
+        let year_button = UIButton(frame: CGRect(x: 0, y: termOfServiecTextView.frame.origin.y + termOfServiecTextView.frame.height + 20, width: 100, height: 100))
         year_button.addTarget(self, action: #selector(self.purchaseYear), for: .touchDown)
-        year_button.backgroundColor = UIColor.purple
-        year_button.center.x = UIScreen.main.bounds.width/2
-          year_button.setTitle(self.year_price + "/year" as String, for: .normal)
+        year_button.titleLabel?.numberOfLines = 2
+        year_button.titleLabel?.textAlignment = .center
+        year_button.backgroundColor = .white
+        year_button.center.x = UIScreen.main.bounds.width/6*5
+        year_button.setTitle(self.year_price + "/YEAR", for: .normal)
+        year_button.setTitleColor(.black, for: .normal)
+        year_button.layer.cornerRadius = 15
+        
         PurchaseManager.retriveInfo(type:PurchaseManager.Product.premium_one_month) { (product) in
             if product != nil{
                 self.one_month_price = (product?.localizedPrice)!
-                One_month_button.setTitle(self.one_month_price + "/month", for: .normal)
+                One_month_button.setTitle(self.one_month_price + "/MOHTH", for: .normal)
                
             }
         }
@@ -84,7 +120,7 @@ class PremiumController:UIViewController{
             if product != nil{
                 self.six_month_price = (product?.localizedPrice)!
                
-                six_months_button.setTitle(self.six_month_price + "/6 months", for: .normal)
+                six_months_button.setTitle(self.six_month_price + "/HALF YEAR", for: .normal)
                
             }
         }
@@ -92,7 +128,7 @@ class PremiumController:UIViewController{
             if product != nil{
                 self.year_price = (product?.localizedPrice)!
                 
-                year_button.setTitle(self.year_price + "/year" as String, for: .normal)
+                year_button.setTitle(self.year_price + "/YEAR", for: .normal)
                
             }
         }
