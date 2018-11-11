@@ -348,6 +348,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         gl.locations = [NSNumber(value:0),NSNumber(value:1)]
         gl.cornerRadius = 0
         cardColor.layer.addSublayer(gl)
+        self.color = color
         cardColor.bringSubview(toFront: cardTitle)
         tagInputView.plusButton.setTitleColor(color, for: .normal)
     }
@@ -466,7 +467,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         definition = UITextView()
         definition.frame = CGRect(x: 20, y: definitionLabel.frame.origin.y + definitionLabel.frame.height + 20, width: self.view.bounds.width - 40, height: 100)
         definition.font = UIFont.systemFont(ofSize: 18)
-        definition.textColor = UIColor(red: 188/255, green: 188/255, blue: 188/255, alpha: 1)
+        definition.textColor = UIColor(red: 132/255, green: 141/255, blue: 163/255, alpha: 1)
         definition.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 0.8)
        // definition.center.x = self.view.bounds.width/2
         definition.layer.cornerRadius = 10
@@ -764,15 +765,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         cardTitle.text = card.getTitle()
         scrollView.contentOffset.y = 0
         cardColor.backgroundColor = card.getColor()
-       // self.view.backgroundColor = card.getColor()
-        //tag.text = card.getTag()
-        //tagInputView.loadTag(tags: (self.card?.getTag())!)
-        definition.text = card.getDefinition()
-        //descriptions.text = card.getDescription()
+        definition.text = card.getText() == nil ? "" : card.getText()?.string
         color = card.getColor()
-        //cardBackGround.backgroundColor = .white
-       //leardingBar.backgroundColor = color
-       // self.view.backgroundColor = color
         var cumulatedHeight = definition.frame.origin.y + definition.frame.height + 20
         for card in card.getChilds(){
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(cardViewPanned))
@@ -906,10 +900,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     func reLoad(){
-        //definition.text = card?.getDefinition()
-        //cardTitle.text = card?.getTitle()
-        //tagInputView.loadTag(tags: (card?.getTag())!)
-       // cardColor.backgroundColor = card?.getColor()
         let contentoffSetY = scrollView.contentOffset.y
         UIView.animate(withDuration:0.5){
             self.definitionLabel.frame.origin.y = self.tagInputView.frame.origin.y + self.tagInputView.frame.height + 20
@@ -986,7 +976,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         card.card.setDescription(picView.commentView.text!)
                         }
                         if manager.fileExists(atPath: (url.path)){
-                            User.uploadPhotoUsingQCloud(url: url)
+                            
+                            //User.uploadPhotoUsingQCloud(url: url)
+                            Cloud.upload(image: url, id: card.card.getId()){_,_ in
+                                
+                            }
                         }
                     }else if card.isKind(of: CardView.ExaView.self){
                         /**deprecated in 6.13
@@ -1017,7 +1011,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         }catch let error{
                             print(error.localizedDescription)
                         }
-                        User.uploadAttrUsingQCloud(url:url)
+                        //User.uploadAttrUsingQCloud(url:url)
+                        Cloud.upload(text: url, id: card.card.getId()){_,_ in
+                            
+                        }
  
                     }else if card.isKind(of: CardView.VoiceCardView.self){
                         let voiceCard = card as! CardView.VoiceCardView
@@ -1026,14 +1023,20 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         var url = Constant.Configuration.url.Audio
                         url.appendPathComponent(card.card.getId() + ".wav")
                         if manager.fileExists(atPath: (url.path)){
-                            User.uploadAudioUsingQCloud(url: url)
+                           // User.uploadAudioUsingQCloud(url: url)
+                            Cloud.upload(audio: url, id: card.card.getId()){_,_ in
+                                
+                            }
                         }
                     }else if card.isKind(of: CardView.MapCardView.self){
                         let manager = FileManager.default
                         var url = Constant.Configuration.url.Map
                         url.appendPathComponent(card.card.getId() + ".jpg")
                         if manager.fileExists(atPath: (url.path)){
-                            User.uploadPhotoUsingQCloud(url: url)
+                            //User.uploadPhotoUsingQCloud(url: url)
+                            Cloud.upload(image: url, id: card.card.getId()){_,_ in
+                                
+                            }
                         }
                         
                     }else if card.isKind(of: CardView.MovieView.self){
@@ -1041,7 +1044,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         var url = Constant.Configuration.url.Movie
                         url.appendPathComponent(card.card.getId() + ".mov")
                             if manager.fileExists(atPath:((card.card as! MovieCard).path)){
-                                User.uploadMovieUsingQCloud(url: url)
+                               // User.uploadMovieUsingQCloud(url: url)
+                                Cloud.upload(video: url, id: card.card.getId()){_,_ in
+                                    
+                                }
                             }
                     }else if card.isKind(of: CardView.SubCardView.self){
                         let sub = card.card
@@ -1053,11 +1059,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             }
             
             let interval = NSTimeIntervalSince1970
-            //let date = NSDate(timeIntervalSince1970: interval)
-            //let timeFormatter = DateFormatter()
-           // timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            //let strNowTime = timeFormatter.string(from: date as Date) as String
-            let card = Card(title: cardTitle.text, tag: tagInputView?.tags.sorted(), description:"", id: UUID().uuidString, definition: definition.text, color: color, cardType:Card.CardType.card.rawValue,modifytime:String(interval))
+            let card = Card(title: cardTitle.text, tag: tagInputView?.tags.sorted(), description:"", id: UUID().uuidString, definition: "", color: color, cardType:Card.CardType.card.rawValue,modifytime:String(interval))
+            let attr = NSAttributedString(string: definition.text)
+            card.setText(attr: attr)
             card.addChildNotes(childs)
             self.card = card
              if !isSubCard && card.getId() != "first"{
@@ -1105,8 +1109,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 if card != nil{
                     self.card?.setTitle(cardTitle.text)
                     self.card?.setColor(color)
-                    self.card?.setDefinition(definition.attributedText.string)
-                   
+                    self.card?.setText(attr: definition.attributedText)
                     self.card?.setTag(tagInputView!.tags.sorted())
                     var childs = [Card]()
                     for card in self.subCards
@@ -1121,7 +1124,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                                 card.card.setDescription(picView.commentView.text!)
                             }
                             if manager.fileExists(atPath: (url.path)){
-                                User.uploadPhotoUsingQCloud(url: url)
+                               // User.uploadPhotoUsingQCloud(url: url)
+                                Cloud.upload(image: url, id: card.card.getId()){_,_ in
+                                    
+                                }
                             }
                         }else if card.isKind(of: CardView.ExaView.self){
                              let exa = card.card
@@ -1131,7 +1137,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         }else if card.isKind(of: CardView.TextView.self){
                             var url = Constant.Configuration.url.attributedText
                             url.appendPathComponent(card.card.getId() + ".rtf")
-                            User.uploadAttrUsingQCloud(url:url)
+                           // User.uploadAttrUsingQCloud(url:url)
+                            let manager = FileManager.default
+                            if manager.fileExists(atPath: (url.path)){
+                                Cloud.upload(text: url, id: card.card.getId()){_,_ in}
+                            }
                         }else if card.isKind(of: CardView.VoiceCardView.self){
                             let voiceCard = card as! CardView.VoiceCardView
                             voiceCard.card.setTitle((voiceCard.title.text)!)
@@ -1139,20 +1149,23 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             var url = Constant.Configuration.url.Audio
                             url.appendPathComponent(card.card.getId() + ".wav")
                             if manager.fileExists(atPath: (url.path)){
-                                User.uploadAudioUsingQCloud(url: url)
+                               // User.uploadAudioUsingQCloud(url: url)
+                                Cloud.upload(audio: url, id: card.card.getId()){_,_ in}
                             }
                         }else if card.isKind(of: CardView.MapCardView.self){
                             let manager = FileManager.default
                             var url = Constant.Configuration.url.Map
                             url.appendPathComponent(card.card.getId() + ".jpg")
                             if manager.fileExists(atPath: (url.path)){
-                                User.uploadPhotoUsingQCloud(url: url)
+                                //User.uploadPhotoUsingQCloud(url: url)
+                                Cloud.upload(image: url, id: card.card.getId()){_,_ in}
                             }
                         }else if card.isKind(of: CardView.MovieView.self){
                                 var url = Constant.Configuration.url.Movie
                                 url.appendPathComponent(card.card.getId() + ".mov")
                                 if manager.fileExists(atPath:url.path){
-                                    User.uploadMovieUsingQCloud(url: url)
+                                   // User.uploadMovieUsingQCloud(url: url)
+                                    Cloud.upload(video: url, id: card.card.getId()){_,_ in}
                                 }
                             
                         }else if card.isKind(of: CardView.SubCardView.self){
@@ -1179,13 +1192,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                                 }
                             }
                         }
-                    User.updateCard(card: (self.card)!, email: loggedemail, completionHandler: { (json:JSON?) in
-                        if json != nil{
-                        if json!["ifSuccess"].boolValue {
-                            print("update card Success")
-                        }
-                        }
-                    })
+                   
                     
                     var index = 0
                     for card in cardList!{
@@ -1235,8 +1242,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             }
         }
         reLoad()
-       // subCards.removeAll()
-       // loadCard(card: self.card!)
     }
     
     

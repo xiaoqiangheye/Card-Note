@@ -35,10 +35,8 @@ class PicCard:Card{
                 }
             })
             */
-            User.downloadPhotosUsingQCloud(cardID: self.getId()) { (bool, error) in
-                if bool{
-                    self.pic = UIImage(contentsOfFile: (url.path))
-                }
+            Cloud.downloadAsset(id: self.getId(), type: "IMAGE") { (bool, error) in
+                self.pic = UIImage(named: (url.path))
             }
         }
        

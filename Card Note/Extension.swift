@@ -217,7 +217,7 @@ func sync(completionHandler:@escaping (Bool)->()){
         }
     }
     
-    var ifSuccessArray = [Bool]()
+  
     Cloud.queryAllCard { (cards) in
         //get local cards
         if let dateRead = try? Data.init(contentsOf: url!){
@@ -245,7 +245,7 @@ func sync(completionHandler:@escaping (Bool)->()){
                         }else if result == ComparisonResult.orderedAscending{
                             //update the internetCard if local is more recent
                             Cloud.updateCard(card: card, completionHandler: { (bool) in
-                                ifSuccessArray.append(bool)
+                                if !bool{completionHandler(false)}
                             })
                         }
                         mutableCards.remove(at: i)
@@ -268,20 +268,19 @@ func sync(completionHandler:@escaping (Bool)->()){
                 try datawrite.write(to: url!)
             }catch{
                 print("fail to add")
-                ifSuccessArray.append(false)
+                completionHandler(false)
             }
             //add local Card to InterNet
-            for card in locals!{
-                Cloud.updateCard(card: card, completionHandler: { (bool) in
-                    ifSuccessArray.append(bool)
+            if(!(locals?.isEmpty)!){
+            Cloud.updateCards(cards: locals!, completionHandler: { (bool) in
+                completionHandler(bool)
                 })
+            }else{
+                completionHandler(true)
             }
+            
         }
-        if ifSuccessArray.contains(false){
-            completionHandler(false)
-        }else{
-            completionHandler(true)
-        }
+        
     }
     
    

@@ -263,8 +263,13 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     
     @objc func aboutUsSetting()
     {
-        
+        let uv = AboutUsController()
+        self.present(uv, animated: true, completion: nil)
     }
+    
+   
+    
+   
     
     @objc func helpSetting(){
         if MFMailComposeViewController.canSendMail(){

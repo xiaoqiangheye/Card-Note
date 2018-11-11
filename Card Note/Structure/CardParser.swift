@@ -54,6 +54,14 @@ class CardParser{
             let modifytime = json["time"].stringValue
             if type == "card"{
                 card = Card(title: title, tag: tags, description: description, id: id, definition: definition, color: color, cardType: type, modifytime: modifytime)
+                var locals = UserDefaults.standard.array(forKey: Constant.Key.Tags) as! [String]
+                for tag in tags{
+                    if !locals.contains(tag){
+                        locals.append(tag)
+                    }
+                }
+                UserDefaults.standard.set(locals, forKey: Constant.Key.Tags)
+                UserDefaults.standard.synchronize()
             }else if type == "example"{
                 card = ExampleCard(id: id, title: title)
                 card.setDefinition(definition)
@@ -62,10 +70,10 @@ class CardParser{
                 var url = Constant.Configuration.url.attributedText
                 url.appendPathComponent(card.getId() + ".rtf")
                 if !manager.fileExists(atPath: url.path){
-                    User.downloadAttrUsingQCloud(cardID: card.getId()) { (bool, error) in
-                        if error == nil{
-                            print("get attr successfully.")
-                        }
+                    
+                    //download
+                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in
+                        //do nothing
                     }
                 }
             }else if type == "text"{
@@ -75,10 +83,9 @@ class CardParser{
                 var url = Constant.Configuration.url.attributedText
                 url.appendPathComponent(card.getId() + ".rtf")
                 if !manager.fileExists(atPath: url.path){
-                    User.downloadAttrUsingQCloud(cardID: card.getId()) { (bool, error) in
-                        if error == nil{
-                            print("get attr successfully.")
-                        }
+                    
+                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in
+                        
                     }
                 }
             }else if type == "picture"{
@@ -95,16 +102,9 @@ class CardParser{
                     }
                 }else{
                     card = PicCard(#imageLiteral(resourceName: "searchBar"))
-                    /*deprecated at May 7th
-                    User.getImage(email: loggedemail, cardID: id, completionHandler: { (image) in
-                        if image != nil{
-                            print("get pic success")
-                        }
-                    })
-                    */
-                    User.downloadPhotosUsingQCloud(cardID: id) { (bool, error) in
-                        //
+                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in
                     }
+                    
                 }
                 card.setId(id)
                 card.updateTime(modifytime)
@@ -120,10 +120,14 @@ class CardParser{
                     print("get audio success")
                 })
                     */
+                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in }
                 }
+                /*
                 User.downloadAudioUsingQCloud(cardID: id) { (bool, error) in
                     //
                 }
+ */
+               
                 let state = json["state"].stringValue
                 if state == RecordManager.State.willRecord.rawValue || state == RecordManager.State.recording.rawValue{
                     (card as! VoiceCard).voiceManager?.state = RecordManager.State.willRecord
@@ -136,36 +140,25 @@ class CardParser{
                 var url = Constant.Configuration.url.Map
                 url.appendPathComponent(id + ".jpg")
                 if !manager.fileExists(atPath:(url.path)){
-                    /* deprecated at May.7th
-                    User.getImage(email: loggedemail, cardID: id, completionHandler: { (image) in
-                        if image != nil{
-                        let imageData = UIImageJPEGRepresentation(image!, 0.5)
-                            do{ try imageData?.write(to:url!)
-                            }catch let err{
-                               print(err.localizedDescription)
-                            }
-                            
-                            print("get map Success")
-                            print(manager.fileExists(atPath:(url?.path)!))
-                        }else{
-                             print("get map fail")
-                        }
-                        
-                    })
-                  */
+                   /*
                     User.downloadMapUsingQCloud(cardID: id) { (bool, error) in
                         if error != nil{
                             //
                         }
                     }
+ */
+                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in }
                 }
                 }else if type == "movie"{
                     card = MovieCard(id: id)
+                    /*
                     User.downloadMovieUsingQCloud(cardID: id) { (bool, error) in
                         if error != nil{
                             //
                         }
                     }
+ */
+                Cloud.downloadAsset(id: card.getId(), type: "MOVIE"){_,_ in }
                 }
           
             let subCardsArray = json["subcard"].array
@@ -173,7 +166,7 @@ class CardParser{
             var subcards:[Card] = [Card]()
             for subcard in subCardsArray!{
                 let string = subcard.rawString()!
-                let card = JSONToCard(subcard.rawString()!)
+                let card = JSONToCard(string)
                 subcards.append(card!)
             }
                 card.addChildNotes(subcards)

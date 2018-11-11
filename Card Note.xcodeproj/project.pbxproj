@@ -13,6 +13,8 @@
 		9A4DAEE6214B7E790046403C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4DAEE5214B7E790046403C /* ProgressBar.swift */; };
 		9A4DAEE8214F3C830046403C /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4DAEE7214F3C830046403C /* LoadingViewController.swift */; };
 		9A7ABE9C216DB3DF00EC5115 /* ImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */; };
+		9AFBF9DC2197FA3E0043C394 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 9AFBF9DB2197FA3E0043C394 /* about.html */; };
+		9AFBF9DE21981A1B0043C394 /* AboutUsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFBF9DD21981A1B0043C394 /* AboutUsController.swift */; };
 		AF6650BF4C280AB47837768B /* Pods_Card_NoteTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCB930C37325DE33FEA805C /* Pods_Card_NoteTests.framework */; };
 		B602B1542092041C00CD8A40 /* SharedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1532092041C00CD8A40 /* SharedCard.swift */; };
 		B602B1562093232600CD8A40 /* VoiceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1552093232600CD8A40 /* VoiceCard.swift */; };
@@ -85,7 +87,6 @@
 		B67FA6232075BDE900EFF7E9 /* AddNewItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */; };
 		B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */; };
 		B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68ACBBE206BB1EF0085E5C5 /* Card.swift */; };
-		B68CA33B2117620A00E9A4D3 /* TimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68CA33A2117620A00E9A4D3 /* TimeManager.swift */; };
 		B6948C30213936DE00C611CF /* MailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6948C2F213936DE00C611CF /* MailController.swift */; };
 		B696AF3F20AC38E1004C7E9E /* CardViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B696AF3E20AC38E1004C7E9E /* CardViewDelegate.swift */; };
 		B6985A7D20BD55FB0014A89B /* AttributedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6985A7C20BD55FB0014A89B /* AttributedTextView.swift */; };
@@ -169,6 +170,8 @@
 		9A4DAEE5214B7E790046403C /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		9A4DAEE7214F3C830046403C /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageController.swift; sourceTree = "<group>"; };
+		9AFBF9DB2197FA3E0043C394 /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = about.html; path = ../../../../PhpstormProjects/cardnoteabout/about.html; sourceTree = "<group>"; };
+		9AFBF9DD21981A1B0043C394 /* AboutUsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsController.swift; sourceTree = "<group>"; };
 		AF6D09AFA1C8271D5CA99BB1 /* Pods-Card NoteUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Card NoteUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Card NoteUITests/Pods-Card NoteUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B602B1532092041C00CD8A40 /* SharedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedCard.swift; sourceTree = "<group>"; };
 		B602B1552093232600CD8A40 /* VoiceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCard.swift; sourceTree = "<group>"; };
@@ -248,7 +251,6 @@
 		B67FA6222075BDE900EFF7E9 /* AddNewItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewItemController.swift; sourceTree = "<group>"; };
 		B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		B68ACBBE206BB1EF0085E5C5 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
-		B68CA33A2117620A00E9A4D3 /* TimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeManager.swift; sourceTree = "<group>"; };
 		B6948C2F213936DE00C611CF /* MailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailController.swift; sourceTree = "<group>"; };
 		B696AF3E20AC38E1004C7E9E /* CardViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewDelegate.swift; sourceTree = "<group>"; };
 		B6985A7C20BD55FB0014A89B /* AttributedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextView.swift; sourceTree = "<group>"; };
@@ -451,6 +453,7 @@
 				9A4DAEE7214F3C830046403C /* LoadingViewController.swift */,
 				9A01D079216843450051D3F5 /* MindMapController.swift */,
 				9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */,
+				9AFBF9DD21981A1B0043C394 /* AboutUsController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -467,7 +470,6 @@
 				B6FB6C9621032E7400915B3B /* SpeechManager.swift */,
 				B6FDCEE520BAFD3400BEBD35 /* ImageManager.swift */,
 				B64A18B120F5D77B00833BE2 /* PurchaseManager.swift */,
-				B68CA33A2117620A00E9A4D3 /* TimeManager.swift */,
 				B672D43A2120176600A51D9D /* Cloud.swift */,
 				B612ABC621414D1B00EB5314 /* PlaceBase.swift */,
 			);
@@ -522,6 +524,7 @@
 		B6BA3AA82064AE5300290BBB /* Card Note */ = {
 			isa = PBXGroup;
 			children = (
+				9AFBF9DB2197FA3E0043C394 /* about.html */,
 				B64BAD8B209C3FE200B9ED73 /* Card Note.entitlements */,
 				B61D68F32096149900B69009 /* bridge.h */,
 				B61DAA112123D6100004217B /* OCR */,
@@ -703,6 +706,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AFBF9DC2197FA3E0043C394 /* about.html in Resources */,
 				B6BA3AB72064AE5300290BBB /* LaunchScreen.storyboard in Resources */,
 				B6BA3AB42064AE5300290BBB /* Assets.xcassets in Resources */,
 				B6555E3B212A8A8C0042C9C3 /* languageList.plist in Resources */,
@@ -860,6 +864,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AFBF9DE21981A1B0043C394 /* AboutUsController.swift in Sources */,
 				B64DD43B211183C200BB0B66 /* TagOptionView.swift in Sources */,
 				B6555E3E212A97B30042C9C3 /* TranslationController.swift in Sources */,
 				B6BA3AAC2064AE5300290BBB /* ViewController.swift in Sources */,
@@ -923,7 +928,6 @@
 				B6BAADDD20A196F8008B6761 /* FilterView.swift in Sources */,
 				B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */,
 				B605E0FC208CAADE00F2C260 /* ExampleCard.swift in Sources */,
-				B68CA33B2117620A00E9A4D3 /* TimeManager.swift in Sources */,
 				B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */,
 				B6EC1F3E20D3AAFB00E04C4F /* CardEditorDelegate.swift in Sources */,
 				B610298E2098614C00DA91BB /* LocationListView.swift in Sources */,

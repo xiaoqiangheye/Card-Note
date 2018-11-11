@@ -87,16 +87,17 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     override func viewDidLoad() {
-       // self.view.backgroundColor = .clear
+        // self.view.backgroundColor = .clear
         coachMarksController.dataSource = self
         if !isFirstLaunch{
             self.coachMarksController.start(on: self)
         }
+        syncCard()
         func createButtonUnderBar(title:String)->UIButton{
             let filterButton = UIButton()
             filterButton.frame = CGRect(x: 40, y: 10, width: 60, height: 30)
             slideView.addSubview(filterButton)
-            let string = NSAttributedString(string: title, attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize: 18),NSAttributedStringKey.foregroundColor:UIColor.black])
+            let string = NSAttributedString(string: title, attributes: [NSAttributedStringKey.font:UIFont(name: "Farah", size: 20)!,NSAttributedStringKey.foregroundColor:UIColor.gray])
             filterButton.setAttributedTitle(string, for: .normal)
            // filterButton.setTitleColor(UIColor.flatGray, for: .normal)
             filterButton.layer.cornerRadius = 2
@@ -213,17 +214,37 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
       
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        loadCard()
+        return true;
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
+       
+       
+    }
+    
+    @objc func textViewChange(_ sender:UITextView){
+        
+    }
+    
+    
+    func reload(){
+        
+    }
+    
+    func loadCard(){
         let manager = FileManager.default
         var cardList:[Card]!
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-         url?.appendPathComponent("card.txt")
+        url?.appendPathComponent("card.txt")
         if let dateRead = try? Data.init(contentsOf: url!){
             cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
             if cardList == nil{
                 cardList = [Card]()
             }
         }
+        let textField = searchTextView.searchTextView
         let string = NSString(string: textField.text!.lowercased())
         if string.contains(" ") && String(string)[textField.text!.startIndex] != " " && String(string)[textField.text!.index(textField.text!.endIndex, offsetBy: -1)] != " "{
             let components = string.components(separatedBy: " ")
@@ -235,68 +256,19 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             let parsedCardList = SearchEngine.loadCards(cards: cardList, keyWords: keyword)
             loadCardWithConstaints(parsedCardList, [Constraint]())
         }else if string == ""{
-            loadCard()
+            loadCardWithConstaints(cardList, [Constraint]())
         }
-       
-    }
-    
-    @objc func textViewChange(_ sender:UITextView){
-      
-    }
-    
-    
-    func reload(){
-        
-    }
-    
-    func loadCard(){
-        let contentOffSetY = scrollView.contentOffset.y
-        scrollView.contentSize = CGSize(width:self.view.bounds.width,height: scrollView.frame.height + 20)
-        for subview in scrollView.subviews{
-            if subview.isKind(of:CardView.self){
-                subview.removeFromSuperview()}
-        }
-        let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent("card.txt")
-        if let dateRead = try? Data.init(contentsOf: url!){
-            var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-            if cardList == nil{
-                cardList = [Card]()
-                
-            }
-           
-            
-            var cumulatedY:CGFloat = 70
-            for card in cardList!{
-                let cardView:CardView = CardView.getSingleCardView(card:card)
-                cardView.frame.origin.y = CGFloat(cumulatedY)
-                cumulatedY += cardView.bounds.height
-                + 30
-                let tapGesture = UITapGestureRecognizer()
-                tapGesture.addTarget(self, action: #selector(tapped))
-                tapGesture.numberOfTapsRequired = 1
-                tapGesture.numberOfTouchesRequired = 1
-                cardView.addGestureRecognizer(tapGesture)
-                let gesture = UISwipeGestureRecognizer()
-                gesture.direction = .left
-                gesture.addTarget(self, action: #selector(controllPanel))
-                cardView.addGestureRecognizer(gesture)
-                scrollView.addSubview(cardView)
-                if cumulatedY > scrollView.contentSize.height{
-                scrollView.contentSize = CGSize(width: self.view.bounds.width, height: cumulatedY)
-                }
-            }
-        }
-        scrollView.contentOffset.y = contentOffSetY
     }
     
    
     
     func loadCardWithConstaints(_ cardList:[Card],_ constaints:[Constraint]){
-        scrollView.contentSize = CGSize(width:self.view.bounds.width,height:10)
+        let contentOffSetY = scrollView.contentOffset.y
+        scrollView.contentSize = CGSize(width:self.view.bounds.width,height:scrollView.frame.height + 20)
         for subview in scrollView.subviews{
+            if subview.isKind(of: CardView.self){
             subview.removeFromSuperview()
+            }
         }
         
         var colorConstaints:[UIColor] = [UIColor]()
@@ -328,12 +300,12 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 }
             }
             
-            var cumulatedY = 10
+        var cumulatedY:CGFloat = 70
             for card in filterdCardList{
                 let cardView:CardView = CardView.getSingleCardView(card:card)
                 cardView.frame.origin.y = CGFloat(cumulatedY)
-                cumulatedY += Int(cardView.bounds.height
-                    + 10)
+                cumulatedY += cardView.bounds.height
+                    + 30
                 let tapGesture = UITapGestureRecognizer()
                 tapGesture.addTarget(self, action: #selector(tapped))
                 tapGesture.numberOfTapsRequired = 1
@@ -346,8 +318,12 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 cardView.addGestureRecognizer(gestureleft)
                 
                 scrollView.addSubview(cardView)
-                scrollView.contentSize = CGSize(width: self.view.bounds.width, height: scrollView.contentSize.height + cardView.bounds.height + 10)
+                if cumulatedY > scrollView.contentSize.height{
+                    scrollView.contentSize = CGSize(width: self.view.bounds.width, height: cumulatedY)
+                }
             }
+        
+            scrollView.contentOffset.y = contentOffSetY
         }
     
     @objc func controllPanel(_ sender:UISwipeGestureRecognizer){
@@ -379,9 +355,11 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     func shareButtonClicked(_ controllPanel:CardViewPanel) {
         let cardView = controllPanel.controlledView as! CardView
         let alertView = SCLAlertView()
+        /*
         alertView.addButton("To Notes Library") {
             self.shareCard(card:cardView.card)
         }
+        */
         alertView.addButton("Generate Picture") {
         let storyBoard = UIStoryboard.init(name: "Main", bundle: nil)
         let cardEditor = storyBoard.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
@@ -445,12 +423,14 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     @objc private func shareCard(card:Card){
-        //User.shareCard(card: card, states: [String]())
+        
+        /*//User.shareCard(card: card, states: [String]())
         let shareView = ShareView.show(target: self.view, card: card)
         shareView.shareBlock = {
             User.shareCard(card: card, states: shareView.state)
             shareView.cancel()
         }
+         */
     }
         
     

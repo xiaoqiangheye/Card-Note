@@ -153,6 +153,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
                 print("fail to add")
             }
            // PurchaseManager.restore()
+            
         }else
         {
             let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)
@@ -161,7 +162,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
                 UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
             }
            PurchaseManager.verifySubscriptions(types: PurchaseManager.products)
+            
         }
+        
+       
         
         SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
             for purchase in purchases {

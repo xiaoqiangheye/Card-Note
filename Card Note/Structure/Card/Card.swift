@@ -150,6 +150,34 @@ class Card:NSObject,NSCoding,Encodable{
         self.modifyTime = modifytime
     }
     
+    func getText()->NSAttributedString?{
+        var url = Constant.Configuration.url.attributedText
+        url.appendPathComponent(self.getId() + ".rtf")
+        do{
+            let data = try Data(contentsOf: url)
+            var ducumentAttribute:NSDictionary?
+            let attr = try NSAttributedString(data: data, options: [ NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: &ducumentAttribute)
+            return attr
+        }catch let error{
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func setText(attr:NSAttributedString){
+        var url = Constant.Configuration.url.attributedText
+        url.appendPathComponent(self.getId() + ".rtf")
+        let range = NSRange(location: 0, length: attr.length)
+        do{
+            let data = try attr.data(from: range, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+            try data.write(to: url)
+        }catch let error{
+            print(error.localizedDescription)
+        }
+        
+    }
+    
+    
     func setTag(_ tag:[String]){
         let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags) as! [String]
         var new = [String]()

@@ -379,6 +379,7 @@ class CardView: UIView{
         func loadPic(){
             var url = Constant.Configuration.url.PicCard
             url.appendPathComponent(self.card.getId() + ".jpg")
+            /*
             User.downloadPhotosUsingQCloud(cardID: self.card.getId()) { (bool, error) in
                 if bool{
                     DispatchQueue.main.async {
@@ -388,7 +389,17 @@ class CardView: UIView{
                     print("load picture success; cardId\(self.card.getId())")
                 }
             }
+            */
+            Cloud.downloadAsset(id: self.card.getId(), type: "IMAGE") { (bool, error) in
+                if bool{
+                    DispatchQueue.main.async {
+                        self.image.image = UIImage(contentsOfFile: url.path)
+                        print("load picture success, cardId\(self.card.getId())")
+                    }
+                }
             }
+        }
+            
     }
     
     class SharedCardView:CardView{
@@ -485,7 +496,8 @@ class CardView: UIView{
         var recognizer:SFSpeechRecognizer!
         var conversionButton:UIButton!
         var loadingView:UIView!
-        func loadAudioFile(){
+        
+        @objc func loadAudioFile(){
             loadingView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
             let loadingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 20))
             loadingLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -494,6 +506,7 @@ class CardView: UIView{
             loadingLabel.center.x = self.frame.width/2
             loadingView.addSubview(loadingLabel)
             self.addSubview(loadingView)
+            /*
             User.downloadAudioUsingQCloud(cardID: self.card.getId()) {[unowned self] (bool, error) in
                 if bool{
                     print("load Audio SuccessFully")
@@ -502,6 +515,19 @@ class CardView: UIView{
                     }
                 }else{
                     
+                }
+            }
+             */
+            
+            Cloud.downloadAsset(id: self.card.getId(), type: "AUDIO") { (bool, error) in
+                if bool{
+                    DispatchQueue.main.async {
+                        self.loadingView.removeFromSuperview()
+                    }
+                }else{
+                    loadingLabel.text = "Loading failed. Click to reload."
+                    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.loadAudioFile))
+                    self.loadingView.addGestureRecognizer(gesture)
                 }
             }
         }
@@ -606,7 +632,7 @@ class CardView: UIView{
             var url = Constant.Configuration.url.Map
             url.appendPathComponent(self.card.getId() + ".jpg")
             
-          
+            /*
             User.downloadMapUsingQCloud(cardID: self.card.getId()) { (bool, error) in
                 if bool{
                     DispatchQueue.main.async {
@@ -615,6 +641,7 @@ class CardView: UIView{
                     print("load map success; cardId\(self.card.getId())")
                 }
             }
+            */
             
         }
     }
@@ -634,6 +661,14 @@ class CardView: UIView{
         var playerButton:UIButton!
         var statusBar:StatusBar!
         var timer:Timer = Timer()
+        
+        func loadMovie(){
+            var url = Constant.Configuration.url.Movie
+            url.appendPathComponent(self.card.getId() + ".mov")
+            Cloud.downloadAsset(id: self.card.getId(), type: "MOVIE") { (bool, error) in
+                
+            }
+        }
         
         func progressBar(didChangeProgress progress: Float) {
             player?.pause()
@@ -851,9 +886,9 @@ class CardView: UIView{
         cardView.addSubview(labelOfTag)
         */
         
-        let definition:String = card.getDefinition()
+       
         let labelOfDes = UILabel(frame: CGRect(x: 20,y:label.frame.height + 20,width:cardView.bounds.width - 40,height:cardView.bounds.height/2))
-        labelOfDes.text = definition
+        labelOfDes.text = card.getText() == nil ? "" : card.getText()?.string
         labelOfDes.font = UIFont.systemFont(ofSize: 15)
         labelOfDes.numberOfLines = 10
         labelOfDes.lineBreakMode = .byClipping
@@ -940,15 +975,7 @@ class CardView: UIView{
         cardView.addSubview(label)
         cardView.title = label
         
-        /*
-         let tag:String = card.getTag()
-         let labelOfTag = UILabel(frame: CGRect(x:20,y:label.bounds.height,width:cardView.bounds.width-20,height:cardView.bounds.height/5))
-         labelOfTag.text = tag
-         labelOfTag.font = UIFont.boldSystemFont(ofSize: 20)
-         label.numberOfLines = 1
-         label.lineBreakMode = .byWordWrapping
-         cardView.addSubview(labelOfTag)
-         */
+       
         
         let definition:String = card.getDefinition()
         let labelOfDes = UILabel(frame: CGRect(x: 20,y:label.frame.height + 20,width:cardView.bounds.width - 40,height:cardView.bounds.height/2))
