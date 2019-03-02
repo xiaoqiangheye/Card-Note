@@ -12,21 +12,21 @@ import Speech
 class SpeechManager{
     class func requestForAuth(){
     SFSpeechRecognizer.requestAuthorization { (authStatus) in  //4
-    var isButtonEnabled = false
+    
     switch authStatus {  //5
     case .authorized:
-    isButtonEnabled = true
-    
+ 
+     print("Authorized")
     case .denied:
-    isButtonEnabled = false
+    
     print("User denied access to speech recognition")
     
     case .restricted:
-    isButtonEnabled = false
+    
     print("Speech recognition restricted on this device")
     
     case .notDetermined:
-    isButtonEnabled = false
+    
     print("Speech recognition not yet authorized")
            }
     }

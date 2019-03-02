@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import Font_Awesome_Swift
-
+import SCLAlertView
 var languageDictionary = NSDictionary(contentsOf: URL(fileURLWithPath:Bundle.main.path(forResource: "languageList", ofType: "plist")!))
 class TranslationController:UIViewController{
     var backButton:UIButton!
@@ -26,12 +26,6 @@ class TranslationController:UIViewController{
         self.view.endEditing(true)
     }
     
-   
-    
-    override func viewDidAppear(_ animated: Bool) {
-       // let centerDefault = NotificationCenter.default
-       // centerDefault.addObserver(self, selector: #selector(keyboadWillExit(aNotification:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
-    }
     
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.8)
@@ -55,12 +49,6 @@ class TranslationController:UIViewController{
        // fromLanguageLabel.textAlignment = .center
         fromLanguageLabel.setTitle("Auto", for: .normal)
         fromLanguageLabel.setTitleColor(Constant.Color.themeColor, for: .normal)
-        //fromLanguageLabel.textColor = Constant.Color.themeColor
-       // fromLanguageLabel.font = UIFont.systemFont(ofSize: 20)
-       // fromLanguageLabel.text = "Auto"
-       // fromLanguageLabel.isUserInteractionEnabled = true
-       // fromLanguageLabel.layer.borderWidth = 1
-        //fromLanguageLabel.layer.borderColor = UIColor.black.cgColor
         fromLanguageLabel.addTarget(self, action: #selector(tapped), for: .touchDown)
         superCard.addSubview(fromLanguageLabel)
     
@@ -71,11 +59,6 @@ class TranslationController:UIViewController{
         superCard.addSubview(revertButton)
         
         toLanguageLabel = UIButton(frame: CGRect(x: superCard.frame.width/3*2, y: 0, width: superCard.frame.width/3, height: 50))
-      //  toLanguageLabel.textAlignment = .center
-        //toLanguageLabel.textColor = Constant.Color.themeColor
-       // toLanguageLabel.font = UIFont.systemFont(ofSize: 20)
-       // toLanguageLabel.text = "English"
-        //toLanguageLabel.isUserInteractionEnabled = true
         toLanguageLabel.setTitle("English", for: .normal)
         toLanguageLabel.setTitleColor(Constant.Color.themeColor, for: .normal)
         toLanguageLabel.addTarget(self, action: #selector(tapped), for: .touchDown)
@@ -122,9 +105,11 @@ class TranslationController:UIViewController{
     @objc func tapped(_ sender:UIButton){
         let label = sender
             let vc = OptionViewController()
+            vc.setTitle(string: "Languages")
             vc.modalPresentationStyle = .overCurrentContext
         if label == toLanguageLabel{
             var strings = languageDictionary?.allKeys as! [String]
+            strings.sort()
             var index = 0
             for string in strings{
                 if string == "Auto"{strings.remove(at: index)}
@@ -167,19 +152,7 @@ class TranslationController:UIViewController{
         }
         
         
-        //textporarily disable youdao translate
-        /*
-        TranslationManager.translate(text: text, from: from, to: to) {[unowned self] (string) in
-            if string == nil{
-                //error
-                AlertView.show(error: "An Error Occur.")
-            }else{
-               self.translatedText.text = string
-              self.copyButton.isHidden = false
-           // self.view.addSubview(self.translatedText)
-            }
-        }
-        */
+        
         TranslationManager.gTranslate(text: text, toLanguage: to, fromLanguage: f) {[unowned self] (string) in
             if string == nil{
                 //error
@@ -197,8 +170,24 @@ class TranslationController:UIViewController{
     }
     
     @objc private func trans(){
-        if originalText.text.count > 0{
-        translate(from:fromLanguageLabel.title(for: .normal)!, to:toLanguageLabel.title(for: .normal)!, text: originalText.text)
+        if !isPremium(){
+            let trial = UserDefaults.standard.integer(forKey: Constant.Key.TranslateTrial)
+            if trial <= 0{
+                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
+                return
+            }else{
+                let view = SCLAlertView()
+                
+                view.addButton("Start") {
+                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.TranslateTrial)
+                    if self.originalText.text.count > 0{
+                        self.translate(from:self.fromLanguageLabel.title(for: .normal)!, to:self.toLanguageLabel.title(for: .normal)!, text: self.originalText.text)
+                    }
+                }
+                
+                
+                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
+            }
         }
     }
     

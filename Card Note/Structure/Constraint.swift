@@ -8,7 +8,7 @@
 
 import Foundation
 import Font_Awesome_Swift
-class Constraint{
+class Constraint:NSObject{
     var type:Constraint.type!
     var value:Any
     enum type{

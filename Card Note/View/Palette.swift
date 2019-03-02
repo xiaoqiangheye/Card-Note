@@ -27,14 +27,14 @@ class Palette: UIView{
     
     func addColors(_ colors: [UIColor]){
         let radius = Double(self.palette.frame.height/2)/2
-        var radian:Double = 0.0
-        let eachR = 2 * .pi / Double(colors.count)
+        var radian:Double = .pi/2.0
+        let eachR = .pi / (Double(colors.count) - 1)
         for color in colors{
             let x = radius * cos(radian)
             let y = radius * sin(radian)
             radian += eachR
             let colorView = UIView()
-            colorView.frame = CGRect(x: Double(self.palette.frame.width/2) + x, y: Double(self.palette.frame.height/2) + y, width: Double(self.palette.frame.width/4), height: Double(self.palette.frame.width/4))
+            colorView.frame = CGRect(x: Double(self.palette.frame.width/2) + x, y: Double(self.palette.frame.height/2) + y, width: Double(30), height: Double(30))
             colorView.center = CGPoint(x: Double(self.palette.frame.width/2) + x, y: Double(self.palette.frame.height/2) + y)
             colorView.backgroundColor = color
             colorView.layer.cornerRadius = colorView.frame.height/2

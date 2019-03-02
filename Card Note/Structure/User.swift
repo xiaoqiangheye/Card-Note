@@ -13,6 +13,8 @@ import Alamofire
 import AMapFoundationKit
 import QCloudCore
 import QCloudCOSXML
+/** deprecated at current situation
+ */
 
 class User:NSObject,URLSessionDelegate{
     private var username:String!
@@ -64,7 +66,7 @@ class User:NSObject,URLSessionDelegate{
                     }
                 }
             }else{
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
                 completionHandler(false, nil)
             }
         }
@@ -149,13 +151,13 @@ class User:NSObject,URLSessionDelegate{
         request.finishBlock = {(outputObject,error) in
             if error == nil{
                 completionHandler(true,nil)
-            print("download successfully, Object ID\(outputObject)")
+           
             }else{
                 completionHandler(false,error)
             }
         }
         request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
-             NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+            
         }
         QCloudCOSXMLService.defaultCOSXML().getObject(request)
     }
@@ -172,13 +174,13 @@ class User:NSObject,URLSessionDelegate{
         request.finishBlock = {(outputObject,error) in
             if error == nil{
                 completionHandler(true,nil)
-                print("download successfully, Object ID\(outputObject)")
+              
             }else{
                 completionHandler(false,error)
             }
         }
         request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
-            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+           
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
     }
@@ -194,14 +196,14 @@ class User:NSObject,URLSessionDelegate{
         request.object = "userAudio/" + cardID + ".wav"
         request.finishBlock = {(outputObject,error) in
             if error == nil{
-            print("download successfully, Object ID\(outputObject)")
+           
                 completionHandler(true,nil)
             }else{
                  completionHandler(false,error)
             }
         }
         request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
-            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+           
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
     }
@@ -219,13 +221,13 @@ class User:NSObject,URLSessionDelegate{
             if error == nil{
             completionHandler(true,nil)
                 
-            print("download successfully, Object ID\(outputObject)")
+            
             }else{
             completionHandler(false,error)
             }
         }
         request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
-            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+            
         }
          QCloudCOSXMLService.defaultCOSXML().getObject(request)
     }
@@ -242,13 +244,12 @@ class User:NSObject,URLSessionDelegate{
         request.finishBlock = {(outputObject,error) in
             if error == nil{
                 completionHandler(true,nil)
-                print("download successfully, Object ID\(outputObject)")
+               
             }else{
                 completionHandler(false,error)
             }
         }
         request.sendProcessBlock = {(bytesDownload,totalBytesDownload,totalBytesExpectedToDownload) in
-            NSLog("upload %lld totalDownLoad %lld aim %lld", bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }
         QCloudCOSXMLService.defaultCOSXML().getObject(request)
     }
@@ -264,7 +265,6 @@ class User:NSObject,URLSessionDelegate{
                 == NSURLAuthenticationMethodServerTrust {
                 print("服务端证书认证！")
                 let serverTrust:SecTrust = challenge.protectionSpace.serverTrust!
-                let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)!
                 let credential = URLCredential(trust: serverTrust)
                 challenge.sender!.continueWithoutCredential(for: challenge)
                 challenge.sender?.use(credential, for: challenge)
@@ -629,7 +629,7 @@ class User:NSObject,URLSessionDelegate{
         NSURLConnection.sendAsynchronousRequest(request as URLRequest, queue: OperationQueue.init(), completionHandler: {(response: URLResponse?, data: Data?, connectionError: Error?)-> Void in
             if connectionError == nil{
                 let str = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                print(str)
+               
                 if (str?.hasSuffix("(result)"))!{
                     let string:String = String(describing: str)
                     let index = string.positionOf(sub:"(result)",backwards:false)
@@ -783,7 +783,6 @@ class User:NSObject,URLSessionDelegate{
             let dataTask = session.dataTask(with: request as URLRequest) { (data:Data?, response:URLResponse?, error:Error?) in
                 if error == nil{
                     let str = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                    print(str)
                     if str != nil{
                         let trimmedstr:String = resultHandler(data:str as! String)
                         if trimmedstr != ""{

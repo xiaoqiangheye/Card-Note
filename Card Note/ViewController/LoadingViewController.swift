@@ -31,11 +31,4 @@ class LoadingViewController:UIViewController{
         alertLabel.text = alert
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        
-    }
 }

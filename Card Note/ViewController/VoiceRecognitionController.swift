@@ -11,13 +11,15 @@ import UIKit
 import Font_Awesome_Swift
 import AVKit
 import Speech
+import SCLAlertView
+
 class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegate{
     weak var delegate:CardEditorDelegate?
     var backButton:UIButton!
     var recordButton:UIButton!
     var recognizeFileButton:UIButton!
     let audioEngine = AVAudioEngine()
-    let speechRecognizer:SFSpeechRecognizer? = SFSpeechRecognizer()
+    var speechRecognizer:SFSpeechRecognizer?
     var recognitionTask:SFSpeechRecognitionTask? = nil
     let request = SFSpeechAudioBufferRecognitionRequest()
     var voiceCardView:CardView.VoiceCardView!
@@ -27,6 +29,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
     var timer:Timer?
     var loadingView:LoadingView?
     var deleteButton:UIButton!
+    var toLanguageLabel:UIButton!
     override func viewWillDisappear(_ animated: Bool) {
         audioEngine.stop()
         recognitionTask?.finish()
@@ -37,6 +40,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
     
     override func viewDidLoad() {
         let node = audioEngine.inputNode
+        speechRecognizer = SFSpeechRecognizer()
         let recordingFormat = node.outputFormat(forBus: 0)
         node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, time) in
             self.request.append(buffer)
@@ -44,25 +48,60 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         
         SpeechManager.requestForAuth()
         self.view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.8)
-        backButton = UIButton(frame: CGRect(x: 0, y: 50, width: 30, height: 30))
+        backButton = UIButton(frame: CGRect(x: 20, y: 50, width: 30, height: 30))
         backButton.setFAIcon(icon: FAType.FATimes, iconSize: 30, forState: .normal)
-        backButton.setTitleColor(.black, for: .normal)
+        backButton.setTitleColor(.white, for: .normal)
         backButton.addTarget(self, action: #selector(dismissView), for: .touchDown)
+        self.view.addSubview(backButton)
+    }
+    
+    
+    @objc private func tapped(sender:UIButton){
+        let label = sender
+        let vc = OptionViewController()
+        vc.setTitle(string: "Languages")
+        vc.modalPresentationStyle = .overCurrentContext
+        if label == toLanguageLabel{
+            let strings = languageDictionary?.allKeys as! [String]
+            var s = Set(strings)
+            s.remove("Auto")
+            vc.loadOptions(strings: s.sorted()) {[weak self] (string) in
+                label.setTitle(string, for: .normal)
+                self?.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: string))
+                if self?.speechRecognizer == nil{
+                    DispatchQueue.main.async {
+                         AlertView.show(alert: "Current languages seems not available.")
+                    }
+                    self?.speechRecognizer = SFSpeechRecognizer()
+                }
+            }
+        }
+        self.present(vc, animated: true, completion: nil)
     }
     
     @objc func loadVoiceCardView(voiceCard:VoiceCard){
         //init card
         self.card = voiceCard
         //the white big card
-        superCard = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width * 0.8, height: 400))
+        superCard = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width * 0.8, height: 450))
         superCard.backgroundColor = .white
         superCard.layer.cornerRadius = 10
         superCard.center = self.view.center
+        superCard.layer.masksToBounds = true
+        
+        
+        toLanguageLabel = UIButton(frame: CGRect(x: 0, y: 0, width: superCard.frame.width, height: 50))
+        toLanguageLabel.setTitle("English", for: .normal)
+        toLanguageLabel.setTitleColor(.white, for: .normal)
+        toLanguageLabel.addTarget(self, action: #selector(tapped), for: .touchDown)
+        toLanguageLabel.backgroundColor = Constant.Color.themeColor
+        
+        
         //recognize File
-        recognizeFileButton = UIButton(frame: CGRect(x: 0, y: 0, width: superCard.frame.width/2 - 10, height: 40))
+        recognizeFileButton = UIButton(frame: CGRect(x: 20, y: 50, width: superCard.frame.width/2 - 10, height: 40))
         recognizeFileButton.setFAIcon(icon: .FASearch, iconSize: 30, forState: .normal)
         recognizeFileButton.center.x = superCard.frame.width/4
-        recognizeFileButton.frame.origin.y = 350
+        recognizeFileButton.frame.origin.y = 400
         recognizeFileButton.isHidden = true
         recognizeFileButton.setTitleColor(.white, for: .normal)
         recognizeFileButton.layer.cornerRadius = 10
@@ -73,7 +112,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
          deleteButton = UIButton(frame: CGRect(x: 0, y: 0, width: superCard.frame.width/2 - 10, height: 40))
          deleteButton.setFAIcon(icon: .FARepeat, iconSize: 30, forState: .normal)
          deleteButton.center.x = superCard.frame.width/4*3
-         deleteButton.frame.origin.y = 350
+         deleteButton.frame.origin.y = 400
          deleteButton.isHidden = true
          deleteButton.setTitleColor(.white, for: .normal)
          deleteButton.layer.cornerRadius = 10
@@ -82,10 +121,10 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         
         //voiceCard
         voiceCardView = getsingleVoiceView(card: voiceCard)
-        voiceCardView.frame.origin.y = 0
+        voiceCardView.frame.origin.y = 50
         voiceCardView.center.x = superCard.bounds.width/2
         
-        textView = UITextView(frame: CGRect(x: 0, y: 100, width: superCard.frame.width * 0.8, height: 200))
+        textView = UITextView(frame: CGRect(x: 0, y: 150, width: superCard.frame.width * 0.8, height: 200))
         textView.textAlignment = .center
         textView.isSelectable = true
         textView.isEditable = false
@@ -97,12 +136,12 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         self.textView.text = self.card?.getDescription()
         
         superCard.addSubview(textView)
+        superCard.addSubview(toLanguageLabel)
         superCard.addSubview(voiceCardView)
         superCard.addSubview(recognizeFileButton)
         superCard.addSubview(deleteButton)
-        backButton.frame.origin = CGPoint(x: superCard.frame.width - 30, y: 0)
-        superCard.addSubview(backButton)
         self.view.addSubview(superCard)
+        
     }
     
     @objc private func deleteAction(){
@@ -119,7 +158,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         recognizeFileButton.isHidden = true
     }
     
-    func getsingleVoiceView(card:VoiceCard)->CardView.VoiceCardView{
+     private func getsingleVoiceView(card:VoiceCard)->CardView.VoiceCardView{
         let view = CardView.VoiceCardView()
         view.card = card
         view.backgroundColor = .white
@@ -160,11 +199,11 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         return view
     }
     
-    @objc func updateTimer(){
+    @objc private func updateTimer(){
         
     }
     
-    @objc func controllerClicked(sender:UIButton){
+    @objc private func controllerClicked(sender:UIButton){
         let card = voiceCardView.card as! VoiceCard
         let manager = card.voiceManager
         if manager?.state == .recording{
@@ -194,7 +233,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
             voiceCardView.addSubview(voiceCardView.progressBar)
         }else if manager?.state == .willRecord{
             loadingView?.startAnimation()
-            recordandRecognizeSpeech()
+            speech()
             if (manager?.beginRecord())!{
                 var stopRecordThreshold = 0
                 timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
@@ -268,28 +307,75 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         }
     }
     
-    
-    @objc func recognizeFile() {
+    @objc private func recognizeFile(){
+        if !isPremium(){
+            let trial = UserDefaults.standard.integer(forKey: Constant.Key.VoiceTrial)
+            if trial <= 0{
+                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
+                return
+            }else{
+                let view = SCLAlertView()
+                
+                view.addButton("Start") {
+                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.VoiceTrial)
+                    self.startRecognizeFile()
+                }
+                
+                
+                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
+            }
+        }
+    }
+    @objc private func startRecognizeFile() {
+        
         let url = Constant.Configuration.url.Audio.appendingPathComponent((self.card)!.getId() + ".wav")
         guard let myRecognizer = SFSpeechRecognizer()else{return}
         if !myRecognizer.isAvailable{return}
-        
+        let processController = LoadingViewController()
+        processController.setAlert("Converting to Text...")
+        processController.modalPresentationStyle = .overCurrentContext
+        self.present(processController, animated: false, completion: nil)
         let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: url.path))
         speechRecognizer?.recognitionTask(with: request) { (result, error) in
             if let result = result{
                 if result.isFinal{
-                let bestString = result.bestTranscription.formattedString
-                print(bestString)
-                self.textView.text = bestString
+                    let bestString = result.bestTranscription.formattedString
+                    print(bestString)
+                    self.textView.text = bestString
                     self.card?.setDescription(self.textView.text)
+                    processController.dismiss(animated: true, completion: nil)
                 }
             }else if let error = error{
                 print(error.localizedDescription)
+                DispatchQueue.main.async {
+                     AlertView.show(alert: "Recognition failed.")
+                }
             }
         }
     }
     
-    @objc func recordandRecognizeSpeech(){
+    
+    @objc private func speech(){
+        if !isPremium(){
+            let trial = UserDefaults.standard.integer(forKey: Constant.Key.VoiceTrial)
+            if trial <= 0{
+                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
+                return
+            }else{
+                let view = SCLAlertView()
+                
+                view.addButton("Start") {
+                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.VoiceTrial)
+                    self.recordandRecognizeSpeech()
+                }
+                
+                
+                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
+            }
+        }
+    }
+    @objc private func recordandRecognizeSpeech(){
+        
         let text = self.textView.text == nil ? "" : self.textView.text
         audioEngine.prepare()
         do{

@@ -59,7 +59,6 @@ class OCRManager:NSObject,URLSessionDelegate{
             if error != nil{
                 print(error?.localizedDescription as Any)
             }else{
-                print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue))
                 do{
                 let result = try JSON(data: data!)["Result"]
                 let regions = result["regions"].arrayValue
@@ -80,7 +79,9 @@ class OCRManager:NSObject,URLSessionDelegate{
                             }
                             string.append("\n")
                         }
+                        if string != ""{
                         string.removeLast()
+                        }
                         stringArray.append(string)
                     }
                     completionhandler(error, stringArray)
@@ -99,8 +100,6 @@ class OCRManager:NSObject,URLSessionDelegate{
             == (NSURLAuthenticationMethodServerTrust) {
             print("服务端证书认证！")
             let serverTrust:SecTrust = challenge.protectionSpace.serverTrust!
-            let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
-            
             let credential = URLCredential(trust: serverTrust)
             challenge.sender!.continueWithoutCredential(for: challenge)
             challenge.sender?.use(credential, for: challenge)

@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 import Font_Awesome_Swift
 class OptionViewController:UIViewController,UIScrollViewDelegate{
-    var scrollView = UIScrollView()
-    var titleLabel:UILabel!
-    var backButton:UIButton!
-    var cumulatedY:CGFloat = 0
-    var backGround:UIView!
-    var completionHandler = {(string:String) in}
+    private var scrollView = UIScrollView()
+    private var titleLabel:UILabel = UILabel()
+    private var backButton:UIButton!
+    private var cumulatedY:CGFloat = 0
+    private var backGround:UIView!
+    private var completionHandler = {(string:String) in}
     weak var delegate:OptionViewControllerDelegate?
     override func viewDidLoad() {
         self.view.backgroundColor = .white
@@ -30,8 +30,8 @@ class OptionViewController:UIViewController,UIScrollViewDelegate{
         titleLabel.textAlignment = .center
         
         
-        backButton = UIButton(frame: CGRect(x: 0, y: UIDevice.current.Xdistance(), width: 30, height: 30))
-        backButton.setFAIcon(icon: FAType.FATimesCircleO, iconSize: 30, forState: .normal)
+        backButton = UIButton(frame: CGRect(x: 20, y: UIDevice.current.Xdistance(), width: 50, height: 50))
+        backButton.setFAIcon(icon: FAType.FATimes, iconSize: 30, forState: .normal)
         backButton.setTitleColor(.white, for: .normal)
         backButton.addTarget(self, action: #selector(dismissView), for: .touchDown)
         
@@ -43,6 +43,10 @@ class OptionViewController:UIViewController,UIScrollViewDelegate{
         scrollView.delegate = self
         scrollView.isScrollEnabled = true
         self.view.addSubview(scrollView)
+    }
+    
+    func setTitle(string:String){
+        titleLabel.text = string
     }
     
     func loadOptions(strings:[String],completionHandler:@escaping (String)->()){
@@ -71,7 +75,7 @@ class OptionViewController:UIViewController,UIScrollViewDelegate{
     @objc private func tapped(gesture: UITapGestureRecognizer){
         let view = gesture.view as! UILabel
         if delegate != nil{
-            delegate?.optionViewController?(optionClicked:view.text)
+            delegate?.optionViewController?(optionClicked:view.text as Any)
         }
         completionHandler(view.text!)
         dismissView()

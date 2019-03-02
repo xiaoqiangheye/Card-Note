@@ -8,9 +8,6 @@
 
 import UIKit
 import CoreData
-import AMapFoundationKit
-import QCloudCore
-import QCloudCOSXML
 import SwiftyStoreKit
 
 var ifloggedin = false
@@ -24,16 +21,7 @@ var signUpUsername = ""
 var signUpAuthCode = ""
 var isFirstLaunch = true
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,BMKGeneralDelegate,BMKLocationAuthDelegate{
-    func signature(with fileds: QCloudSignatureFields!, request: QCloudBizHTTPRequest!, urlRequest urlRequst: NSMutableURLRequest!, compelete continueBlock: QCloudHTTPAuthentationContinueBlock!) {
-        let credential = QCloudCredential()
-        credential.secretID = Bundle.main.infoDictionary?["QCloudSecretID"] as! String
-        credential.secretKey = Bundle.main.infoDictionary?["QCloudSecretKey"] as! String
-        let creation = QCloudAuthentationV5Creator.init(credential: credential)
-        let sig = creation?.signature(forData: urlRequst)
-        continueBlock(sig,nil)
-    }
-    
+class AppDelegate: UIResponder, UIApplicationDelegate{
     var window: UIWindow?
     func createDirectory(){
         let array = [Constant.Configuration.url.attributedText,Constant.Configuration.url.Audio,Constant.Configuration.url.Card,Constant.Configuration.url.Map,Constant.Configuration.url.Movie,Constant.Configuration.url.PicCard]
@@ -55,14 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
         //上次存储的版本号
         let save_version = UserDefaults.standard.object(forKey: "isFirstIntobs") as? String
         
-        /*方法1：
-         if save_version == nil || !(app_version == save_version) {
-         UserDefaults.standard.setValue(app_version, forKey: "isFirst")
-         UserDefaults.standard.synchronize()
-         return true
-         } else {
-         return false
-         }*/
         
         //方法2：
         if app_version == save_version {
@@ -80,39 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        //Tencent Cloud
-      let configuration = QCloudServiceConfiguration()
-        configuration.appID = "1253464939"
-       configuration.signatureProvider = self
-        let endpoint = QCloudCOSXMLEndPoint()
-        endpoint.regionName = "ap-chengdu"
-        configuration.endpoint = endpoint
-        QCloudCOSXMLService.registerDefaultCOSXML(with: configuration)
-        QCloudCOSTransferMangerService.registerDefaultCOSTransferManger(with: configuration)
-        
-        
-        //called complete transactions
-        SwiftyStoreKit.completeTransactions { (purchase) in
-            
-        }
-        
-        //map setting
-        //gao de
-        /* temporarily banned
-        AMapServices.shared().apiKey = "cd1079b6f89a637f97e367d5b2baa101"
-        let mapManager = BMKMapManager()
-         BMKLocationAuth.sharedInstance()?.checkPermision(withKey: "gB7SGt9F65EgmkiWWcaHtLaxssYpyCLx", authDelegate: self)
-        //Baidu
-        let ret = mapManager.start("gB7SGt9F65EgmkiWWcaHtLaxssYpyCLx", generalDelegate: self)
-        if ret == false {
-            NSLog("manager start failed!")
-        }
-        if BMKMapManager.setCoordinateTypeUsedInBaiduMapSDK(BMK_COORD_TYPE.COORDTYPE_BD09LL) {
-            NSLog("经纬度类型设置成功");
-        } else {
-            NSLog("经纬度类型设置失败");
-        }
-        */
+       
         
         //directory setting
         createDirectory()
@@ -130,22 +78,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
             //other setting
             //auto sync opened
-            UserDefaults.standard.set(true, forKey: Constant.Configuration.Cloud.AUTO_SYNC)
+            UserDefaults.standard.set(false, forKey: Constant.Configuration.Cloud.AUTO_SYNC)
             //auto sync if Wifi presents
-            UserDefaults.standard.set(true, forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
+            UserDefaults.standard.set(false, forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
             //account Plan
             UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue,forKey: "accountPlan")
-            //create a new clasic card
             
-            let newOrientationCard = Card(title: "Your First Card", tag: nil, description: "", id: "first", definition: "Start your first trip", color: Constant.Color.blueLeft, cardType: Card.CardType.card.rawValue, modifytime: String(NSTimeIntervalSince1970))
-           let exaCard = ExampleCard(key: "First Term", value: "This is an Key-Value card for you to take notes. In classes, you can write important terms into this card. The key is the term and the value is the definition of the term.")
-            newOrientationCard.addChildNote(exaCard)
+            //trial
+            UserDefaults.standard.set(5,forKey: Constant.Key.OCRTrial)
+            UserDefaults.standard.set(5,forKey: Constant.Key.TranslateTrial)
+            UserDefaults.standard.set(5,forKey: Constant.Key.VoiceTrial)
+            
+            
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
             url?.appendPathComponent("card.txt")
-            
+            let orientation = orientationCard()
             var cardList = [Card]()
-            cardList.append(newOrientationCard)
+            cardList.append(orientation)
             let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList as Any)
             do{
                 try datawrite.write(to: url!)
@@ -154,16 +104,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
             }
            // PurchaseManager.restore()
             
-        }else
-        {
+        }else{
             let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)
             if tags == nil{
                 let tags = [String]()
                 UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
             }
-           PurchaseManager.verifySubscriptions(types: PurchaseManager.products)
-            
         }
+        PurchaseManager.verifySubscriptions(types: PurchaseManager.products)
         
        
         
@@ -182,6 +130,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate, QCloudSignatureProvider,B
             }
         }
         return true
+    }
+    
+    private func orientationCard()->Card{
+        let newOrientationCard = Card(title: "Your First Card", tag: nil, description: "", id: "first", definition: "", color: Constant.Color.blueLeft, cardType: Card.CardType.card.rawValue, modifytime: String(NSTimeIntervalSince1970))
+        newOrientationCard.setText(attr: NSAttributedString(string: "Welcome to Canote!"))
+        
+        let textCard = TextCard(id: UUID().uuidString)
+        textCard.setText(attr: NSAttributedString(string: "Now Let's get started! In this Card, you can add many forms of subcards you like, which includes Photos, Voices, Videos, Text, and Key Term. Those multimedia helps you record anything wherever you are.\n\n Click the float \"+\" Button on the right, and you can select the types of media you want to add."))
+        newOrientationCard.addChildNote(textCard)
+        
+        let exaCard = ExampleCard(key: "First Term", value: "This is an Key-Value card for you to take notes. In classes, you can write important terms into this card. The key is the term and the value is the definition of the term.")
+        newOrientationCard.addChildNote(exaCard)
+        
+        return newOrientationCard
+    }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        if let rootViewController = self.topViewControllerWithRootViewController(rootViewController: window?.rootViewController) {
+            if (rootViewController.responds(to: Selector(("canRotate")))) {
+                // Unlock landscape view orientations for this view controller if it is not currently being dismissed
+                if !rootViewController.isBeingDismissed{
+                    return .landscape
+                }
+            }
+        }
+        
+        // Only allow portrait (standard behaviour)
+        return .portrait
+    }
+    
+    private func topViewControllerWithRootViewController(rootViewController: UIViewController!) -> UIViewController? {
+        if (rootViewController == nil) { return nil }
+        if (rootViewController.isKind(of: (UITabBarController).self)) {
+            return topViewControllerWithRootViewController(rootViewController: (rootViewController as! UITabBarController).selectedViewController)
+        } else if (rootViewController.isKind(of:(UINavigationController).self)) {
+            return topViewControllerWithRootViewController(rootViewController: (rootViewController as! UINavigationController).visibleViewController)
+        } else if (rootViewController.presentedViewController != nil) {
+            return topViewControllerWithRootViewController(rootViewController: rootViewController.presentedViewController)
+        }
+        return rootViewController
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

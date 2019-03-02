@@ -14,6 +14,7 @@ import SwiftyJSON
 import SwiftMessages
 import Font_Awesome_Swift
 import Instructions
+import Reachability
 extension CardViewController:CoachMarksControllerDataSource{
     func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
         return 4
@@ -46,10 +47,19 @@ extension CardViewController:CoachMarksControllerDataSource{
         }else if index == 3{
         coachViews.bodyView.hintLabel.text = "This is a tool Bar to select your cards."
         coachViews.bodyView.nextLabel.text = "OK"
+            
+        
+        }
+        let autoSync = UserDefaults.standard.bool(forKey: Constant.Configuration.Cloud.AUTO_SYNC)
+        if isFirstLaunch && autoSync && isPremium(){
+            ifCanSync()
+        }else{
+            loadCard()
         }
         
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
     }
+    
 }
 
 class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate,UIDocumentInteractionControllerDelegate{
@@ -60,6 +70,10 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     var docController:UIDocumentInteractionController!
     let coachMarksController = CoachMarksController()
     var filterView = FilterView()
+    var syncButton:UIButton!
+    var filterButton:UIButton!
+    var isSynced = false
+    var internet:Reachability!
     @IBAction func addNewCard(_ sender:UIButton){
         
         let vc = storyboard?.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
@@ -83,25 +97,28 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadCard()
     }
     
     override func viewDidLoad() {
         // self.view.backgroundColor = .clear
+        internet = Reachability.init()
+       
+        
+        filterView.delegate = self
         coachMarksController.dataSource = self
         if !isFirstLaunch{
             self.coachMarksController.start(on: self)
         }
-        syncCard()
         func createButtonUnderBar(title:String)->UIButton{
             let filterButton = UIButton()
-            filterButton.frame = CGRect(x: 40, y: 10, width: 60, height: 30)
+            filterButton.frame = CGRect(x: 40, y: 10, width: 70, height: 30)
             slideView.addSubview(filterButton)
-            let string = NSAttributedString(string: title, attributes: [NSAttributedStringKey.font:UIFont(name: "Farah", size: 20)!,NSAttributedStringKey.foregroundColor:UIColor.gray])
-            filterButton.setAttributedTitle(string, for: .normal)
-           // filterButton.setTitleColor(UIColor.flatGray, for: .normal)
+            filterButton.titleLabel?.font = UIFont(name: "DevanagariSangamMN", size: 19)!
+            //filterButton.titleLabel?.textColor = UIColor.gray
+            filterButton.setTitle(title, for: .normal)
+            filterButton.setTitleColor(UIColor.gray, for: .normal)
             filterButton.layer.cornerRadius = 2
-            filterButton.backgroundColor = .white
+            filterButton.backgroundColor = Constant.Color.blueWhite
             filterButton.layer.shadowOffset = CGSize(width: 0, height: 5)
             filterButton.layer.shadowColor = Constant.Color.darkWhite.cgColor
             filterButton.layer.shadowOpacity = 0.8
@@ -116,7 +133,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         addCardButton.yBottomOffSet = 49
         
         let gl = CAGradientLayer.init()
-        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:100);
+        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:CGFloat(UIDevice.current.Xdistance()) + 60);
         gl.startPoint = CGPoint(x:0, y:0);
         gl.endPoint = CGPoint(x:1, y:1);
         gl.colors = [Constant.Color.blueLeft.cgColor,Constant.Color.blueRight.cgColor]
@@ -130,21 +147,22 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         
         //search Bar
         searchTextView.frame = CGRect(x: 40, y: 80, width: Int(UIScreen.main.bounds.width-80), height: 40)
+        searchTextView.center.y = gl.frame.origin.y + gl.frame.height
         self.view.addSubview(searchTextView)
         self.view.bringSubview(toFront: searchTextView)
-        searchTextView.searchTextView.addTarget(self, action: #selector(textViewChange), for: .allEditingEvents)
+       // searchTextView.searchTextView.addTarget(self, action: #selector(textViewChange), for: .allEditingEvents)
         searchTextView.searchTextView.delegate = self
         //slideView
         slideView = UIView(frame: CGRect(x: 0, y:0, width: UIScreen.main.bounds.width, height: 50))
         slideView.backgroundColor = .white
        
         //filter Button
-        let filterButton = createButtonUnderBar(title: "Filter")
-        let syncButton = createButtonUnderBar(title: "Sync")
-        filterButton.frame = CGRect(x: 40, y: 30, width: 60, height: 30)
+        filterButton = createButtonUnderBar(title: "Filter")
+        syncButton = createButtonUnderBar(title: "Sync")
+        filterButton.frame = CGRect(x: 40, y: 30, width: 70, height: 30)
         filterButton.addTarget(self, action: #selector(showFilter), for: .touchDown)
-        syncButton.frame = CGRect(x: 110, y: 30, width: 60, height: 30)
-        syncButton.addTarget(self, action: #selector(syncCard), for: .touchDown)
+        syncButton.frame = CGRect(x: 110, y: 30, width: 70, height: 30)
+        syncButton.addTarget(self, action: #selector(ifCanSync), for: .touchDown)
         slideView.addSubview(filterButton)
         slideView.addSubview(syncButton)
         
@@ -168,6 +186,12 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         //filterView
         filterView.isHidden = true
         self.view.addSubview(filterView)
+        let autoSync = UserDefaults.standard.bool(forKey: Constant.Configuration.Cloud.AUTO_SYNC)
+        if isFirstLaunch && autoSync && isPremium(){
+            ifCanSync()
+        }else{
+            loadCard()
+        }
     }
     
     @objc private func showFilter(){
@@ -214,26 +238,16 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
       
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        loadCard()
-        return true;
-    }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
-       
-       
+        loadCard()
     }
     
-    @objc func textViewChange(_ sender:UITextView){
-        
-    }
-    
-    
-    func reload(){
-        
-    }
     
     func loadCard(){
+        loadCard(constaints: [Constraint]())
+    }
+    
+    private func loadCard(constaints:[Constraint]){
         let manager = FileManager.default
         var cardList:[Card]!
         var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -244,25 +258,38 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
                 cardList = [Card]()
             }
         }
+        
+        let sorted = cardList.sorted { (card1, card2) -> Bool in
+            let time1 = card1.getTime()
+            let time2 = card2.getTime()
+            let date1 = NSDate(timeIntervalSince1970: TimeInterval(time1)!)
+            let date2 = NSDate(timeIntervalSince1970: TimeInterval(time2)!)
+            if date1.compare(date2 as Date) == ComparisonResult.orderedAscending{
+                return false
+            }else{
+                return true
+            }
+        }
+        
         let textField = searchTextView.searchTextView
         let string = NSString(string: textField.text!.lowercased())
         if string.contains(" ") && String(string)[textField.text!.startIndex] != " " && String(string)[textField.text!.index(textField.text!.endIndex, offsetBy: -1)] != " "{
             let components = string.components(separatedBy: " ")
-            let parsedCardList = SearchEngine.loadCards(cards: cardList, keyWords: components)
-            loadCardWithConstaints(parsedCardList, [Constraint]())
+            let parsedCardList = SearchEngine.loadCards(cards: sorted, keyWords: components)
+            loadCardWithConstaints(parsedCardList, constaints)
         }else if string != ""{
             var keyword = [String]()
             keyword.append(textField.text!)
-            let parsedCardList = SearchEngine.loadCards(cards: cardList, keyWords: keyword)
-            loadCardWithConstaints(parsedCardList, [Constraint]())
+            let parsedCardList = SearchEngine.loadCards(cards: sorted, keyWords: keyword)
+            loadCardWithConstaints(parsedCardList, constaints)
         }else if string == ""{
-            loadCardWithConstaints(cardList, [Constraint]())
+            loadCardWithConstaints(sorted                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           , constaints)
         }
     }
     
-   
     
-    func loadCardWithConstaints(_ cardList:[Card],_ constaints:[Constraint]){
+    
+    private func loadCardWithConstaints(_ cardList:[Card],_ constaints:[Constraint]){
         let contentOffSetY = scrollView.contentOffset.y
         scrollView.contentSize = CGSize(width:self.view.bounds.width,height:scrollView.frame.height + 20)
         for subview in scrollView.subviews{
@@ -286,14 +313,31 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         
             var filterdCardList = [Card]()
             for card in cardList{
-                if colorConstaints.contains(card.color!) && tagConstaints.isEmpty{
+                var ifContainsColor = false
+                for color in colorConstaints{
+                    if color.isEqual(getRightColorFromLeftGradient(left: card.color!)){
+                        ifContainsColor = true
+                    }
+                }
+                if !colorConstaints.isEmpty && ifContainsColor && tagConstaints.isEmpty{
                     filterdCardList.append(card)
-                }else if colorConstaints.contains(card.color!) && !tagConstaints.isEmpty{
+                }else if colorConstaints.isEmpty && !tagConstaints.isEmpty{
                     for tagConstriant in tagConstaints{
                         if card.getTag().contains(tagConstriant){
                             filterdCardList.append(card)
                             break
                         }
+                    }
+                }else if(!tagConstaints.isEmpty && !colorConstaints.isEmpty){
+                    var ifContainsTag = false
+                    for tagConstriant in tagConstaints{
+                        if card.getTag().contains(tagConstriant){
+                           ifContainsTag = true
+                            break
+                        }
+                    }
+                    if(ifContainsTag && ifContainsColor){
+                        filterdCardList.append(card)
                     }
                 }else if colorConstaints.isEmpty && tagConstaints.isEmpty{
                     filterdCardList.append(card)
@@ -474,8 +518,47 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         self.present(vc, animated: true, completion: nil)
     }
     
+    @objc func ifCanSync(){
+        let syncwithWIFI = UserDefaults.standard.bool(forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
+        if(syncwithWIFI && !(internet.connection == .wifi)){
+            let alertView = SCLAlertView()
+            alertView.addButton("Use Cellular data for once") {
+                self.syncCard()
+            }
+            
+            alertView.addButton("Use Cellular data if present") {
+                UserDefaults.standard.set(false, forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
+                self.syncCard()
+            }
+            alertView.showWarning("WIFI Setting", subTitle: "Your setting allow sync only with wifi presents.")
+        }else{
+            syncCard()
+        }
+    }
+    
     @objc func syncCard(){
-        sync { (bool) in
+        if(!isPremium()){
+            let vc = PremiumController()
+            self.present(vc, animated: true, completion: nil)
+            return
+        }
+        self.isSynced = true
+        let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
+        rotateAnimation.fromValue = 0.0
+        rotateAnimation.toValue = CGFloat(Double.pi * 2.0)
+        rotateAnimation.duration = 10
+        syncButton.setTitle("", for: .normal)
+        syncButton.setFAIcon(icon: .FASpinner, iconSize: 20, forState: .normal)
+        syncButton.setTitleColor(.gray, for: .normal)
+        syncButton.titleLabel!.layer.add(rotateAnimation, forKey: "rotate")
+        syncButton.isEnabled = false
+        sync { [unowned self] (bool) in
+            DispatchQueue.main.async {
+                self.syncButton.titleLabel!.layer.removeAllAnimations()
+                self.syncButton.setTitle("Sync", for: .normal)
+                self.syncButton.titleLabel?.font = UIFont(name: "Farah", size: 18)
+                self.syncButton.isEnabled = true
+            }
             if bool{
                 DispatchQueue.main.async {
                     AlertView.show(success: "Sync Succeed.")
@@ -489,11 +572,26 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         }
     }
     
-    
 }
 
 extension CardViewController:CardEditorDelegate{
     func cardEditor(DidFinishSaveCard card: Card) {
+        loadCard()
+    }
+}
+
+extension CardViewController:FilterViewDelegate{
+    func filterViewFilterClicked(constraints:[Constraint]) {
+        loadCard(constaints: constraints)
+        filterButton.backgroundColor = Constant.Color.blueRight
+        filterButton.setTitleColor(.white, for: .normal)
+    }
+    
+    
+    
+    func filterViewDidExit() {
+        filterButton.backgroundColor = Constant.Color.blueWhite
+        filterButton.setTitleColor(UIColor.gray, for: .normal)
         loadCard()
     }
 }

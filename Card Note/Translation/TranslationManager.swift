@@ -32,7 +32,7 @@ class TranslationManager{
             if error == nil && data != nil{
                 do{
                     let json = try JSON(data: data!)
-                    print(String(data: data!, encoding: String.Encoding.utf8))
+                    print(String(data: data!, encoding: String.Encoding.utf8) as Any)
                     let list = json["data"]
                     let translations = list["translations"].arrayValue
                     if translations.count > 0{

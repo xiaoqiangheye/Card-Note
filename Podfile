@@ -6,26 +6,17 @@ target 'Card Note' do
   use_frameworks!
 pod 'Alamofire', '~> 4.7'
 pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
-pod 'Font-Awesome-Swift', '~> 1.7.2'
-pod 'QCloudCOSXML'
-pod 'Spring', :git => 'https://github.com/MengTo/Spring.git'
+pod 'Font-Awesome-Swift'
+pod 'Spring'
 pod 'SwiftMessages'
 pod 'Hero', '~> 1.2.0'
 pod 'SCLAlertView'
-pod 'AMap2DMap'
-pod 'AMapSearch'
-pod 'AMapLocation'
 pod 'RAMPaperSwitch'
 pod 'SwiftyStoreKit'
-pod 'Mapbox-iOS-SDK', '~> 4.2'
-pod 'MapboxGeocoder.swift', '~> 0.9'
 pod 'Instructions', '~> 1.2.0'
 pod 'SwiftyJSON'
-pod 'JTAppleCalendar'
-pod 'BaiduMapKit'
-pod 'BMKLocationKit'
+pod 'ReachabilitySwift'
   # Pods for Card Note
-
 
   target 'Card NoteTests' do
     inherit! :search_paths

@@ -8,9 +8,10 @@
 
 import Foundation
 import UIKit
-import JTAppleCalendar
-@objc protocol FilterViewDelegate{
-    @objc optional func filterViewFilterClicked()
+
+@objc protocol FilterViewDelegate:NSObjectProtocol{
+    @objc func filterViewFilterClicked(constraints:[Constraint])
+    @objc optional func filterViewDidExit()
 }
 
 class FilterView:UIView,ColorViewDelegate,TagInputViewDelegate{
@@ -42,6 +43,9 @@ class FilterView:UIView,ColorViewDelegate,TagInputViewDelegate{
     private func decorate(){
         self.layer.cornerRadius = 20
         self.backgroundColor = .white
+        self.layer.shadowColor = UIColor.gray.cgColor
+        self.layer.shadowOffset = CGSize(width: 0, height: 5)
+        self.layer.shadowOpacity = 0.5
         
         //exit
         let exit = UIButton(frame: CGRect(x: self.bounds.width - 50, y: 0, width: 50, height: 50))
@@ -82,22 +86,40 @@ class FilterView:UIView,ColorViewDelegate,TagInputViewDelegate{
         self.addSubview(tag)
         
         //filter
-        let filter = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        let filter = UIButton(frame: CGRect(x: 0, y: 250, width: 50, height: 50))
         filter.backgroundColor = Constant.Color.blueRight
         filter.setFAIcon(icon: .FASearch, iconSize: 30, forState: .normal)
         filter.addTarget(self, action: #selector(filterClicked), for: .touchDown)
+        filter.setTitleColor(.white, for: .normal)
+        filter.center.x = self.bounds.width/2
+        filter.layer.cornerRadius = 25
+        self.addSubview(filter)
     }
     
     @objc private func filterClicked(){
-        hide()
-        if delegate != nil{
-            delegate?.filterViewFilterClicked?()
+        var constraints = [Constraint]()
+        for color in colors{
+            let constraint = Constraint(.color, color)
+            constraints.append(constraint)
         }
-    
+        
+        for tag in tags{
+            let constraint = Constraint(.tag, tag)
+            constraints.append(constraint)
+        }
+        
+        if delegate != nil{
+            delegate?.filterViewFilterClicked(constraints: constraints)
+        }
+        
+        self.isHidden = true
     }
     
     @objc private func hide(){
         self.isHidden = true
+        if (delegate != nil){
+            delegate?.filterViewDidExit!()
+        }
     }
     
     private func addColorView(color:UIColor)->ColorView{
@@ -106,7 +128,7 @@ class FilterView:UIView,ColorViewDelegate,TagInputViewDelegate{
         colorView.layer.shadowColor = Constant.Color.translusentGray.cgColor
         colorView.layer.shadowOpacity = 0.5
         colorView.layer.shadowOffset = CGSize(width: 0, height: 5)
-        colors.insert(color)
+        colorView.delegate = self
         return colorView
     }
     
@@ -146,6 +168,10 @@ class FilterView:UIView,ColorViewDelegate,TagInputViewDelegate{
         tags.insert(tag)
     }
     
+    func tagDidFinishRemoving(tag: String) {
+        tags.remove(tag)
+    }
+    
     
 }
 
@@ -153,6 +179,7 @@ class FilterView:UIView,ColorViewDelegate,TagInputViewDelegate{
 class ColorView:UIView{
     var isSelected:Bool = false
     weak var delegate:ColorViewDelegate?
+    
     convenience init(color:UIColor){
         self.init(frame: CGRect(x: 0, y: 0, width: 30, height:30))
         self.backgroundColor = color
@@ -162,12 +189,14 @@ class ColorView:UIView{
         self.addGestureRecognizer(gesture)
     }
     
+    //change the status of the colorview when tapped
     @objc private func colorViewTapped(gesture:UITapGestureRecognizer){
         if gesture.state == .recognized{
            changeStatus()
         }
     }
     
+    //change the status of the color view, will be selected if unslected and vice versa.
     private func changeStatus()
     {
         if isSelected{
@@ -184,6 +213,7 @@ class ColorView:UIView{
             if delegate != nil{delegate?.willBeSelected?(colorView: self)}
         }
     }
+    
     //@param:null
     //select the given colors
     func select(){
@@ -191,6 +221,8 @@ class ColorView:UIView{
     }
     
     //diselect the given colors
+    //@param:color
+    //select the given color
     func diSelect(color:UIColor){
         changeStatus()
     }

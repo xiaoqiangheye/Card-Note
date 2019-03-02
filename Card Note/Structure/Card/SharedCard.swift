@@ -27,14 +27,8 @@ class SharedCard:Card{
         self.username = username
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
-        self.init(coder: aDecoder)
-        
-        //fatalError("init(coder:) has not been implemented")
-    }
-    
-    required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

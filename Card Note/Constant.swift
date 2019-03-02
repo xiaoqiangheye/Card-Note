@@ -66,6 +66,7 @@ class Constant{
         static let greenLeft = UIColor(red:68/255.0,green:227/255.0,blue:171/255.0,alpha:1)
         static let greenRight = UIColor(red:59/255.0,green:218/255.0,blue:195/255.0,alpha:1)
         static let blueWhite = UIColor(red:250/255, green: 250/255, blue: 255/255, alpha: 1)
+        static let translusentBlack = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.7)
     }
     
     struct Key{
@@ -75,5 +76,8 @@ class Constant{
         static let loggedEmail = "loggedEmail"
         static let loggedUsername = "username"
         static let loggedID = "id"
+        static let OCRTrial = "ocrtrial"
+        static let TranslateTrial = "transtrial"
+        static let VoiceTrial = "voicetrial"
     }
 }

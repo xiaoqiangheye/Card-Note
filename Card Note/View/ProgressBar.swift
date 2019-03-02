@@ -39,36 +39,33 @@ class ProgressBar:UIProgressView,UIGestureRecognizerDelegate{
     
     
     @objc private func panned(gesture:UIPanGestureRecognizer){
+        if delegate != nil{
+            delegate?.progressBar!(panned: self)
+        }
+        
         if gesture.state == .changed{
             let transition = gesture.translation(in: self)
             if slideButton.center.x < self.frame.width && slideButton.center.x > 0{
             slideButton.center.x += transition.x
-            let percent = slideButton.center.x/self.frame.width
-            self.setProgress(Float(percent), animated: false)
-                if delegate != nil{
-                    delegate?.progressBar?(didChangeProgress: self.progress)
-                }
+            gesture.setTranslation(CGPoint.zero, in: self)
             }else if slideButton.center.x == 0 && transition.x > 0{
             slideButton.center.x += transition.x
-            let percent = slideButton.center.x/self.frame.width
-            self.setProgress(Float(percent), animated: false)
-                if delegate != nil{
-                    delegate?.progressBar?(didChangeProgress: self.progress)
-                }
+            gesture.setTranslation(CGPoint.zero, in: self)
             }else if slideButton.center.x == self.frame.width && transition.x < 0{
             slideButton.center.x += transition.x
-            let percent = slideButton.center.x/self.frame.width
-            self.setProgress(Float(percent), animated: false)
-                if delegate != nil{
-                    delegate?.progressBar?(didChangeProgress: self.progress)
-                }
-            }
             gesture.setTranslation(CGPoint.zero, in: self)
+            }
         }else if gesture.state == .ended{
             if slideButton.center.x < 0{
                 slideButton.frame.origin.x = 0
             }else if slideButton.center.x > self.frame.width{
                 slideButton.frame.origin.x = self.frame.width - slideButton.frame.width
+            }
+            
+            let percent = slideButton.center.x/self.frame.width
+            self.setProgress(Float(percent), animated: false)
+            if delegate != nil{
+                delegate?.progressBar?(didChangeProgress: self.progress)
             }
         }
     }
@@ -89,4 +86,5 @@ class ProgressBar:UIProgressView,UIGestureRecognizerDelegate{
 
 @objc protocol ProGressBarDelegate:NSObjectProtocol{
     @objc optional func progressBar(didChangeProgress progress:Float)
+    @objc optional func progressBar(panned progressBar:ProgressBar)
 }

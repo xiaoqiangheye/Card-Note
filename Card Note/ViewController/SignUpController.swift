@@ -88,7 +88,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         let nsValue = userinfo.object(forKey: UIKeyboardFrameEndUserInfoKey)
         let keyboardRec = (nsValue as AnyObject).cgRectValue
         let height = keyboardRec?.size.height
-        guard let window = UIApplication.shared.keyWindow else {
+        guard let _ = UIApplication.shared.keyWindow else {
             return
         }
         for view in self.view.subviews{
@@ -103,11 +103,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
     
     @objc func keyboadWillExit(aNotification:NSNotification){
         print("keyBoardExit")
-        let userinfo: NSDictionary = aNotification.userInfo! as NSDictionary
-        let nsValue = userinfo.object(forKey: UIKeyboardFrameEndUserInfoKey)
-        let keyboardRec = (nsValue as AnyObject).cgRectValue
-        let height = keyboardRec?.size.height
-        guard let window = UIApplication.shared.keyWindow else {
+        guard UIApplication.shared.keyWindow != nil else {
             return
         }
          continueButton.frame.origin = CGPoint(x: self.view.frame.width - 50, y: self.view.frame.height - 50)
@@ -182,7 +178,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                                         cardArray.append(card!)
                                     }
                                 }
-                                var cardCopiedArray = cardArray
+                            
                                 //get local cards
                                 let manager = FileManager.default
                                 var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -190,7 +186,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                                 url?.appendPathComponent("card.txt")
                                 
                                 
-                                let data = try! Data(contentsOf: url!)
+                                
                                 if let dateRead = try? Data.init(contentsOf: url!){
                                     var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
                                     var cardCopiedList = cardList
@@ -206,7 +202,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                                                 let dateIn = formatter.date(from: interNetCard.getTime())
                                                 let datelo = formatter.date(from: localCard.getTime())
-                                                var result:ComparisonResult = (dateIn?.compare(datelo!))!
+                                                let result:ComparisonResult = (dateIn?.compare(datelo!))!
                                                 if result == ComparisonResult.orderedDescending{
                                                     //update the localCard if Internet is more recent
                                                     cardCopiedList![j] = interNetCard
@@ -232,7 +228,7 @@ class SignUpController:UIViewController,UITextFieldDelegate{
                                     //add rest InterNetCard to local
                                     cardCopiedList?.append(contentsOf:cardArray)
                                     
-                                    let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardCopiedList)
+                                    let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardCopiedList as Any)
                                     do{
                                         try datawrite.write(to: url!)
                                     }catch{
@@ -319,7 +315,6 @@ class SignUpController:UIViewController,UITextFieldDelegate{
         //VerificationOfAuthCode
         let auth = authCode.text
         if auth != nil{
-            print(auth)
             signUpAuthCode = auth!
         User.verifyEmail(auth: auth!) { (json:JSON?) in
             if json != nil{

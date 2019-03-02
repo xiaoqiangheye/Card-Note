@@ -182,7 +182,7 @@ class RecordManager {
     static func play(filePath:String)->Bool
     {
         do {
-            var player = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: filePath))
+            let player = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: filePath))
             print("歌曲长度：\(player.duration)")
             player.prepareToPlay()
             player.play()
@@ -195,10 +195,10 @@ class RecordManager {
     
     func playWithAVPlayer()->Bool{
         do{
-            var player = AVPlayer(url: URL(fileURLWithPath: file_path!))
+            let player = AVPlayer(url: URL(fileURLWithPath: file_path!))
             player.play()
             return true
-        }catch let err{
+        }catch _{
             return false
         }
     }

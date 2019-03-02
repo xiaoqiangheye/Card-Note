@@ -23,6 +23,33 @@ class TextCard:Card{
     super.init(title: "", tag: nil, description: "", id: id, definition: "", color: nil, cardType: CardType.text.rawValue, modifytime: "")
     }
     
+    override func getText()->NSAttributedString?{
+        var url = Constant.Configuration.url.attributedText
+        url.appendPathComponent(self.getId() + ".rtf")
+        do{
+            let data = try Data(contentsOf: url)
+            var ducumentAttribute:NSDictionary?
+            let attr = try NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: &ducumentAttribute)
+            return attr
+        }catch let error{
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    override func setText(attr:NSAttributedString){
+        var url = Constant.Configuration.url.attributedText
+        url.appendPathComponent(self.getId() + ".rtf")
+        let range = NSRange(location: 0, length: attr.length)
+        do{
+            let data = try attr.data(from: range, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
+            try data.write(to: url)
+        }catch let error{
+            print(error.localizedDescription)
+        }
+        
+    }
+    
   
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

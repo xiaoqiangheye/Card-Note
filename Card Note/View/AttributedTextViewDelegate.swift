@@ -1,3 +1,4 @@
+
 //
 //  AttributedTextViewDelegate.swift
 //  Card Note
@@ -7,7 +8,7 @@
 //
 
 import Foundation
-
+import UIKit
 @objc protocol AttributedTextViewDelegate{
     @objc optional func selectFont(height:CGFloat)
     @objc optional func selectFontColor()

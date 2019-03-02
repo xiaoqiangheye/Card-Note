@@ -1,30 +1,13 @@
 PODS:
   - Alamofire (4.7.2)
-  - AMap2DMap (5.6.0):
-    - AMapFoundation (~> 1.4)
-  - AMapFoundation (1.5.0)
-  - AMapLocation (2.6.1):
-    - AMapFoundation (~> 1.4)
-  - AMapSearch (6.1.0):
-    - AMapFoundation (~> 1.4)
-  - BaiduMapKit (4.2.0)
-  - BMKLocationKit (1.2.1)
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
   - Font-Awesome-Swift (1.7.2)
   - Hero (1.2.0)
   - Instructions (1.2.0)
-  - JTAppleCalendar (7.1.5)
-  - Mapbox-iOS-SDK (4.2.0)
-  - MapboxGeocoder.swift (0.9.0)
-  - QCloudCore (5.4.3)
-  - QCloudCOSXML (5.4.3):
-    - QCloudCore (= 5.4.3)
-    - QCloudCOSXML/Transfer (= 5.4.3)
-  - QCloudCOSXML/Transfer (5.4.3):
-    - QCloudCore (= 5.4.3)
   - RAMPaperSwitch (2.1.0)
+  - ReachabilitySwift (4.3.0)
   - SCLAlertView (0.8)
   - Spring (1.0.5)
   - SwiftMessages (4.1.2)
@@ -33,22 +16,14 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
-  - AMap2DMap
-  - AMapLocation
-  - AMapSearch
-  - BaiduMapKit
-  - BMKLocationKit
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
-  - Font-Awesome-Swift (~> 1.7.2)
+  - Font-Awesome-Swift
   - Hero (~> 1.2.0)
   - Instructions (~> 1.2.0)
-  - JTAppleCalendar
-  - Mapbox-iOS-SDK (~> 4.2)
-  - MapboxGeocoder.swift (~> 0.9)
-  - QCloudCOSXML
   - RAMPaperSwitch
+  - ReachabilitySwift
   - SCLAlertView
-  - Spring (from `https://github.com/MengTo/Spring.git`)
+  - Spring
   - SwiftMessages
   - SwiftyJSON
   - SwiftyStoreKit
@@ -56,22 +31,13 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
-    - AMap2DMap
-    - AMapFoundation
-    - AMapLocation
-    - AMapSearch
-    - BaiduMapKit
-    - BMKLocationKit
     - Font-Awesome-Swift
     - Hero
     - Instructions
-    - JTAppleCalendar
-    - Mapbox-iOS-SDK
-    - MapboxGeocoder.swift
-    - QCloudCore
-    - QCloudCOSXML
     - RAMPaperSwitch
+    - ReachabilitySwift
     - SCLAlertView
+    - Spring
     - SwiftMessages
     - SwiftyJSON
     - SwiftyStoreKit
@@ -79,41 +45,26 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   ChameleonFramework:
     :git: https://github.com/ViccAlexander/Chameleon.git
-  Spring:
-    :git: https://github.com/MengTo/Spring.git
 
 CHECKOUT OPTIONS:
   ChameleonFramework:
     :commit: 6dd284bde21ea2e7f9fd89bc36f40df16e16369d
     :git: https://github.com/ViccAlexander/Chameleon.git
-  Spring:
-    :commit: c540239f3590bbaf4a35c3959c329dd5ed4e3eee
-    :git: https://github.com/MengTo/Spring.git
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
-  AMap2DMap: cf0bfd6ae97951b55cc061903b814f924ba6c221
-  AMapFoundation: 04fc43736ed63bed15d502e20f74ded399991f1e
-  AMapLocation: cf024b53dc03663efb4ea4bcce27d4cce58bb97a
-  AMapSearch: e3f96bd0681abe70abba303709a1a05625a8f76c
-  BaiduMapKit: b6a8f31b3d2e4e5cad4084512a0d9a3878638272
-  BMKLocationKit: c0fd588904738a6865e9311ed445c38452039007
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   Font-Awesome-Swift: 83ab9db365379ee6025167cec67bdc5d3226a811
   Hero: 33dadf2cd1c98af71e213dcbc2902e6e03622a4e
   Instructions: 763c2452bd78e05d8f969a21c1cbc3c07deef33a
-  JTAppleCalendar: 2d4f974f9f3c8b4964d51ca1f6e004883c031fbe
-  Mapbox-iOS-SDK: 706d52e3ad095e16944d9643f37d5a97627f6c19
-  MapboxGeocoder.swift: 66d2e5e452c5de6b65ea9b01be436d1c5f100b7e
-  QCloudCore: 91bff302e250f7f0066bcca8d9e5c3f3b75e9f78
-  QCloudCOSXML: 45d66cd7ceb4ad64d4411f882996b77356ebbb76
   RAMPaperSwitch: ef08af0400a040c9850e09253280deb77510becb
+  ReachabilitySwift: 408477d1b6ed9779dba301953171e017c31241f3
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
-  Spring: 3c7666eccefdeb87140008dc81043f89f8dbb787
+  Spring: 17901566c8ecf3a1327902b940406c64512f9bb1
   SwiftMessages: d81f48c1f8b6bc1dbebdfffe11226f0344f937ca
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   SwiftyStoreKit: b7563505440a68c9d9fa70bc43d8a97015519409
 
-PODFILE CHECKSUM: d6b45d80adf69fa00c5244342f23f89d632067fb
+PODFILE CHECKSUM: 5d453a7bfd5ffc309f5e28841d3408e5be537bf3
 
 COCOAPODS: 1.5.3

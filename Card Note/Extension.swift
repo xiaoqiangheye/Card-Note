@@ -62,18 +62,18 @@ extension UIColor{
         var cString = hex.trimmingCharacters(in:CharacterSet.whitespacesAndNewlines).uppercased()
         if (cString.hasPrefix("#")) {
             let index = cString.index(cString.startIndex, offsetBy:1)
-            cString = cString.substring(from: index)
+            cString = String(cString[index...])
         }
-        if (cString.characters.count != 6) {
+        if (cString.count != 6) {
             return UIColor.red
         }
         let rIndex = cString.index(cString.startIndex, offsetBy: 2)
-        let rString = cString.substring(to: rIndex)
-        let otherString = cString.substring(from: rIndex)
+        let rString = String(cString[..<rIndex])
+        let otherString = String(cString[rIndex...])
         let gIndex = otherString.index(otherString.startIndex, offsetBy: 2)
-        let gString = otherString.substring(to: gIndex)
+        let gString = String(otherString[..<gIndex])
         let bIndex = cString.index(cString.endIndex, offsetBy: -2)
-        let bString = cString.substring(from: bIndex)
+        let bString = String(cString[bIndex...])
         var r:CUnsignedInt = 0, g:CUnsignedInt = 0, b:CUnsignedInt = 0;
         Scanner(string: rString).scanHexInt32(&r)
         Scanner(string: gString).scanHexInt32(&g)
@@ -217,173 +217,84 @@ func sync(completionHandler:@escaping (Bool)->()){
         }
     }
     
-  
-    Cloud.queryAllCard { (cards) in
-        //get local cards
-        if let dateRead = try? Data.init(contentsOf: url!){
-            var locals = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-            var cardCopiedList = locals
-            if locals == nil{
-                locals = [Card]()
+    
+        Cloud.queryTags { (tags) in
+            if tags != nil{
+                let localtags = UserDefaults.standard.array(forKey: Constant.Key.Tags) as! [String]
+                let u = tags?.union(localtags)
+                let arrayTags = u?.sorted()
+                UserDefaults.standard.set(arrayTags, forKey: Constant.Key.Tags)
             }
-            
-            var mutableCards = cards
-            var i = 0
-            for card in mutableCards{
-                var j = 0
-                var removed:Bool = false
+        }
+    
+    
+    
+   
+        Cloud.queryAllCard { (cards) in
+            //get local cards
+            if let dateRead = try? Data.init(contentsOf: url!){
+                var locals = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
+                var cardCopiedList = Dictionary<String,Card>()
+                if locals == nil{
+                    locals = [Card]()
+                }
+                var localMap = Dictionary<String,Card>()
                 for local in locals!{
-                    if card.getId() == local.getId(){
+                    localMap[local.getId()] = local
+                    cardCopiedList[local.getId()] = local
+                }
+                
+                let mutableCards = cards
+                for card in mutableCards{
+                    if localMap.keys.contains(card.getId()){
+                        let local = localMap[card.getId()]
                         let formatter = DateFormatter()
                         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                         let dateIn = NSDate(timeIntervalSince1970: Double(card.getTime())!)
-                        let datelo = NSDate(timeIntervalSince1970: Double(local.getTime())!)
+                        let datelo = NSDate(timeIntervalSince1970: Double(local!.getTime())!)
                         let result:ComparisonResult = (dateIn.compare(datelo as Date))
                         if result == ComparisonResult.orderedDescending{
                             //update the localCard if Internet is more recent
-                            cardCopiedList![j] = card
+                            cardCopiedList[card.getId()] = card
                         }else if result == ComparisonResult.orderedAscending{
                             //update the internetCard if local is more recent
                             Cloud.updateCard(card: card, completionHandler: { (bool) in
                                 if !bool{completionHandler(false)}
                             })
                         }
-                        mutableCards.remove(at: i)
-                        locals!.remove(at: j)
-                        removed = true
-                    }
-                    if !removed{
-                        j+=1
+                        localMap.removeValue(forKey: card.getId())
+                    }else{
+                        cardCopiedList[card.getId()] = card
                     }
                 }
-                if !removed{
-                    i+=1
+                
+                let values = cardCopiedList.values
+                var cardList = [Card]()
+                for value in values{
+                    cardList.append(value)
                 }
-            }
-            
-            //add rest InterNetCard to local
-            cardCopiedList?.append(contentsOf:mutableCards)
-            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardCopiedList!)
-            do{
-                try datawrite.write(to: url!)
-            }catch{
-                print("fail to add")
-                completionHandler(false)
-            }
-            //add local Card to InterNet
-            if(!(locals?.isEmpty)!){
-            Cloud.updateCards(cards: locals!, completionHandler: { (bool) in
-                completionHandler(bool)
-                })
-            }else{
-                completionHandler(true)
+                
+                let datawrite = NSKeyedArchiver.archivedData(withRootObject: cardList)
+                
+                do{
+                    try datawrite.write(to: url!)
+                }catch{
+                    print("fail to add")
+                    completionHandler(false)
+                }
+                
+                //add local Card to InterNet
+                if(!(localMap.isEmpty)){
+                    Cloud.addCards(cards: localMap.values.shuffled(), completionHandler: { (bool) in
+                        completionHandler(bool)
+                    })
+                }else{
+                    completionHandler(true)
+                }
+                
             }
             
         }
-        
-    }
-    
-   
-    /*deprecated Login/Sign up Function in 8.13.2000
-    User.getUserCards(email: loggedemail, completionHandler: { (json:JSON?) in
-        if json != nil{
-            if !json!["ifSuccess"].boolValue{
-                ifSuccessArray.append(false)
-            }else{
-                ifSuccessArray.append(true)
-                let carddata = json!["card"].arrayValue
-                //get cards from the dataBase
-                var cardArray:[Card] = [Card]()
-                for cardJSON in carddata{
-                    print("card" + cardJSON.rawString()!)
-                    let card = CardParser.JSONToCard(cardJSON.rawString()!)
-                    if card != nil{
-                        cardArray.append(card!)
-                    }
-                }
-                //get local cards
-                let manager = FileManager.default
-                var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-                url?.appendPathComponent(loggedID)
-                url?.appendPathComponent("card.txt")
-                if let dateRead = try? Data.init(contentsOf: url!){
-                    var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-                    var cardCopiedList = cardList
-                    if cardList == nil{
-                        cardList = [Card]()
-                    }
-                    var i = 0
-                    for interNetCard in cardArray{
-                        var j = 0
-                        var removed:Bool = false
-                        for localCard in cardList!{
-                            
-                            if interNetCard.getId() == localCard.getId(){
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                let dateIn = formatter.date(from: interNetCard.getTime())
-                                let datelo = formatter.date(from: localCard.getTime())
-                                let result:ComparisonResult = (dateIn?.compare(datelo!))!
-                                if result == ComparisonResult.orderedDescending{
-                                    //update the localCard if Internet is more recent
-                                    cardCopiedList![j] = interNetCard
-                                }else if result == ComparisonResult.orderedAscending{
-                                    //update the internetCard if local is more recent
-                                    User.updateCard(card: localCard, email: loggedemail, completionHandler: { (json:JSON?) in
-                                        if json != nil{
-                                            let ifSuccess = json!["ifSuccess"].boolValue
-                                            if ifSuccess{
-                                                print("Success to update card")
-                                                ifSuccessArray.append(true)
-                                            }else{
-                                                ifSuccessArray.append(false)
-                                            }
-                                        }
-                                        
-                                    })
-                                }
-                                cardArray.remove(at: i)
-                                cardList?.remove(at: j)
-                                removed = true
-                            }
-                            if !removed{
-                                j+=1
-                            }
-                        }
-                        if !removed{
-                            i+=1
-                        }
-                    }
-                    
-                    //add rest InterNetCard to local
-                    cardCopiedList?.append(contentsOf:cardArray)
-                    let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardCopiedList!)
-                    do{
-                        try datawrite.write(to: url!)
-                    }catch{
-                        print("fail to add")
-                        ifSuccessArray.append(false)
-                    }
-                    //add local Card to InterNet
-                    for card in cardList!{
-                        User.addCard(email: loggedemail, card: card, completionHandler: { (json:JSON?) in
-                            if json != nil{
-                                let ifSuccess = json!["ifSuccess"].boolValue
-                                if ifSuccess{
-                                    print("Sync Success")
-                                    ifSuccessArray.append(true)
-                                }else{
-                                    let error = json!["error"].stringValue
-                                    ifSuccessArray.append(false)
-                                }
-                            }
-                        })
-                    }
-                }
-            }
-        }
-    })
- */
     
 }
 
@@ -469,8 +380,6 @@ func imagePerspective(usingCI image:UIImage, inputVertex:[CGPoint])->UIImage?{
     perspectiveC?.setValue(CIVector(cgPoint: inputVertex[2]), forKey: "inputBottomRight")
     perspectiveC?.setValue(CIVector(cgPoint: inputVertex[1]), forKey: "inputBottomLeft")
     
-    
-    let context = CIContext()
     let Oimage = perspectiveC?.outputImage
    // let imageRF = context.createCGImage(Oimage!, from: (Oimage?.extent)!)
     
@@ -623,10 +532,15 @@ extension UIImage{
 
 extension UIView{
     func addBottomLine(){
-            let underLine:UIView = UIView(frame:CGRect(x:0,y:self.frame.size.height-0.5,width:self.frame.size.width,height:0.5))
-            underLine.backgroundColor = Constant.Color.translusentGray
-            self.addSubview(underLine)
-        
+        let underLine:UIView = UIView(frame:CGRect(x:0,y:self.frame.size.height-0.5,width:self.frame.size.width,height:0.5))
+        underLine.backgroundColor = Constant.Color.translusentGray
+        self.addSubview(underLine)
+    }
+    
+    func addBottomLine(width:CGFloat,color:UIColor){
+        let underLine:UIView = UIView(frame:CGRect(x:0,y:self.frame.size.height-width,width:self.frame.size.width,height:width))
+        underLine.backgroundColor = color
+        self.addSubview(underLine)
     }
 }
 
@@ -652,6 +566,26 @@ extension UIViewController {
             return currentViewController(base: presented)
         }
         return base
+    }
+}
+
+extension UIColor {
+    static func isEqual(l: UIColor, r: UIColor) -> Bool {
+        var r1: CGFloat = 0
+        var g1: CGFloat = 0
+        var b1: CGFloat = 0
+        var a1: CGFloat = 0
+        l.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
+        var r2: CGFloat = 0
+        var g2: CGFloat = 0
+        var b2: CGFloat = 0
+        var a2: CGFloat = 0
+        r.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
+        return r1 == r2 && g1 == g2 && b1 == b2 && a1 == a2
+    }
+    
+    func isEqual(_ color:UIColor)->Bool{
+        return UIColor.isEqual(l:self,r:color)
     }
 }
 

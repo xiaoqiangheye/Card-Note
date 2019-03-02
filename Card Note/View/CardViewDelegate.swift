@@ -19,4 +19,5 @@ import Foundation
     @objc optional func cardView(translate view:CardView,text:String)
     @objc optional func picView(extractText:CardView.PicView)
     @objc optional func voiceView(recognition cardView:CardView.VoiceCardView)
+    @objc optional func movieView(expand videoView:CardView.MovieView)
 }

@@ -10,11 +10,14 @@ import Foundation
 import SwiftyJSON
 import UIKit
 class CardParser{
+    static var queue = OperationQueue()
     class func filter(_ string:String)->String{
-       let string1 = string.replacingOccurrences(of: "\\", with: "\\\\")
-       let string2 = string1.replacingOccurrences(of: "\r", with: "\\r")
-       let string3 = string2.replacingOccurrences(of: "\n", with: "\\n")
-        return string3
+      // let string1 = string.replacingOccurrences(of: "\\", with: "")
+      // let string5 = string4.replacingOccurrences(of: "\b", with: "")
+       let string2 = string.replacingOccurrences(of: "\n", with: "\\n")
+       let string3 = string2.replacingOccurrences(of: "\r", with: "\\r")
+       let string4 = string3.replacingOccurrences(of: "\t", with: "\\t")
+        return string4
     }
     
    
@@ -32,6 +35,7 @@ class CardParser{
     
     class func JSONToCard(_ json:String)->Card?{
         var card:Card!
+        queue.maxConcurrentOperationCount = 1
         do{ 
             let json = try JSON(data: json.data(using: String.Encoding.utf8)!)
             let title = json["title"].stringValue
@@ -62,6 +66,16 @@ class CardParser{
                 }
                 UserDefaults.standard.set(locals, forKey: Constant.Key.Tags)
                 UserDefaults.standard.synchronize()
+                
+                let manager = FileManager.default
+                var url = Constant.Configuration.url.attributedText
+                url.appendPathComponent(card.getId() + "_DEFINITION.rtf")
+                if !manager.fileExists(atPath: url.path){
+                    //download
+                    let opr = Cloud.downloadDefinition(id: card.getId())
+                    queue.addOperation(opr)
+                    queue.waitUntilAllOperationsAreFinished()
+                }
             }else if type == "example"{
                 card = ExampleCard(id: id, title: title)
                 card.setDefinition(definition)
@@ -70,11 +84,9 @@ class CardParser{
                 var url = Constant.Configuration.url.attributedText
                 url.appendPathComponent(card.getId() + ".rtf")
                 if !manager.fileExists(atPath: url.path){
-                    
-                    //download
-                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in
-                        //do nothing
-                    }
+                    let opr = Cloud.downloadAsset(id: card.getId(), type: "TEXT")
+                    queue.addOperation(opr)
+                    queue.waitUntilAllOperationsAreFinished()
                 }
             }else if type == "text"{
                 card = TextCard(id: id)
@@ -83,10 +95,9 @@ class CardParser{
                 var url = Constant.Configuration.url.attributedText
                 url.appendPathComponent(card.getId() + ".rtf")
                 if !manager.fileExists(atPath: url.path){
-                    
-                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in
-                        
-                    }
+                    let opr = Cloud.downloadAsset(id: card.getId(), type: "TEXT")
+                    queue.addOperation(opr)
+                    queue.waitUntilAllOperationsAreFinished()
                 }
             }else if type == "picture"{
                 let manager = FileManager.default
@@ -98,15 +109,17 @@ class CardParser{
                     if image != nil{
                         card = PicCard(image!)
                     }else{
-                    card = PicCard(#imageLiteral(resourceName: "searchBar"))
+                    card = PicCard(#imageLiteral(resourceName: "icon_compass_background@2x.png"))
                     }
                 }else{
                     card = PicCard(#imageLiteral(resourceName: "searchBar"))
-                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in
-                    }
-                    
+                    let opr = Cloud.downloadAsset(id: card.getId(), type: "IMAGE")
+                   
+                    queue.addOperation(opr)
+                    queue.waitUntilAllOperationsAreFinished()
                 }
                 card.setId(id)
+                card.setDescription(description)
                 card.updateTime(modifytime)
                 
             }else if type == "voice"{
@@ -115,12 +128,10 @@ class CardParser{
                 var url = Constant.Configuration.url.Audio
                 url.appendPathComponent(id + ".wav")
                 if !manager.fileExists(atPath:(url.path)){
-                    /* deprecated at May.7th
-                User.getAudio(email: loggedemail, cardID: id, completionHandler: { (path) in
-                    print("get audio success")
-                })
-                    */
-                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in }
+                    let opr = Cloud.downloadAsset(id: card.getId(), type: "AUDIO")
+                    
+                    queue.addOperation(opr)
+                    queue.waitUntilAllOperationsAreFinished()
                 }
                 /*
                 User.downloadAudioUsingQCloud(cardID: id) { (bool, error) in
@@ -134,33 +145,13 @@ class CardParser{
                 }else{
                  (card as! VoiceCard).voiceManager?.state = RecordManager.State.haveRecord
                 }
-            }else if type == "map"{
-                card = MapCard(id: id, formalAddress: json["formalAddress"].stringValue, neighbourAddress: json["neighbourAddress"].stringValue, longitude: CGFloat(json["longitude"].floatValue), latitude: CGFloat(json["latitude"].floatValue))
-                let manager = FileManager.default
-                var url = Constant.Configuration.url.Map
-                url.appendPathComponent(id + ".jpg")
-                if !manager.fileExists(atPath:(url.path)){
-                   /*
-                    User.downloadMapUsingQCloud(cardID: id) { (bool, error) in
-                        if error != nil{
-                            //
-                        }
-                    }
- */
-                    Cloud.downloadAsset(id: card.getId(), type: "TEXT"){_,_ in }
-                }
-                }else if type == "movie"{
-                    card = MovieCard(id: id)
-                    /*
-                    User.downloadMovieUsingQCloud(cardID: id) { (bool, error) in
-                        if error != nil{
-                            //
-                        }
-                    }
- */
-                Cloud.downloadAsset(id: card.getId(), type: "MOVIE"){_,_ in }
-                }
-          
+            }else if type == "movie"{
+                card = MovieCard(id: id)
+                let opr = Cloud.downloadAsset(id: card.getId(), type: "VIDEO")
+                queue.addOperation(opr)
+                queue.waitUntilAllOperationsAreFinished()
+            }
+            
             let subCardsArray = json["subcard"].array
             if subCardsArray != nil{
             var subcards:[Card] = [Card]()
@@ -171,6 +162,7 @@ class CardParser{
             }
                 card.addChildNotes(subcards)
             }
+            queue.waitUntilAllOperationsAreFinished()
         return card
     }catch let error{
         print(error.localizedDescription)
@@ -214,13 +206,6 @@ class CardParser{
             let voiceCard = (card as! VoiceCard)
             let state = voiceCard.voiceManager?.state.rawValue
             string.append("\"state\":" + "\"" + state! + "\"")
-        }else if card.getType() == "map"{
-            string.append(",")
-            let mapCard = (card as! MapCard)
-            string.append("\"formalAddress\":" + "\"" + mapCard.formalAddress + "\"" + ", ")
-            string.append("\"neighbourAddress\":" + "\"" + mapCard.neibourAddress + "\"" + ", ")
-            string.append("\"longitude\":" + "\"" + "\(mapCard.longitude!)" + "\"" + ", ")
-            string.append("\"latitude\":" + "\"" + "\(mapCard.latitude!)" + "\"")
         }else if card.getType() == Card.CardType.movie.rawValue{
             // do nothing
         }
@@ -250,7 +235,8 @@ class CardParser{
         
         string.append("}")
        // for card.getChilds()
-        let json = JSON(string)
+        let filterd = filter(string)
+        let json = JSON(filterd)
         if json != JSON.null{
         return json.rawString()
         }else{

@@ -155,10 +155,10 @@ extension LoadingView {
         
         //圆1的路径
         let path1 = UIBezierPath.init()
-        path1.addArc(withCenter: otherRoundCenter1, radius: 10, startAngle: -CGFloat(M_PI), endAngle: 0, clockwise: true)
+        path1.addArc(withCenter: otherRoundCenter1, radius: 10, startAngle: -CGFloat(Double.pi), endAngle: 0, clockwise: true)
         
         let path1_1 = UIBezierPath.init()
-        path1_1.addArc(withCenter: otherRoundCenter2, radius: 10, startAngle: -CGFloat(M_PI), endAngle: 0, clockwise: false)
+        path1_1.addArc(withCenter: otherRoundCenter2, radius: 10, startAngle: -CGFloat(Double.pi), endAngle: 0, clockwise: false)
         path1.append(path1_1)
         
         viewMovePathAnim(view: round1, path: path1, time: animTime)
@@ -167,7 +167,7 @@ extension LoadingView {
         
         //添加round2的轨迹
         let path2 = UIBezierPath.init()
-        path2.addArc(withCenter: otherRoundCenter1, radius: 10, startAngle: 0, endAngle: -(CGFloat(M_PI)), clockwise: true)
+        path2.addArc(withCenter: otherRoundCenter1, radius: 10, startAngle: 0, endAngle: -(CGFloat(Double.pi)), clockwise: true)
         //添加round2的轨迹动画
         viewMovePathAnim(view: round2, path: path2, time: animTime)
         //圆2的颜色渐变
@@ -175,7 +175,7 @@ extension LoadingView {
         
         //圆3的路径
         let path3 = UIBezierPath.init()
-        path3.addArc(withCenter: otherRoundCenter2, radius: 10, startAngle: 0, endAngle: -CGFloat(M_PI), clockwise: false)
+        path3.addArc(withCenter: otherRoundCenter2, radius: 10, startAngle: 0, endAngle: -CGFloat(Double.pi), clockwise: false)
         //轨迹动画
         viewMovePathAnim(view: round3, path: path3, time: animTime)
         //颜色动画

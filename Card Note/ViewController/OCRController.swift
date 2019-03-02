@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Font_Awesome_Swift
 import ChameleonFramework
-
+import SCLAlertView
 class Point:UIButton{
     var point:CGPoint
     var superFrame:CGRect
@@ -92,15 +92,15 @@ class OCRController:UIViewController,PointDelegate{
         extractButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         extractButton.backgroundColor = .white
         extractButton.setFAIcon(icon: .FACut, iconSize:30,forState: .normal)
-        extractButton.setTitleColor(Constant.Color.themeColor, for: .normal)
+        extractButton.setTitleColor(.black, for: .normal)
         extractButton.layer.cornerRadius = 25
         extractButton.addTarget(self, action: #selector(extractText), for: .touchDown)
         
         ocrbutton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         ocrbutton.backgroundColor = .white
-        ocrbutton.setImage(UIImage(named: "ocr"), for: .normal)
+        ocrbutton.setFAIcon(icon: .FASearch, iconSize: 30, forState: .normal)
         ocrbutton.imageView?.frame.size = CGSize(width: 30, height: 30)
-        ocrbutton.setTitleColor(.white, for: .normal)
+        ocrbutton.setTitleColor(.black, for: .normal)
         ocrbutton.layer.cornerRadius = 25
         ocrbutton.addTarget(self, action: #selector(recognize), for: .touchDown)
         
@@ -139,7 +139,27 @@ class OCRController:UIViewController,PointDelegate{
     }
     
     @objc func recognize(){
+        if !isPremium(){
+            let trial = UserDefaults.standard.integer(forKey: Constant.Key.OCRTrial)
+            if trial <= 0{
+                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
+                return
+            }else{
+                let view = SCLAlertView()
+                view.addButton("Start") {
+                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.OCRTrial)
+                    self.startRecognize()
+                }
+                
+                
+                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
+            }
+        }
+    }
+    
+    @objc func startRecognize(){
         print("start to recognize")
+        
         let processController = LoadingViewController()
         processController.setAlert("Extracting Text...")
         processController.modalPresentationStyle = .overCurrentContext
@@ -161,7 +181,7 @@ class OCRController:UIViewController,PointDelegate{
                 }
             }else{
                 AlertView.show(alert: "Seems no internet.")
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
             }
         }
     }

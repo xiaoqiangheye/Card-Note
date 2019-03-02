@@ -81,10 +81,5 @@ class AdViewController:UIViewController{
         performSegue(withIdentifier: "main", sender: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.destination.isKind(of: SignUpController.self){
-            (segue.destination as! SignUpController).former = "ad"
-             (segue.destination as! SignUpController).now = "login"
-        }
-    }
+   
 }

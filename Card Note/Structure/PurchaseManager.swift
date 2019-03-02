@@ -30,7 +30,7 @@ class PurchaseManager{
         
         SwiftyStoreKit.purchaseProduct(type.rawValue, quantity: 1, atomically: true) { result in
             switch result {
-            case .success(let product):
+            case .success( _):
                 verifySubscription(type: type)
                 DispatchQueue.main.async {
                     processCV.dismiss(animated: false, completion: nil)
@@ -79,8 +79,22 @@ class PurchaseManager{
                   completionHandler(nil)
             }
             else {
-                print("Error: \(result.error?.localizedDescription)")
                   completionHandler(nil)
+            }
+        }
+    }
+    
+    
+    class func retriveInfos(types:Set<String>, completionHandler:@escaping (Set<SKProduct>?)->()){
+        SwiftyStoreKit.retrieveProductsInfo(types) { (result) in
+            if let _ = result.retrievedProducts.first{
+                completionHandler(result.retrievedProducts)
+            }else if let invalidProductId = result.invalidProductIDs.first {
+                print("Invalid product identifier: \(invalidProductId)")
+                completionHandler(nil)
+            }
+            else {
+                completionHandler(nil)
             }
         }
     }
@@ -91,7 +105,7 @@ class PurchaseManager{
         SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
             switch result {
             case .success(let receipt):
-                var productIds = types
+                let productIds = types
                 // Verify the purchase of a Subscription
                 let purchaseResult = SwiftyStoreKit.verifySubscriptions(
                     ofType: .autoRenewable, // or .nonRenewing (see below)
@@ -134,7 +148,7 @@ class PurchaseManager{
         SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
             switch result {
             case .success(let receipt):
-                var productIds = types
+                let productIds = types
                 // Verify the purchase of a Subscription
                 let purchaseResult = SwiftyStoreKit.verifySubscriptions(
                     ofType: .autoRenewable, // or .nonRenewing (see below)
@@ -163,6 +177,9 @@ class PurchaseManager{
                     UserDefaults.standard.synchronize()
                     print("\(productIds) is expired since \(expiryDate)\n\(items)\n")
                 case .notPurchased:
+                    UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue, forKey: "accountPlan")
+                    Constant.Configuration.AccountPlan = Constant.AccountPlan.basic.rawValue
+                    UserDefaults.standard.synchronize()
                     print("The user has never purchased \(productIds)")
                 }
                 
@@ -209,12 +226,11 @@ class PurchaseManager{
         SwiftyStoreKit.restorePurchases(atomically: true) { results in
             if results.restoreFailedPurchases.count > 0 {
                 print("Restore Failed: \(results.restoreFailedPurchases)")
-            }
-            else if results.restoredPurchases.count > 0 {
+                AlertView.show(alert: "Restore Failed.")
+            }else if results.restoredPurchases.count > 0 {
                 print("Restore Success: \(results.restoredPurchases)")
-                for purchase in results.restoredPurchases{
-                    verifySubscription(type: PurchaseManager.Product(rawValue: purchase.productId)!)
-                }
+                AlertView.show(success:"Restore Succeed!")
+                verifySubscriptions(types: products)
             }
             else {
                 print("Nothing to Restore")

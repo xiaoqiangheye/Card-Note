@@ -18,8 +18,8 @@ import Speech
 class CardView: UIView{
     weak var delegate:CardViewDelegate?
     var card:Card!
-    private var label:UILabel = UILabel()
-    private var labelofDes:UILabel = UILabel()
+    private var label:UILabel!
+    private var labelofDes:UILabel!
     private var _ifTranslated = false
     weak var uimenu:UIMenuController!
     private var observeButton:UIButton!
@@ -41,6 +41,16 @@ class CardView: UIView{
        
     }
     
+    func reload(){
+        Cloud.downloadDefinition(id: card.getId()) { [weak self](bool, error) in
+            if(error == nil && bool){
+                DispatchQueue.main.async {
+                    self?.labelofDes.text = self?.card.getText() == nil ? "" : self?.card.getText()?.string
+                }
+            }
+        }
+    }
+    
     @objc func share(){
             let alertView = SCLAlertView()
             alertView.addButton("Generate Picture") {
@@ -54,10 +64,11 @@ class CardView: UIView{
                         try FileManager.default.createDirectory(at:Constant.Configuration.url.temporary, withIntermediateDirectories: true, attributes: nil)
                         try imageData?.write(to: url)
                         let u:NSURL = NSURL(fileURLWithPath: url.path)
-                        self.docController = UIDocumentInteractionController.init(url: u as URL)
+                        if(self.docController == nil){
+                            self.docController = UIDocumentInteractionController.init(url: u as URL)
+                        }
                         self.docController.uti = "public.jpeg"
                         self.docController.delegate = self
-                        // controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
                         self.docController.presentOpenInMenu(from: CGRect.zero, in: self, animated: true)
                         
                         
@@ -162,6 +173,7 @@ class CardView: UIView{
         var textView = MyTextView()
         var title = UITextField()
         var translateTextView = UITextView()
+        var translateTitle = UITextField()
         var example:String = ""
         
         @objc override func observeMode(){
@@ -174,24 +186,24 @@ class CardView: UIView{
             self.textView.isEditable = true
         }
         
-        /*
-        @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
-                if sender.state == .began{
-                        self.becomeFirstResponder()
-                        uimenu = UIMenuController.shared
-                        uimenu.arrowDirection = .default
-                        uimenu.menuItems = [UIMenuItem(title: "Translate", action: #selector(self.translate)),UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Share", action: #selector(self.share))]
-                        uimenu.setTargetRect(self.bounds, in: self)
-                        uimenu.setMenuVisible(true, animated: true)
-                }
-            
-        }
-       */
         
         @objc override func hideTranslate(){
             translateTextView.removeFromSuperview()
+            translateTitle.removeFromSuperview()
             textView.isHidden = false
+            title.isHidden = false
             _ifTranslated = false
+        }
+        
+        @objc override func menuController(_ sender:UILongPressGestureRecognizer){
+            if sender.state == .began{
+                self.becomeFirstResponder()
+                uimenu = UIMenuController.shared
+                uimenu.arrowDirection = .default
+                uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Share", action: #selector(self.share)),UIMenuItem(title: "Translate", action: #selector(translate)),UIMenuItem(title: "Cancel Translation", action: #selector(hideTranslate))]
+                uimenu.setTargetRect(self.bounds, in: self)
+                uimenu.setMenuVisible(true, animated: true)
+            }
         }
         
 
@@ -201,27 +213,35 @@ class CardView: UIView{
             translateTextView.isEditable = false
             translateTextView.isSelectable = false
             translateTextView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(menuController(_:))))
-            TranslationManager.translate(text: textView.text) { (translate) in
+            
+            translateTitle.textColor = .black
+            translateTitle.backgroundColor = .clear
+            translateTitle.font = UIFont.systemFont(ofSize: 20)
+            translateTitle.text = card.getTitle()
+            translateTitle.textAlignment = .left
+            translateTitle.frame = CGRect(x: 20, y: 0, width:UIScreen.main.bounds.width * 0.8 - 40, height: 50)
+            translateTitle.center.y = 25
+            translateTitle.addBottomLine()
+            
+            TranslationManager.translate(text: textView.text) { [unowned self](translate) in
                 if translate != nil{
                     self.translateTextView.text = translate
                     self.textView.isHidden = true
                     self._ifTranslated = true
                     self.addSubview(self.translateTextView)
                 }else{
-                    let view = MessageView.viewFromNib(layout: .cardView)
-                    // Theme message elements with the warning style.
-                    view.configureTheme(.warning)
-                    
-                    // Add a drop shadow.
-                    view.configureDropShadow()
-                    
-                    // Set message title, body, and icon. Here, we're overriding the default warning
-                    // image with an emoji character.
-                    view.button?.removeFromSuperview()
-                    view.configureContent(title: "Error", body: "Translation Went Wrong.", iconText: "")
-                    
-                    // Show the message.
-                    SwiftMessages.show(view: view)
+                    AlertView.show(alert: "Translation Went Wrong.")
+                }
+            }
+            
+            TranslationManager.translate(text: title.text!) { [unowned self](translate) in
+                if translate != nil{
+                    self.translateTitle.text = translate
+                    self.title.isHidden = true
+                    self._ifTranslated = true
+                    self.addSubview(self.translateTitle)
+                }else{
+                    AlertView.show(alert: "Translation Went Wrong.")
                 }
             }
         }
@@ -321,16 +341,17 @@ class CardView: UIView{
                 shareView.addButton("To Album", action: {
                     ImageManager.writeImageToAlbum(image: self.image.image!, completionhandler: nil)
                 })
-                shareView.showSuccess("Success", subTitle: "Now Let's share!")
+                shareView.showSuccess("Success", subTitle: "Let's share!")
             }
-            alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
+            alertView.showNotice("Sharing", subTitle: "It's nice to share!")
         }
+        
         @objc override func menuController(_ sender: UILongPressGestureRecognizer) {
             if sender.state == .began{
                     self.becomeFirstResponder()
                     uimenu = UIMenuController.shared
                     uimenu.arrowDirection = .default
-                    uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "FootNote", action: #selector(self.addComment)),UIMenuItem(title: "Hide FootNote", action: #selector(self.hideComment)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Extract Text", action: #selector(self.extractText))]
+                uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "FootNote", action: #selector(self.addComment)),UIMenuItem(title: "Hide FootNote", action: #selector(self.hideComment)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Extract Text", action: #selector(self.extractText)),UIMenuItem(title: "Share", action: #selector(self.share))]
                     uimenu.setTargetRect(self.bounds, in: self)
                     uimenu.setMenuVisible(true, animated: true)
                 
@@ -347,6 +368,8 @@ class CardView: UIView{
             }else if (action == #selector(self.extractText)){
                 return true
             }else if action == #selector(self.editMode){
+                return true
+            }else if action == #selector(self.share){
                 return true
             }else{
                 return false
@@ -390,11 +413,15 @@ class CardView: UIView{
                 }
             }
             */
-            Cloud.downloadAsset(id: self.card.getId(), type: "IMAGE") { (bool, error) in
+            Cloud.downloadAsset(id: self.card.getId(), type: "IMAGE") { [weak self](bool, error) in
                 if bool{
                     DispatchQueue.main.async {
-                        self.image.image = UIImage(contentsOfFile: url.path)
-                        print("load picture success, cardId\(self.card.getId())")
+                        if(self != nil){
+                            self?.image.image = UIImage(contentsOfFile: url.path)
+                            print("load picture success, cardId\(self!.card.getId())")
+                        }else{
+                            print("image UI delocated.")
+                        }
                     }
                 }
             }
@@ -497,6 +524,22 @@ class CardView: UIView{
         var conversionButton:UIButton!
         var loadingView:UIView!
         
+        
+        @objc override func reload(){
+            if (card as! VoiceCard).voiceManager?.state == .willRecord || (card as! VoiceCard).voiceManager?.state == .recording{
+                self.controllerButton.setFAIcon(icon: .FAMicrophone, iconSize: 30, forState: .normal)
+                self.progressBar.isHidden = true
+                self.controllerButton.center.x = self.frame.width/2
+                self.controllerButton.center.y = self.frame.height/2
+            }else{
+                self.controllerButton.setFAIcon(icon: .FAPlayCircle, iconSize: 30, forState: .normal)
+                self.controllerButton.frame = CGRect(x:30, y:0, width: 30, height:30)
+                self.controllerButton.center.y = self.frame.height/2
+                self.progressBar.isHidden = false
+                
+            }
+        }
+        
         @objc func loadAudioFile(){
             loadingView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
             let loadingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 20))
@@ -506,28 +549,15 @@ class CardView: UIView{
             loadingLabel.center.x = self.frame.width/2
             loadingView.addSubview(loadingLabel)
             self.addSubview(loadingView)
-            /*
-            User.downloadAudioUsingQCloud(cardID: self.card.getId()) {[unowned self] (bool, error) in
-                if bool{
-                    print("load Audio SuccessFully")
-                    DispatchQueue.main.async {
-                        self.loadingView.removeFromSuperview()
-                    }
-                }else{
-                    
-                }
-            }
-             */
-            
-            Cloud.downloadAsset(id: self.card.getId(), type: "AUDIO") { (bool, error) in
+            Cloud.downloadAsset(id: self.card.getId(), type: "AUDIO") { [weak self](bool, error) in
                 if bool{
                     DispatchQueue.main.async {
-                        self.loadingView.removeFromSuperview()
+                        self?.loadingView.removeFromSuperview()
                     }
                 }else{
                     loadingLabel.text = "Loading failed. Click to reload."
-                    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.loadAudioFile))
-                    self.loadingView.addGestureRecognizer(gesture)
+                    let gesture = UITapGestureRecognizer(target: self, action: #selector(self?.loadAudioFile))
+                    self?.loadingView.addGestureRecognizer(gesture)
                 }
             }
         }
@@ -560,6 +590,7 @@ class CardView: UIView{
                         let u = NSURL(fileURLWithPath: url.path)
                             self.docController = UIDocumentInteractionController.init(url: u as URL)
                             self.docController.delegate = self
+                            self.docController.uti = "public.data"
                             // controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
                             self.docController.presentOpenInMenu(from: CGRect.zero, in: self, animated: true)
                         }else{
@@ -579,13 +610,103 @@ class CardView: UIView{
         func progressBar(didChangeProgress progress: Float) {
            let card =  self.card as! VoiceCard
             if card.voiceManager?.player != nil{
-                if (card.voiceManager?.player?.isPlaying)!{
-                   card.voiceManager?.pause()
-                }
-            card.voiceManager?.player?.currentTime = Double(progress) * (card.voiceManager?.player?.duration)!
-            }else{
-                if (card.voiceManager?.play())!{
                 card.voiceManager?.player?.currentTime = Double(progress) * (card.voiceManager?.player?.duration)!
+                play()
+               // card.voiceManager?.player?.play(atTime: (card.voiceManager?.player?.duration)! * Double(progress))
+            }else{
+                if(play()){
+                   card.voiceManager?.player?.currentTime = Double(progress) * (card.voiceManager?.player?.duration)!
+                }
+            }
+        }
+        
+        func play()->Bool{
+            let card = self.card as! VoiceCard
+            var success = true
+            if card.voiceManager?.player == nil{
+                let play = card.voiceManager?.play()
+                if play!{
+                    adjustRecoderUIWhenRecording()
+                }else{
+                    success = false
+                    AlertView.show(alert: "The file has been damaged.")
+                    card.voiceManager?.state = RecordManager.State.willRecord
+                    self.reload()
+                }
+            }else{
+                card.voiceManager?.continuePlaying()
+                adjustRecoderUIWhenRecording()
+            }
+            return success
+        }
+        
+        func pause(){
+            let card = self.card as! VoiceCard
+            card.voiceManager?.pause()
+            controllerButton.setFAIcon(icon: .FAPlayCircle, forState: .normal)
+        }
+        
+        func adjustRecoderUIWhenRecording(){
+            let card = self.card as! VoiceCard
+            controllerButton.setFAIcon(icon: .FAPauseCircle, forState: .normal)
+            self.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
+                let duration = card.voiceManager?.player?.duration
+                let currentTime = card.voiceManager?.player?.currentTime
+                let minute = Int(duration! - currentTime!)/60
+                let second = Int(duration! - currentTime!) % 60
+                self.timerLable.text = "" + (minute >= 10 ? "\(minute)":"0\(minute)") + ":" + (second >= 10 ? "\(second)":"0\(second)")
+                self.progressBar.progress = Float((card.voiceManager?.player?.currentTime)!)/Float((card.voiceManager?.player?.duration)!)
+                self.progressBar.slideButton.center.x = self.progressBar.frame.width * CGFloat(self.progressBar.progress)
+                if !(card.voiceManager?.player?.isPlaying)!{
+                    card.voiceManager?.state = .haveRecord
+                    self.timer?.invalidate()
+                    self.controllerButton.setFAIcon(icon: .FAPlayCircle, forState: .normal)
+                }
+            })
+        }
+        
+        @objc func voiceViewControllButtonClicked(_ sender:UIButton){
+            //func adjust UI when recording
+            let targetView = sender.superview as! VoiceCardView
+            let card = targetView.card as! VoiceCard
+            let manager = card.voiceManager
+            if manager?.state == RecordManager.State.willRecord{
+                if (manager?.beginRecord())!{
+                    sender.setFAIcon(icon: .FAStopCircle, forState: .normal)
+                    targetView.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if manager?.state == .recording{
+                            targetView.timerLable.text = String(Int((card.voiceManager?.recorder?.currentTime)!))
+                        }
+                    })
+                }else{
+                    AlertView.show(error: "Record Failed. Check if the Record Permission is On.")
+                }
+                
+            }else if manager?.state == RecordManager.State.recording{
+                manager?.stopRecord()
+                sender.setFAIcon(icon: .FAPlayCircle, forState: .normal)
+                manager?.canPlay = true
+                targetView.timer?.invalidate()
+                targetView.timerLable.text = String((card.voiceManager?.time)!)
+                targetView.progressBar.isHidden = false
+                UIView.animate(withDuration: 0.2) {
+                    sender.frame.origin.x = 30
+                }
+                card.voiceManager?.time = 0
+                targetView.progressBar.progress = 0
+            }else if manager?.state == RecordManager.State.haveRecord{
+                play()
+            }else if manager?.state == RecordManager.State.playing{
+                pause()
+            }
+            
+        }
+        
+        func progressBar(panned progressBar: ProgressBar) {
+            let card = self.card as! VoiceCard
+            if card.voiceManager?.player != nil{
+                if (card.voiceManager?.player?.isPlaying)!{
+                    pause()
                 }
             }
         }
@@ -632,17 +753,6 @@ class CardView: UIView{
             var url = Constant.Configuration.url.Map
             url.appendPathComponent(self.card.getId() + ".jpg")
             
-            /*
-            User.downloadMapUsingQCloud(cardID: self.card.getId()) { (bool, error) in
-                if bool{
-                    DispatchQueue.main.async {
-                        self.image.image = UIImage(contentsOfFile: (url.path))
-                    }
-                    print("load map success; cardId\(self.card.getId())")
-                }
-            }
-            */
-            
         }
     }
     
@@ -661,21 +771,48 @@ class CardView: UIView{
         var playerButton:UIButton!
         var statusBar:StatusBar!
         var timer:Timer = Timer()
-        
-        func loadMovie(){
+        var loadingView:UIButton!
+        @objc func loadMovie(){
+            loadingView = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+            let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
+            rotateAnimation.fromValue = 0.0
+            rotateAnimation.toValue = CGFloat(Double.pi * 2.0)
+            rotateAnimation.duration = 15
+            loadingView.setFAIcon(icon: FAType.FASpinner, forState: .normal)
+            loadingView.center.x = self.frame.width/2
+            loadingView.center.y = self.frame.height/2
+            loadingView.layer.add(rotateAnimation, forKey: "rotate")
+            self.addSubview(loadingView)
             var url = Constant.Configuration.url.Movie
             url.appendPathComponent(self.card.getId() + ".mov")
-            Cloud.downloadAsset(id: self.card.getId(), type: "MOVIE") { (bool, error) in
-                
+            Cloud.downloadAsset(id: self.card.getId(), type: "VIDEO") {[weak self] (bool, error) in
+                if(bool){
+                DispatchQueue.main.async {
+                    self?.loadingView.removeFromSuperview()
+                    if self != nil{
+                        MovieView.decorateMovieView(view: self!)
+                    }
+                }
+                }else{
+                    DispatchQueue.main.async {
+                        self?.loadingView.setFAIcon(icon: FAType.FARepeat, forState: .normal)
+                        self?.loadingView.addTarget(self, action: #selector(self?.loadMovie), for: .touchDown)
+    
+                    }
+                }
             }
         }
         
         func progressBar(didChangeProgress progress: Float) {
-            player?.pause()
+            pause()
             player?.seek(to: CMTime(seconds: statusBar.duration * Double(progress), preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
             if player?.status == .readyToPlay{
-                player?.play()
+                play()
             }
+        }
+        
+        func progressBar(panned progressBar: ProgressBar) {
+            pause()
         }
         
         func statusBar(changeStatus status: CardView.MovieView.State) {
@@ -685,6 +822,15 @@ class CardView: UIView{
                 play()
             }
         }
+        
+        enum State{
+            case playing
+            case readyToPlay
+            case pause
+        }
+        
+        
+        
         
         class StatusBar:UIView{
             var controllButton:UIButton!
@@ -716,7 +862,9 @@ class CardView: UIView{
             var time:TimeInterval{
                 set{
                     _time = newValue
-                     timeLabel.text = "\(Int(newValue))|\(Int(duration))"
+                    let minite = Int(duration - newValue)/60
+                    let second = Int(duration - newValue)%60
+                    timeLabel.text = "" + (minite >= 10 ? "\(minite)" : "0\(minite)") + ":" + (second >= 10 ? "\(second)":"0\(second)")
                     progressBar.setProgress(Float(newValue/duration), animated: true)
                     progressBar.slideButton.center.x = progressBar.frame.width * CGFloat(newValue)/CGFloat(duration)
                 }
@@ -749,9 +897,11 @@ class CardView: UIView{
                 progressBar.center.y = self.frame.height/2
                 timeLabel = UILabel(frame: CGRect(x: self.frame.width - 50, y: 10, width: 50 , height: 30))
                 timeLabel.center.y = self.frame.height/2
-                timeLabel.text = "0|0"
+                timeLabel.text = "00:00"
                 self.addSubview(progressBar)
                 self.addSubview(timeLabel)
+                
+                self.backgroundColor = Constant.Color.translusentBlack
             }
             
             @objc private func controllerButtonClicked(){
@@ -778,11 +928,6 @@ class CardView: UIView{
             timer.invalidate()
         }
         
-        enum State{
-            case playing
-            case readyToPlay
-            case pause
-        }
         
        @objc func playerDidFinishPlaying(){
             state = .readyToPlay
@@ -804,15 +949,28 @@ class CardView: UIView{
             })
             
             let gesture = UITapGestureRecognizer(target: self, action: #selector(tapped))
+            gesture.numberOfTapsRequired = 1
+            gesture.numberOfTouchesRequired = 1
+            let gesture2 = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+            gesture2.numberOfTapsRequired = 2
+            self.addGestureRecognizer(gesture2)
             self.addGestureRecognizer(gesture)
             playerButton.isHidden = true
         }
         
-        @objc func tapped(){
-            if self.statusBar.isHidden{
-            self.statusBar.isHidden = false
-            }else{
-                self.statusBar.isHidden = true
+        @objc private func tapped(ges:UITapGestureRecognizer){
+            if(ges.numberOfTouches == 1){
+                if self.statusBar.isHidden{
+                    self.statusBar.isHidden = false
+                }else{
+                    self.statusBar.isHidden = true
+                }
+            }
+        }
+        
+        @objc private func doubleTapped(){
+            if(delegate != nil){
+                delegate?.movieView!(expand: self)
             }
         }
         
@@ -823,12 +981,33 @@ class CardView: UIView{
             self.statusBar.state = .pause
         }
         
+        override func share() {
+            let alertView = SCLAlertView()
+            alertView.addButton("Share the video to other Apps") {
+                var url = Constant.Configuration.url.Movie
+                url.appendPathComponent(self.card.getId() + ".mov")
+                if FileManager.default.fileExists(atPath: url.path){
+                    let u = NSURL(fileURLWithPath: url.path)
+                    self.docController = UIDocumentInteractionController.init(url: u as URL)
+                    self.docController.delegate = self
+                    self.docController.uti = "public.movie"
+                    // controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+                    self.docController.presentOpenInMenu(from: CGRect.zero, in: self, animated: true)
+                    
+                }else{
+                    AlertView.show(alert: "The video file has not been downloaded locally.")
+                }
+            }
+            alertView.showNotice("Sharing", subTitle: "It's nice to have your card shared.")
+        }
+        
         
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     class func getSingleCardView(card:Card)->CardView{
         let x = UIScreen.main.bounds.width
@@ -907,6 +1086,10 @@ class CardView: UIView{
         
         cardView.labelofDes = labelOfDes
         cardView.addSubview(labelOfDes)
+        if (!FileManager.default.fileExists(atPath: Constant.Configuration.url.attributedText.appendingPathComponent(card.getId() + "_DEFINITION.rtf").path)){
+            cardView.reload()
+        }
+        
      
         
         //add imageView
@@ -977,9 +1160,8 @@ class CardView: UIView{
         
        
         
-        let definition:String = card.getDefinition()
         let labelOfDes = UILabel(frame: CGRect(x: 20,y:label.frame.height + 20,width:cardView.bounds.width - 40,height:cardView.bounds.height/2))
-        labelOfDes.text = definition
+        labelOfDes.text = card.getText() == nil ? "" : card.getText()?.string
         labelOfDes.font = UIFont.systemFont(ofSize: 15)
         labelOfDes.numberOfLines = 10
         labelOfDes.lineBreakMode = .byClipping
@@ -1182,70 +1364,6 @@ class CardView: UIView{
         return view
     }
     
-    @objc static func voiceViewControllButtonClicked(_ sender:UIButton){
-        //func adjust UI when recording
-        let targetView = sender.superview as! VoiceCardView
-        let card = targetView.card as! VoiceCard
-        let manager = card.voiceManager
-        func adjustRecoderUIWhenRecording(){
-            sender.setFAIcon(icon: .FAPauseCircle, forState: .normal)
-            targetView.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                targetView.timerLable.text = String(Int((card.voiceManager?.player?.currentTime)!)) + "/" + String(Int((card.voiceManager?.player?.duration)!))
-                targetView.progressBar.progress =  Float((card.voiceManager?.player?.currentTime)!)/Float((card.voiceManager?.player?.duration)!)
-                targetView.progressBar.slideButton.center.x = targetView.progressBar.frame.width * CGFloat(targetView.progressBar.progress)
-                if !(manager?.player?.isPlaying)!{
-                    manager?.state = .haveRecord
-                    targetView.timer?.invalidate()
-                    sender.setFAIcon(icon: .FAPlayCircle, forState: .normal)
-                }
-            })
-        }
-        
-        
-        if manager?.state == RecordManager.State.willRecord{
-            if (manager?.beginRecord())!{
-            sender.setFAIcon(icon: .FAStopCircle, forState: .normal)
-            targetView.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-            if manager?.state == .recording{
-                targetView.timerLable.text = String(Int((card.voiceManager?.recorder?.currentTime)!))
-            }
-            })
-            }else{
-               AlertView.show(error: "Record Failed. Check if the Record Permission is On.")
-            }
-            
-        }else if manager?.state == RecordManager.State.recording{
-            manager?.stopRecord()
-            sender.setFAIcon(icon: .FAPlayCircle, forState: .normal)
-            manager?.canPlay = true
-            targetView.timer?.invalidate()
-            targetView.timerLable.text = String((card.voiceManager?.time)!)
-            targetView.progressBar.isHidden = false
-            UIView.animate(withDuration: 0.2) {
-                sender.frame.origin.x = 30
-            }
-            card.voiceManager?.time = 0
-           targetView.progressBar.progress = 0
-        }else if manager?.state == RecordManager.State.haveRecord{
-            //manager?.play()
-            if manager?.player == nil{
-            let play = manager?.play()
-            if play!{
-               adjustRecoderUIWhenRecording()
-            }else{
-                AlertView.show(targetView, alert: "The file has been damaged.")
-                manager?.state = RecordManager.State.willRecord
-            }
-            }else{
-                manager?.continuePlaying()
-                adjustRecoderUIWhenRecording()
-            }
-        }else if manager?.state == RecordManager.State.playing{
-            manager?.pause()
-            sender.setFAIcon(icon: .FAPlayCircle, forState: .normal)
-        }
-        
-    }
     
     class func getSingleVoiceView(card:VoiceCard)->VoiceCardView{
         let view = VoiceCardView()
@@ -1292,13 +1410,8 @@ class CardView: UIView{
         
        // view.controllerButton.setTitle("录音", for: UIControlState.normal)
        
-        
-       // view.conversionButton = UIButton(frame: CGRect(x: 0, y: 80, width: 20, height: 20))
-        //view.conversionButton.setFAIcon(icon: .FAGlobe, iconSize: 20, forState: .normal)
-        //view.conversionButton.setTitleColor(.black, for: .normal)
-        //view.conversionButton.addTarget(view, action: #selector(view.recognizeFile), for: .touchDown)
         view.controllerButton.setTitleColor(.black, for: UIControlState.normal)
-        view.controllerButton.addTarget(self, action: #selector(voiceViewControllButtonClicked(_:)), for:UIControlEvents.touchDown)
+        view.controllerButton.addTarget(view, action: #selector(view.voiceViewControllButtonClicked(_:)), for:UIControlEvents.touchDown)
         view.recognizer = SFSpeechRecognizer()
         
         //view.addSubview(view.conversionButton)
@@ -1312,6 +1425,8 @@ class CardView: UIView{
         return view
     }
     
+    
+    /*
     class func getSingleMapView(card:MapCard)->MapCardView{
         let y = UIScreen.main.bounds.height
         let view = MapCardView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: y/4))
@@ -1358,50 +1473,71 @@ class CardView: UIView{
         
         return view
     }
+ 
+ */
     
-    class func getSingleMovieView(card:MovieCard)->MovieView{
-       let view = MovieView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.6))
+    class private func decorateMovieView(view:MovieView){
         view.center.x = UIScreen.main.bounds.width/2
-        view.card = card
-        let url = Constant.Configuration.url.Movie.absoluteURL.appendingPathComponent(card.getId() + ".mov")
+        let url = Constant.Configuration.url.Movie.appendingPathComponent(view.card.getId() + ".mov")
+        let manager = FileManager.default
+        if !manager.fileExists(atPath: url.path){
+            view.loadMovie()
+        }
+        
         view.url = url
         view.clipsToBounds = true
         print("path:\(url.path)")
-        let playerItem = AVPlayerItem(url: view.url!)
-        NotificationCenter.default.addObserver(view,
-                                               selector: #selector(view.playerDidFinishPlaying),
-                                               name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                                               object: playerItem)
-        view.player = AVPlayer(playerItem: playerItem)
-          let theNaturalSize = view.player?.currentItem?.asset.tracks(withMediaType: .video)[0]
-        let size = theNaturalSize?.naturalSize
-        let ratio = (size?.width)!/(size?.height)!
-        view.frame.size.height = view.frame.width/ratio
-        view.playerLayer = AVPlayerLayer(player: view.player)
-       // view.frame.size = (view.playerLayer?.videoRect.size)!
-        view.playerLayer?.frame = view.bounds
-        view.playerLayer?.videoGravity = .resizeAspect
-        view.layer.addSublayer(view.playerLayer!)
-        view.layer.cornerRadius = 10
-       
-        view.playerButton = UIButton(frame:CGRect(x: 0, y: 0, width: 50, height: 50))
-        view.playerButton.setFAIcon(icon: .FAPlay, iconSize: 50, forState: .normal)
-        view.playerButton.setTitleColor(.white, for: .normal)
-        view.playerButton.addTarget(view, action: #selector(view.play), for: .touchDown)
-        view.playerButton.center.x = view.frame.width/2
-        view.playerButton.center.y = view.frame.height/2
-        view.addSubview(view.playerButton)
-        
-        view.statusBar = MovieView.StatusBar(frame: CGRect(x: 0, y: view.frame.height - 50, width: view.frame.width, height: 50), state: MovieView.State.readyToPlay)
-        view.statusBar.isHidden = true
-        view.statusBar.delegate = view
-        view.addSubview(view.statusBar)
+        if FileManager.default.fileExists(atPath: url.path){
+            let playerItem = AVPlayerItem(url: url)
+            NotificationCenter.default.addObserver(view,
+                                                   selector: #selector(view.playerDidFinishPlaying),
+                                                   name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                                                   object: playerItem)
+            view.player = AVPlayer(playerItem: playerItem)
+            
+            if let theNaturalSize = view.player?.currentItem?.asset.tracks(withMediaType: .video)[0]{
+                let size = theNaturalSize.naturalSize
+                let ratio = (size.width)/(size.height)
+                view.frame.size.height = view.frame.width/ratio
+                
+                view.playerLayer = AVPlayerLayer(player: view.player)
+                // view.frame.size = (view.playerLayer?.videoRect.size)!
+                
+                view.playerLayer?.frame = view.bounds
+                view.playerLayer?.videoGravity = .resizeAspect
+                
+                
+                view.layer.addSublayer(view.playerLayer!)
+                view.layer.cornerRadius = 10
+                
+                view.playerButton = UIButton(frame:CGRect(x: 0, y: 0, width: 50, height: 50))
+                view.playerButton.setFAIcon(icon: .FAPlay, iconSize: 50, forState: .normal)
+                view.playerButton.setTitleColor(.white, for: .normal)
+                view.playerButton.addTarget(view, action: #selector(view.play), for: .touchDown)
+                view.playerButton.center.x = view.frame.width/2
+                view.playerButton.center.y = view.frame.height/2
+                view.addSubview(view.playerButton)
+                
+                view.statusBar = MovieView.StatusBar(frame: CGRect(x: 0, y: view.frame.height - 50, width: view.frame.width, height: 50), state: MovieView.State.readyToPlay)
+                view.statusBar.isHidden = true
+                view.statusBar.delegate = view
+                view.statusBar.progressBar.delegate = view
+                view.addSubview(view.statusBar)
+            }
+            
+        }else{
+            view.loadMovie()
+        }
         
         let longTapGesture = UILongPressGestureRecognizer()
         longTapGesture.addTarget(view, action: #selector(view.menuController))
         view.addGestureRecognizer(longTapGesture)
-        
-        
+    }
+    
+    class func getSingleMovieView(card:MovieCard)->MovieView{
+       let view = MovieView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.6))
+        view.card = card
+        decorateMovieView(view: view)
         return view
     }
     
@@ -1485,7 +1621,7 @@ class MyTextView:UITextView{
     @objc func translate(){
         let range = self.selectedRange
         let r = Range(range, in: self.text)
-        let text = self.text.substring(with: r!)
+        let text = String(self.text[r!])
         let cardView = self.superview as! CardView
         if delegate != nil{
             cardView.delegate?.cardView?(translate: cardView, text:text)
@@ -1504,9 +1640,10 @@ class MyTextView:UITextView{
 
 }
 
-
-
-//status Bar delegate
 protocol StatusBarDelegate:NSObjectProtocol{
     func statusBar(changeStatus status:CardView.MovieView.State)
 }
+
+
+
+

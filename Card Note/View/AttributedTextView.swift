@@ -192,7 +192,6 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
         if self.font != nil{
         setFont(fontName: (self.font?.fontName)!)
         }
-        let size = self.font?.pointSize
         
         if fontColor != nil{
         setFontColor(color: self.fontColor!)
@@ -219,7 +218,6 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             print(textView.text)
             var range = NSMakeRange(textView.attributedText.length - 1, 1)
             self.font = self.textView.attributedText.attribute(NSAttributedStringKey.font, at: at, effectiveRange: &range) as? UIFont
-            print(self.font?.fontName)
             self.fontColor = self.textView.attributedText.attribute(NSAttributedStringKey.foregroundColor, at: at, effectiveRange: &range) as? UIColor
             self.backColor = self.textView.attributedText.attribute(NSAttributedStringKey.backgroundColor, at: at, effectiveRange: &range) as? UIColor
             self.isUnderlined = (self.textView.attributedText.attribute(NSAttributedStringKey.underlineStyle, at: at, effectiveRange: &range)) == nil ? 0:1
@@ -339,7 +337,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                 }
             }else{
                 if textMode == Constant.TextMode.OrderedListStartMode{
-                    if let order = Int(String(character)){
+                    if Int(String(character)) != nil{
                         textMode = Constant.TextMode.OrderedListMode
                         break
                     }
@@ -424,7 +422,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             let paragraph = NSMutableParagraphStyle()
             paragraph.firstLineHeadIndent = 10
             let bullet = "\(order + 1)."
-            let attributedBullet = NSAttributedString(string: bullet, attributes: [NSAttributedStringKey.font:UIFont(name: "Avenir-Medium", size: 18),NSAttributedStringKey.ligature:1, NSAttributedStringKey.paragraphStyle:paragraph])
+            let attributedBullet = NSAttributedString(string: bullet, attributes: [NSAttributedStringKey.font:UIFont(name: "Avenir-Medium", size: 18)!,NSAttributedStringKey.ligature:1, NSAttributedStringKey.paragraphStyle:paragraph])
             let attributedString = NSMutableAttributedString(attributedString: textView.attributedText)
             if index <= 0{
                 index = 0
@@ -499,8 +497,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             }
             
             if textView.text.count > 0{
-            let substring = textView.text.substring(to: textView.text.index(textView.text.startIndex, offsetBy: index + 1))
-            print(substring)
+            let substring = String(textView.text![..<textView.text.index(textView.text.startIndex, offsetBy: index+1)])
             for character in substring.reversed(){
                 print(character)
                 if character == "\n"{

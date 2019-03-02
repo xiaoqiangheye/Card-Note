@@ -48,7 +48,6 @@ class Card:NSObject,NSCoding,Encodable{
     
     enum CardType:String{
         case card = "card"
-        case map = "map"
         case example = "example"
         case picture = "picture"
         case text = "text"
@@ -152,11 +151,11 @@ class Card:NSObject,NSCoding,Encodable{
     
     func getText()->NSAttributedString?{
         var url = Constant.Configuration.url.attributedText
-        url.appendPathComponent(self.getId() + ".rtf")
+        url.appendPathComponent(self.getId() + "_DEFINITION.rtf")
         do{
             let data = try Data(contentsOf: url)
             var ducumentAttribute:NSDictionary?
-            let attr = try NSAttributedString(data: data, options: [ NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: &ducumentAttribute)
+            let attr = try NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: &ducumentAttribute)
             return attr
         }catch let error{
             print(error.localizedDescription)
@@ -166,7 +165,7 @@ class Card:NSObject,NSCoding,Encodable{
     
     func setText(attr:NSAttributedString){
         var url = Constant.Configuration.url.attributedText
-        url.appendPathComponent(self.getId() + ".rtf")
+        url.appendPathComponent(self.getId() + "_DEFINITION.rtf")
         let range = NSRange(location: 0, length: attr.length)
         do{
             let data = try attr.data(from: range, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])

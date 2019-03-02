@@ -15,10 +15,10 @@ class TapBarController:UITabBarController{
         self.tabBar.barTintColor = .white
        // self.tabBar.items![0].setFAIcon(icon: FAType.FAWindowRestore)
        // self.tabBar.items![1].setFAIcon(icon: FAType.FAUsers)
-        self.tabBar.items![0].setFAIcon(icon: .FAWindowRestore, size: nil, orientation: .up, textColor: Constant.Color.darkWhite, backgroundColor: .clear, selectedTextColor: Constant.Color.blueLeft, selectedBackgroundColor: .clear)
-        self.tabBar.items![1].setFAIcon(icon: .FATags, size: nil, orientation: .up, textColor: Constant.Color.darkWhite, backgroundColor: .clear, selectedTextColor: Constant.Color.blueLeft, selectedBackgroundColor: .clear)
+        self.tabBar.items![0].setFAIcon(icon: .FAWindowRestore, size: nil, orientation: .up, textColor: .darkGray, backgroundColor: .clear, selectedTextColor: Constant.Color.blueLeft, selectedBackgroundColor: .clear)
+        self.tabBar.items![1].setFAIcon(icon: .FATags, size: nil, orientation: .up, textColor: .darkGray, backgroundColor: .clear, selectedTextColor: Constant.Color.blueLeft, selectedBackgroundColor: .clear)
         self.tabBar.items![1].title = "Tags"
-        self.tabBar.items![2].setFAIcon(icon: FAType.FAUser, size: nil, orientation: .up, textColor: Constant.Color.darkWhite, backgroundColor:.clear, selectedTextColor: Constant.Color.blueLeft, selectedBackgroundColor: .clear)
+        self.tabBar.items![2].setFAIcon(icon: FAType.FAUser, size: nil, orientation: .up, textColor: .darkGray, backgroundColor:.clear, selectedTextColor: Constant.Color.blueLeft, selectedBackgroundColor: .clear)
     
     }
 }

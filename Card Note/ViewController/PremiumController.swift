@@ -19,7 +19,7 @@ class PremiumController:UIViewController{
     private var logo:UIImageView!
     private var termOfServiecTextView:UITextView!
     private let TERM_OF_SERVICE = "* Please note that The Premium Plan is a subscription that will be renewed automatically unless you turn off auto-renew 24 hours before the end of the period. If you want to cancel the subscription, please turn off subscription 24 hours before the period ends, or the period will be renewed and you will be charged. If you cancel the current period, the period will automatically ends on the end date, and the period will not be renewed."
-    private let ADVANTAGE_PREMIUM = ["Limitless Notes", "Limitless Time for voice record", "Cloud Storage", "Auto-Sync", "Limitless Devices", "Translation across different languages", "Voice, Photo, Video Record" ,"Voice to Text Conversion"]
+    private let ADVANTAGE_PREMIUM = ["Limitless Notes", "Limitless Time for voice record", "Cloud Storage", "Auto-Sync", "Limitless Devices", "Translation across different languages", "Extract Text from Photo" ,"Voice to Text Conversion"]
     override func viewDidLoad() {
         //backButton
         backButton = UIButton(frame: CGRect(x: 10, y: 50, width: 30, height: 30))
@@ -90,6 +90,8 @@ class PremiumController:UIViewController{
         One_month_button.setTitle(self.one_month_price + "/MONTH", for: .normal)
         One_month_button.layer.cornerRadius = 15
         One_month_button.setTitleColor(.black, for: .normal)
+        
+        
          let six_months_button = UIButton(frame: CGRect(x: 0, y:termOfServiecTextView.frame.origin.y + termOfServiecTextView.frame.height + 20, width: 100, height: 100))
         six_months_button.titleLabel?.numberOfLines = 2
         six_months_button.titleLabel?.textAlignment = .center
@@ -99,6 +101,8 @@ class PremiumController:UIViewController{
         six_months_button.setTitle(self.six_month_price + "/HALF YEAR", for: .normal)
         six_months_button.layer.cornerRadius = 15
         six_months_button.setTitleColor(.black, for: .normal)
+        
+        
         let year_button = UIButton(frame: CGRect(x: 0, y: termOfServiecTextView.frame.origin.y + termOfServiecTextView.frame.height + 20, width: 100, height: 100))
         year_button.addTarget(self, action: #selector(self.purchaseYear), for: .touchDown)
         year_button.titleLabel?.numberOfLines = 2
@@ -109,33 +113,27 @@ class PremiumController:UIViewController{
         year_button.setTitleColor(.black, for: .normal)
         year_button.layer.cornerRadius = 15
         
-        PurchaseManager.retriveInfo(type:PurchaseManager.Product.premium_one_month) { (product) in
-            if product != nil{
-                self.one_month_price = (product?.localizedPrice)!
-                One_month_button.setTitle(self.one_month_price + "/MOHTH", for: .normal)
-               
-            }
-        }
-        PurchaseManager.retriveInfo(type:PurchaseManager.Product.premium_6_months) { (product) in
-            if product != nil{
-                self.six_month_price = (product?.localizedPrice)!
-               
-                six_months_button.setTitle(self.six_month_price + "/HALF YEAR", for: .normal)
-               
-            }
-        }
-        PurchaseManager.retriveInfo(type:PurchaseManager.Product.premium_12_months) { (product) in
-            if product != nil{
-                self.year_price = (product?.localizedPrice)!
-                
-                year_button.setTitle(self.year_price + "/YEAR", for: .normal)
-               
+        
+        PurchaseManager.retriveInfos(types: PurchaseManager.products) {[weak self] (products) in
+            if products != nil && self != nil{
+                for product in products!{
+                    switch product.productIdentifier{
+                        case PurchaseManager.Product.premium_one_month.rawValue:
+                            One_month_button.setTitle((product.localizedPrice ?? "Unavalible") + "/MOHTH", for: .normal)
+                        case PurchaseManager.Product.premium_6_months.rawValue:
+                            six_months_button.setTitle((product.localizedPrice ?? "Unavalable") +  "/HALF YEAR", for: .normal)
+                        case PurchaseManager.Product.premium_12_months.rawValue:
+                             year_button.setTitle((product.localizedPrice ?? "Unavalible") + "/YEAR", for: .normal)
+                        default:
+                            break
+                    }
+                }
+                self?.view.addSubview(One_month_button)
+                self?.view.addSubview(six_months_button)
+                self?.view.addSubview(year_button)
             }
         }
         
-        self.view.addSubview(One_month_button)
-        self.view.addSubview(six_months_button)
-        self.view.addSubview(year_button)
     }
     
     @objc private func purchaseOneMonth(){
