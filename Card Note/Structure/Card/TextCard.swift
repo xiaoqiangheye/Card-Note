@@ -23,7 +23,7 @@ class TextCard:Card{
     super.init(title: "", tag: nil, description: "", id: id, definition: "", color: nil, cardType: CardType.text.rawValue, modifytime: "")
     }
     
-    override func getText()->NSAttributedString?{
+    func getText()->NSAttributedString?{
         var url = Constant.Configuration.url.attributedText
         url.appendPathComponent(self.getId() + ".rtf")
         do{
@@ -37,7 +37,7 @@ class TextCard:Card{
         }
     }
     
-    override func setText(attr:NSAttributedString){
+    func setText(attr:NSAttributedString){
         var url = Constant.Configuration.url.attributedText
         url.appendPathComponent(self.getId() + ".rtf")
         let range = NSRange(location: 0, length: attr.length)

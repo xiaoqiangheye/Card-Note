@@ -23,7 +23,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     var cardTitle: UITextView!
     var tag: UITextView!
     var definition: UITextView!
-    var descriptions: UITextView!
     var definitionLabel:UILabel!
     var tagInputView: TagInputView!
     var scrollView:UIScrollView!
@@ -59,10 +58,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     var picTureAction:String = ""
     var mapAction:String = ""
     /////////selected
-    var selectedPictureView:CardView.PicView?
+    var selectedPictureView:PicView?
     var selectedTextView:UITextView?
     var selectedView:UIView?
-    var selectedMapView:CardView.MapCardView?
    // private var EditingSubCard:[CardEditorView] = [CardEditorView]()
     //textMode
     var isEditMode = false
@@ -155,7 +153,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.lengthOfBytes(using: .utf8) < 1{
             if subCards.count > 0{
-                if (subCards.last?.isKind(of:CardView.TextView.self))!{
+                if (subCards.last?.isKind(of:TextView.self))!{
                     subCards.last?.removeFromSuperview()
                     subCards.removeLast()
                 }
@@ -181,8 +179,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     func textViewDidChange(_ textView: UITextView) {
         //save to files
         if textView.superview != nil{
-            if (textView.superview?.isKind(of: CardView.ExaView.self))!{
-                let view = textView.superview as! CardView.ExaView
+            if (textView.superview?.isKind(of: ExaView.self))!{
+                let view = textView.superview as! ExaView
                 let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
                 var url = Constant.Configuration.url.attributedText
                 url.appendPathComponent(view.card.getId() + ".rtf")
@@ -191,8 +189,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 }catch let error{
                     print(error.localizedDescription)
                 }
-            }else if (textView.superview?.isKind(of: CardView.TextView.self))!{
-                let view = textView.superview as! CardView.TextView
+            }else if (textView.superview?.isKind(of: TextView.self))!{
+                let view = textView.superview as! TextView
                 let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
                 var url = Constant.Configuration.url.attributedText
                 url.appendPathComponent(view.card.getId() + ".rtf")
@@ -215,18 +213,18 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         
         //如果textview的高度大于最大高度高度就为最大高度并可以滚动，否则不能滚动
         if textView.superview != nil{
-            if (textView.superview as? CardView.TextView) != nil{
+            if (textView.superview as? TextView) != nil{
                 textView.frame.size.height = size.height
                 textView.superview?.frame.size.height = size.height
-               reLoad()
-            }else if (textView.superview as? CardView.ExaView) != nil{
+                reLoad()
+            }else if (textView.superview as? ExaView) != nil{
                 textView.frame.size.height = size.height
                 textView.superview?.frame.size.height = textView.frame.origin.y + textView.frame.height
                 reLoad()
             }
             else if textView == definition{
                 textView.frame.size.height = size.height
-               reLoad()
+                reLoad()
             }
         }
         
@@ -589,7 +587,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             if attributedView != nil && attributedView?.superview != nil{
                 attributedView?.removeFromSuperview()
             
-             if (selectedTextView?.superview?.isKind(of: CardView.TextView.self))!{
+             if (selectedTextView?.superview?.isKind(of: TextView.self))!{
             attributedView = AttributedTextView(y: self.view.frame.height - height! - 50, textView: selectedTextView!)
             attributedView?.delegate = self
             self.view.addSubview(attributedView!)
@@ -600,7 +598,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         if selectedView != nil && selectedView?.superview != nil{
         //adjust the offset of the scrollview
         var relativeHeight:CGFloat!
-        if !(selectedView?.superview?.isKind(of: CardView.TextView.self))! && !(selectedView?.superview?.isKind(of: CardView.SubCardView.self))! && !(selectedView?.superview?.isKind(of: CardView.PicView.self))! && !(selectedView?.superview?.isKind(of: CardView.ExaView.self))! && !(selectedView?.superview?.isKind(of: CardView.VoiceCardView.self))!{
+        if !(selectedView?.superview?.isKind(of: TextView.self))! && !(selectedView?.superview?.isKind(of: CardView.SubCardView.self))! && !(selectedView?.superview?.isKind(of: PicView.self))! && !(selectedView?.superview?.isKind(of: ExaView.self))! && !(selectedView?.superview?.isKind(of: VoiceCardView.self))!{
             relativeHeight = (selectedView?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedView?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
         }else{
             relativeHeight = (selectedView?.superview?.frame.origin.y)! - scrollView.contentOffset.y  + (selectedView?.superview?.frame.height)! + CGFloat(UIDevice.current.Xdistance())
@@ -627,8 +625,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     @objc func endEditing(){
         self.view.endEditing(true)
         for sub in subCards{
-            if sub.isKind(of: CardView.TextView.self){
-                let sub = sub as! CardView.TextView
+            if sub.isKind(of: TextView.self){
+                let sub = sub as! TextView
                 sub.textView.resignFirstResponder()
                 
             }
@@ -676,17 +674,15 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         view.removeFromSuperview()
         let fileManager = FileManager.default
         do{
-        if view.isKind(of: CardView.TextView.self){
+        if view.isKind(of: TextView.self){
             try fileManager.removeItem(at: Constant.Configuration.url.attributedText.appendingPathComponent(view.card.getId() + ".rtf"))
-        }else if view.isKind(of: CardView.PicView.self){
+        }else if view.isKind(of: PicView.self){
              try fileManager.removeItem(at: Constant.Configuration.url.PicCard.appendingPathComponent(view.card.getId() + ".jpg"))
-        }else if view.isKind(of: CardView.VoiceCardView.self){
+        }else if view.isKind(of: VoiceCardView.self){
              try fileManager.removeItem(at: Constant.Configuration.url.Audio.appendingPathComponent(view.card.getId() + ".wav"))
-        }else if view.isKind(of: CardView.MovieView.self){
+        }else if view.isKind(of: MovieView.self){
              try fileManager.removeItem(at: Constant.Configuration.url.Movie.appendingPathComponent(view.card.getId() + ".mov"))
-        }else if view.isKind(of: CardView.MapCardView.self){
-              try fileManager.removeItem(at: Constant.Configuration.url.Map.appendingPathComponent(view.card.getId() + ".jpg"))
-        }
+            }
         }catch let error{
             print(error.localizedDescription)
         }
@@ -708,14 +704,17 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         cardTitle.text = card.getTitle()
         scrollView.contentOffset.y = 0
         cardColor.backgroundColor = card.getColor()
-        definition.text = card.getText() == nil ? "" : card.getText()?.string
+        definition.text = card.getDefinition()
         color = card.getColor()
+        
         var cumulatedHeight = definition.frame.origin.y + definition.frame.height + 20
+        
+        
         for card in card.getChilds(){
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(cardViewPanned))
             panGesture.delegate = self
             if card.isKind(of: ExampleCard.self){
-                let exaView = CardView.singleExampleView(card:card as! ExampleCard)
+                let exaView = ExaView(card:card)
                 exaView.textView.text = card.getDefinition()
                 exaView.frame.origin.y = cumulatedHeight
                 exaView.textView.delegate = self
@@ -726,7 +725,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 scrollView.addSubview(exaView)
                 self.subCards.append(exaView)
             }else if card.isKind(of: PicCard.self){
-                let picCard = CardView.getSinglePicView(pic: card as! PicCard)
+                let picCard = PicView(card: card)
                 picCard.delegate = self
                 picCard.commentView.delegate = self
                 picCard.addGestureRecognizer(panGesture)
@@ -740,7 +739,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                     picCard.image.image = UIImage(data: data! as Data)
                     (card as! PicCard).pic = UIImage(data: data! as Data)
                 }else{
-                    picCard.image.image = #imageLiteral(resourceName: "searchBar")
                     DispatchQueue.global().async {
                         picCard.loadPic()
                     }
@@ -754,7 +752,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 picCard.addGestureRecognizer(tapGesture)
             }else if card.isKind(of: TextCard.self){
                 let textCard = (card as! TextCard)
-                let textCardView = CardView.getSingleTextView(card:textCard)
+                let textCardView = TextView(card:textCard)
                 textCardView.delegate = self
                 textCardView.frame.origin.y = cumulatedHeight
                 textCardView.textView.delegate = self
@@ -765,7 +763,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 subCards.append(textCardView)
             }else if card.isKind(of: VoiceCard.self){
                 let voiceCard = card as! VoiceCard
-                let voiceCardView = CardView.getSingleVoiceView(card: voiceCard)
+                let voiceCardView = VoiceCardView(card: voiceCard)
                 voiceCardView.title.delegate = self
                 voiceCardView.hero.id = voiceCard.getId()
                 voiceCardView.delegate = self
@@ -775,13 +773,18 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 }else{
                     voiceCard.voiceManager?.state = .haveRecord
                 }
+                var url = Constant.Configuration.url.Audio
+                url.appendPathComponent(card.getId() + ".wav")
+                if !FileManager.default.fileExists(atPath: url.path){
+                    voiceCardView.loadAudioFile()
+                }
                 voiceCardView.frame.origin.y = cumulatedHeight
                 cumulatedHeight += voiceCardView.frame.height + 20
                 scrollView.addSubview(voiceCardView)
                 subCards.append(voiceCardView)
             }else if card.isKind(of: MovieCard.self){
                 let movieCard = card as! MovieCard
-                let movieCardView = CardView.getSingleMovieView(card: movieCard)
+                let movieCardView = MovieView(card: movieCard)
               
                 movieCardView.delegate = self
                 movieCardView.frame.origin.y = cumulatedHeight
@@ -827,9 +830,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         var index = 0
         for card in subCards{
             //adjust two adjacent textViews into one.
-            if index < subCards.count - 1 && subCards[index].isKind(of: CardView.TextView.self) && subCards[index + 1].isKind(of: CardView.TextView.self){
-                let view = subCards[index] as! CardView.TextView
-                let nxtView = subCards[index + 1] as! CardView.TextView
+            if index < subCards.count - 1 && subCards[index].isKind(of: TextView.self) && subCards[index + 1].isKind(of: TextView.self){
+                let view = subCards[index] as! TextView
+                let nxtView = subCards[index + 1] as! TextView
                 let viewAttributedText = view.textView.attributedText
                 let mutable = NSMutableAttributedString(attributedString: viewAttributedText!)
                 mutable.append(NSAttributedString(string: "\n"))
@@ -864,52 +867,40 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             self.scrollView.contentSize.height = card.frame.origin.y + card.frame.height + 20
             index += 1
         }
+        
         self.scrollView.contentSize.height += 50
-        scrollView.contentOffset.y = contentoffSetY
+        self.scrollView.contentOffset.y = contentoffSetY
     }
     
     @IBAction func save(_ sender: Any) {
         let manager = FileManager.default
         if self.type == CardEditor.type.add{
             var childs:[Card] = [Card]()
-            if subCards.count >= 1{
                 for card in self.subCards
                 {
                     childs.append(card.card)
-                    if card.isKind(of: CardView.PicView.self){
+                    if card.isKind(of: PicView.self){
                         
                         var url = Constant.Configuration.url.PicCard
                         url.appendPathComponent(card.card.getId() + ".jpg")
-                        let picView = card as! CardView.PicView
+                        let picView = card as! PicView
                         if picView.commentView.text != nil{
                         card.card.setDescription(picView.commentView.text!)
                         }
-                        if isPremium() && manager.fileExists(atPath: (url.path)){
+                        if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
                             //User.uploadPhotoUsingQCloud(url: url)
                             Cloud.upload(image: url, id: card.card.getId()){_,_ in
                                 
                             }
                         }
-                    }else if card.isKind(of: CardView.ExaView.self){
-                        /**deprecated in 6.13
-                        (card.card as! ExampleCard).setExample((card as! CardView.ExaView).textView.attributedText.string)
-                        print((card as! CardView.ExaView).textView.attributedText.string)
-                        */
+                    }else if card.isKind(of: ExaView.self){
                         
-                        /**updated in 6.13
-                        */
-                        let view = card as! CardView.ExaView
+                        let view = card as! ExaView
                         view.card.setTitle(view.title.text!)
                         view.card.setDefinition(view.textView.text)
-                       
-                    }else if card.isKind(of: CardView.TextView.self){
-                        /**deprecated in 6.13
-                        (card.card as! TextCard).setText((card as! CardView.TextView).textView.attributedText.string)
-                        */
+                    }else if card.isKind(of: TextView.self){
                         
-                        /**updated in 6.13
-                         */
-                        let view = card as! CardView.TextView
+                        let view = card as! TextView
                         let data = try? view.textView.attributedText.data(from: NSMakeRange(0, view.textView.attributedText.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
                         var url = Constant.Configuration.url.attributedText
                         url.appendPathComponent(view.card.getId() + ".rtf")
@@ -919,40 +910,29 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         }catch let error{
                             print(error.localizedDescription)
                         }
-                       if isPremium() && manager.fileExists(atPath: (url.path)){
+                       if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
                             Cloud.upload(text: url, id: card.card.getId()){_,_ in
                                 
                             }
                         }
  
-                    }else if card.isKind(of: CardView.VoiceCardView.self){
-                        let voiceCard = card as! CardView.VoiceCardView
+                    }else if card.isKind(of: VoiceCardView.self){
+                        let voiceCard = card as! VoiceCardView
                         voiceCard.card.setTitle((voiceCard.title.text)!)
                         
                         var url = Constant.Configuration.url.Audio
                         url.appendPathComponent(card.card.getId() + ".wav")
-                        if isPremium() && manager.fileExists(atPath: (url.path)){
+                        if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
                            // User.uploadAudioUsingQCloud(url: url)
                             Cloud.upload(audio: url, id: card.card.getId()){_,_ in
                                 
                             }
                         }
-                    }else if card.isKind(of: CardView.MapCardView.self){
-                        
-                        var url = Constant.Configuration.url.Map
-                        url.appendPathComponent(card.card.getId() + ".jpg")
-                        if isPremium() && manager.fileExists(atPath: (url.path)){
-                            //User.uploadPhotoUsingQCloud(url: url)
-                            Cloud.upload(image: url, id: card.card.getId()){_,_ in
-                                
-                            }
-                        }
-                        
-                    }else if card.isKind(of: CardView.MovieView.self){
+                    }else if card.isKind(of: MovieView.self){
                        
                         var url = Constant.Configuration.url.Movie
                         url.appendPathComponent(card.card.getId() + ".mov")
-                            if isPremium() && manager.fileExists(atPath:((card.card as! MovieCard).path)){
+                            if manager.fileExists(atPath:url.path) && isAutoSyncOn(){
                                // User.uploadMovieUsingQCloud(url: url)
                                 Cloud.upload(video: url, id: card.card.getId()){_,_ in
                                     
@@ -964,25 +944,13 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         sub?.setTitle(view.title.text!)
                         sub?.setDefinition(view.content.text!)
                 }
-                }
+                
             }
             
             let interval = NSTimeIntervalSince1970
-            let card = Card(title: cardTitle.text, tag: tagInputView?.tags.sorted(), description:"", id: UUID().uuidString, definition: "", color: color, cardType:Card.CardType.card.rawValue,modifytime:String(interval))
-            let attr = NSAttributedString(string: definition.text)
-            card.setText(attr: attr)
+            let card = Card(title: cardTitle.text, tag: tagInputView?.tags.sorted(), description:"", id: UUID().uuidString, definition: definition.text, color: color, cardType:Card.CardType.card.rawValue,modifytime:String(interval))
             
-            var url = Constant.Configuration.url.attributedText
-            url.appendPathComponent(card.getId() + "_DEFINITION.rtf")
-            if isPremium(){
-                Cloud.uploadDefinition(id: card.getId(), url: url) { (bool, error) in
-                    if error != nil{
-                        DispatchQueue.main.async {
-                            AlertView.show(error: "Error Uploading Cards.")
-                        }
-                    }
-                }
-            }
+            
             card.addChildNotes(childs)
             self.card = card
              if !isSubCard{
@@ -998,49 +966,32 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                     }
                 }
           
-        let manager = FileManager.default
-            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-            url?.appendPathComponent("card.txt")
-            if let dateRead = try? Data.init(contentsOf: url!){
-                var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-                if cardList == nil{
-                    cardList = [Card]()
-                }
-                cardList?.append(card)
-                let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList as Any)
-                do{
-                    try datawrite.write(to: url!)
-                }catch{
-                    print("fail to add")
-                }
-            }
-            }
-          
             
+            let url = Constant.Configuration.url.Card.appendingPathComponent(card.getId() + ".card")
+            manager.createFile(atPath: url.path, contents: nil, attributes: nil)
+            let datawrite = NSKeyedArchiver.archivedData(withRootObject: card as Any)
+                do{
+                    try datawrite.write(to: url)
+                }catch{
+                    print("Failed to save the file")
+                }
+            }
         }else if self.type == CardEditor.type.save{
             let manager = FileManager.default
-          
-            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-            url?.appendPathComponent("card.txt")
-            if let dateRead = try? Data.init(contentsOf: url!){
-                var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-                if cardList == nil{
-                    cardList = [Card]()
-                }
-                if card != nil{
+            if card != nil{
                     self.card?.setTitle(cardTitle.text)
                     self.card?.setColor(color)
-                    self.card?.setText(attr: definition.attributedText)
+                    self.card?.setDefinition(definition.text)
                     self.card?.setTag(tagInputView!.tags.sorted())
                     var childs = [Card]()
                     for card in self.subCards
                     {
                         childs.append(card.card)
-                        if card.isKind(of: CardView.PicView.self){
+                        if card.isKind(of: PicView.self){
                             let manager = FileManager.default
                             var url = Constant.Configuration.url.PicCard
                             url.appendPathComponent(card.card.getId() + ".jpg")
-                            let picView = card as! CardView.PicView
+                            let picView = card as! PicView
                             if picView.commentView.text != nil{
                                 card.card.setDescription(picView.commentView.text!)
                             }
@@ -1050,12 +1001,12 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                                     
                                 }
                             }
-                        }else if card.isKind(of: CardView.ExaView.self){
+                        }else if card.isKind(of: ExaView.self){
                              let exa = card.card
-                             let exaView = card as! CardView.ExaView
+                             let exaView = card as! ExaView
                              exa?.setTitle(exaView.title.text!)
                              exa?.setDefinition(exaView.textView.text)
-                        }else if card.isKind(of: CardView.TextView.self){
+                        }else if card.isKind(of: TextView.self){
                             var url = Constant.Configuration.url.attributedText
                             url.appendPathComponent(card.card.getId() + ".rtf")
                            // User.uploadAttrUsingQCloud(url:url)
@@ -1063,8 +1014,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             if manager.fileExists(atPath: (url.path)){
                                 Cloud.upload(text: url, id: card.card.getId()){_,_ in}
                             }
-                        }else if card.isKind(of: CardView.VoiceCardView.self){
-                            let voiceCard = card as! CardView.VoiceCardView
+                        }else if card.isKind(of: VoiceCardView.self){
+                            let voiceCard = card as! VoiceCardView
                             voiceCard.card.setTitle((voiceCard.title.text)!)
                             let manager = FileManager.default
                             var url = Constant.Configuration.url.Audio
@@ -1073,15 +1024,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                                // User.uploadAudioUsingQCloud(url: url)
                                 Cloud.upload(audio: url, id: card.card.getId()){_,_ in}
                             }
-                        }else if card.isKind(of: CardView.MapCardView.self){
-                            let manager = FileManager.default
-                            var url = Constant.Configuration.url.Map
-                            url.appendPathComponent(card.card.getId() + ".jpg")
-                            if manager.fileExists(atPath: (url.path)){
-                                //User.uploadPhotoUsingQCloud(url: url)
-                                Cloud.upload(image: url, id: card.card.getId()){_,_ in}
-                            }
-                        }else if card.isKind(of: CardView.MovieView.self){
+                        }else if card.isKind(of: MovieView.self){
                                 var url = Constant.Configuration.url.Movie
                                 url.appendPathComponent(card.card.getId() + ".mov")
                                 if manager.fileExists(atPath:url.path){
@@ -1103,20 +1046,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                     let interval = date.timeIntervalSince1970
                     self.card?.updateTime(String(interval))
                     
-                    //update definition
-                    var textUrl = Constant.Configuration.url.attributedText
-                    textUrl.appendPathComponent(card!.getId() + "_DEFINITION.rtf")
-                    Cloud.uploadDefinition(id: card!.getId(), url: textUrl) { (bool, error) in
-                        if(error != nil){
-                            DispatchQueue.main.async {
-                                AlertView.show(error: "Error Uploading Cards.")
-                            }
-                        }
-                    }
-                    
                     //upload card to icloud
                      if !isSubCard{
-                       
                         Cloud.updateCard(card:self.card!){ (bool) in
                             if bool{
                                print("update card Success")
@@ -1127,27 +1058,18 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             }
                         }
                         
-                   
-                    
-                    var index = 0
-                    for card in cardList!{
-                        if card.getId() != self.card?.getId(){
-                            index += 1
-                        }else{
-                            break
+        
+                        let url = Constant.Configuration.url.Card.appendingPathComponent((self.card?.getId())! + ".card")
+                        manager.createFile(atPath: url.path, contents: nil, attributes: nil)
+                        let datawrite = NSKeyedArchiver.archivedData(withRootObject:self.card! as Any)
+                        do{
+                            try datawrite.write(to: url)
+                        }catch{
+                            print("fail to add")
                         }
                     }
-                    
-                        cardList![index] = card!
-                        let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList as Any)
-                    do{
-                        try datawrite.write(to: url!)
-                    }catch{
-                        print("fail to add")
-                    }
-                    }
-                }
-           }
+                
+            }
         }
         if isSubCard{
                 if self.delegate != nil{
@@ -1165,10 +1087,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 switch subView.card.getType(){
                 case Card.CardType.card.rawValue:
                     let cardView = subView as! CardView.SubCardView
-                    cardView.content.text = card.getText() == nil ? "" : card.getText()?.string
+                    cardView.content.text = card.getDefinition()
                     cardView.title.text = card.getTitle()
                 case Card.CardType.voice.rawValue:
-                    let cardView = subView as! CardView.VoiceCardView
+                    let cardView = subView as! VoiceCardView
                     cardView.reload()
                 default:break
                 }
@@ -1434,7 +1356,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     
     @objc private func updatePic(_ sender:UITapGestureRecognizer){
-        selectedPictureView = (sender.view as! CardView.PicView)
+        selectedPictureView = (sender.view as! PicView)
         let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
@@ -1474,7 +1396,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             url.appendPathComponent(piccard.getId() + ".jpg")
                 let data = UIImageJPEGRepresentation(image, 0.5)
             try? data?.write(to: url)
-        let picView = CardView.getSinglePicView(pic: piccard)
+        let picView = PicView(card: piccard)
         let tapGesture = UITapGestureRecognizer()
             tapGesture.numberOfTapsRequired = 1
             tapGesture.numberOfTouchesRequired = 1
@@ -1511,7 +1433,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             try? FileManager.default.copyItem(at: videoURL, to: URL(fileURLWithPath: Constant.Configuration.url.Movie.appendingPathComponent(id + ".mov").path))
             let movieCard = MovieCard(id: id)
            // movieCard.path = videoURL.path
-            let movieView = CardView.getSingleMovieView(card: movieCard)
+            let movieView = MovieView(card: movieCard)
             cardViewAddPanGesture(movieView)
             movieView.delegate = self
             if subCards.count > 0{
@@ -1577,7 +1499,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     @objc private func addExample(){
         let exampleCard = ExampleCard()
-        let exaView = CardView.singleExampleView(card:exampleCard)
+        let exaView = ExaView(card:exampleCard)
         cardViewAddPanGesture(exaView)
          exaView.textView.delegate = self
          exaView.title.delegate = self
@@ -1597,7 +1519,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     @objc private func addTextView(){
         if addButtonStateisOpen{turnOffToolBox()}
         let textCard = TextCard()
-        let textView = CardView.getSingleTextView(card:textCard)
+        let textView = TextView(card:textCard)
         cardViewAddPanGesture(textView)
         textView.textView.delegate = self
         textView.delegate = self
@@ -1607,8 +1529,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             self.scrollView.addSubview(textView)
              subCards.append(textView)
         }else if subCards.count >= 1{
-            if (subCards.last?.isKind(of: CardView.TextView.self))!{
-                let text = subCards.last as! CardView.TextView
+            if (subCards.last?.isKind(of: TextView.self))!{
+                let text = subCards.last as! TextView
                 selectedView = text.textView
                 text.textView.becomeFirstResponder()
             }else{
@@ -1630,9 +1552,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
            let location = gesture.location(in: scrollView)
     print("x:\(location.x),y:\(location.y)")
      //   print("last height:\((subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)!)")
-        if subCards.count > 0 && location.y > (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! && !(subCards.last?.isKind(of: CardView.TextView.self))! && !addButtonStateisOpen{
+        if subCards.count > 0 && location.y > (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! && !(subCards.last?.isKind(of: TextView.self))! && !addButtonStateisOpen{
             let textCard = TextCard(id: UUID().uuidString)
-            let view = CardView.getSingleTextView(card: textCard)
+            let view = TextView(card: textCard)
             cardViewAddPanGesture(view)
             view.delegate = self
             view.textView.delegate = self
@@ -1644,7 +1566,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             view.textView.becomeFirstResponder()
         }else if subCards.count == 0 && location.y > definition.frame.origin.y + definition.frame.height && !addButtonStateisOpen{
             let textCard = TextCard(id: UUID().uuidString)
-            let view = CardView.getSingleTextView(card: textCard)
+            let view = TextView(card: textCard)
             cardViewAddPanGesture(view)
             view.delegate = self
             view.textView.delegate = self
@@ -1688,7 +1610,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     @objc private func addVoice(){
         let voiceCard = VoiceCard(id: UUID().uuidString,title:"record")
-        let voiceView = CardView.getSingleVoiceView(card: voiceCard)
+        let voiceView = VoiceCardView(card: voiceCard)
         voiceView.hero.id = voiceCard.getId()
         voiceView.delegate = self
         voiceView.title.delegate = self
@@ -1784,7 +1706,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
  */
 extension CardEditor:CardViewDelegate{
     
-    internal func movieView(expand videoView: CardView.MovieView) {
+    internal func movieView(expand videoView: MovieView) {
         let vc = VideoController()
         vc.loadMovie(avPlayer: videoView.player!)
         self.present(vc, animated: true){
@@ -1792,7 +1714,7 @@ extension CardEditor:CardViewDelegate{
         }
     }
     
-    internal func voiceView(recognition cardView: CardView.VoiceCardView) {
+    internal func voiceView(recognition cardView: VoiceCardView) {
         cardView.hero.id = cardView.card.getId()
         let vc = VoiceRecognitionController()
         vc.modalPresentationStyle = .currentContext
@@ -1803,16 +1725,16 @@ extension CardEditor:CardViewDelegate{
         self.present(vc, animated: true, completion: nil)
     }
     
-    internal func cardView(commentHide picView: CardView.PicView) {
+    internal func cardView(commentHide picView: PicView) {
         reLoad()
     }
     
-    internal func cardView(commentShowed picView: CardView.PicView) {
+    internal func cardView(commentShowed picView: PicView) {
         reLoad()
         picView.commentView.becomeFirstResponder()
     }
     
-    internal func picView(extractText:CardView.PicView){
+    internal func picView(extractText:PicView){
         let vc = OCRController()
         vc.modalPresentationStyle = .currentContext
         vc.hero.isEnabled = true

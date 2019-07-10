@@ -97,12 +97,13 @@ class TranslationController:UIViewController{
         superCard.bringSubview(toFront: fromLanguageLabel)
     }
     
-    @objc func copyTranslatedText(){
+    @objc private func copyTranslatedText(){
         UIPasteboard.general.string = translatedText.text
         AlertView.show(success: "Copied to Pasteboard.")
     }
     
-    @objc func tapped(_ sender:UIButton){
+    
+    @objc private func tapped(_ sender:UIButton){
         let label = sender
             let vc = OptionViewController()
             vc.setTitle(string: "Languages")
@@ -126,7 +127,8 @@ class TranslationController:UIViewController{
             self.present(vc, animated: true, completion: nil)
     }
     
-    @objc func revert(){
+    //revert the two languages
+    @objc private func revert(){
         if fromLanguageLabel.title(for: .normal) != "Auto"{
        let tmp = fromLanguageLabel.title(for: .normal)
        fromLanguageLabel.setTitle(toLanguageLabel.title(for: .normal), for: .normal)
@@ -138,7 +140,9 @@ class TranslationController:UIViewController{
         dismiss(animated: true, completion: nil)
     }
     
-    private func translate(from:String,to:String,text:String){
+    
+    //translate
+    func translate(from:String,to:String,text:String){
         var f = ""
         if from != "Auto"{
         f = languageDictionary![from] as! String
@@ -169,29 +173,15 @@ class TranslationController:UIViewController{
         }
     }
     
+    //translation the text in the textbox
     @objc private func trans(){
-        if !isPremium(){
-            let trial = UserDefaults.standard.integer(forKey: Constant.Key.TranslateTrial)
-            if trial <= 0{
-                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
-                return
-            }else{
-                let view = SCLAlertView()
-                
-                view.addButton("Start") {
-                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.TranslateTrial)
-                    if self.originalText.text.count > 0{
-                        self.translate(from:self.fromLanguageLabel.title(for: .normal)!, to:self.toLanguageLabel.title(for: .normal)!, text: self.originalText.text)
-                    }
-                }
-                
-                
-                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
+            if self.originalText.text.count > 0{
+                self.translate(from:self.fromLanguageLabel.title(for: .normal)!, to:self.toLanguageLabel.title(for: .normal)!, text: self.originalText.text)
             }
-        }
     }
     
 }
+
 
 extension TranslationController:UITextViewDelegate{
     func textViewDidEndEditing(_ textView: UITextView) {

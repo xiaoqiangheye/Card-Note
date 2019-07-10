@@ -21,10 +21,13 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     var rateUs:SettingCard!
     var TermofUse:SettingCard!
     var backGround:UIView!
+    var tag:SettingCard!
+    var version:SettingCard!
     
     
     var mailController:MFMailComposeViewController?
     class SettingCard:UIView{
+        var imageView:UIImageView!
         class func getSingleNameCard()->SettingCard{
             let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width * 0.8))
             view.backgroundColor = UIColor.white
@@ -48,15 +51,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             userEmail.textAlignment = .center
             view.addSubview(userEmail)
             
-            if ifloggedin{
-                username.text = loggedusername
-                userEmail.text = loggedemail
-                portrait.setFAIconWithName(icon: .FAUserCircle, textColor: UIColor.black)
-                
-            }else{
-                username.text = ""
-                userEmail.text = "Log in"
-            }
+            
             
             
             return view
@@ -80,11 +75,11 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         class func getSingleSettingCard(color:UIColor,title:String, icon:UIImage,action: (SettingCard)->())->SettingCard{
             let view = SettingCard(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
             view.backgroundColor = color
-            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-            imageView.center.x = view.frame.width/2
-            imageView.center.y = view.frame.height/2
-            imageView.image = icon
-            view.addSubview(imageView)
+            view.imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+            view.imageView.center.x = view.frame.width/2
+            view.imageView.center.y = view.frame.height/2
+            view.imageView.image = icon
+            view.addSubview(view.imageView)
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
             label.font = UIFont.systemFont(ofSize: 15)
             label.textColor = UIColor.flatGray
@@ -102,14 +97,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         
     }
     
-   func logout(_ sender: Any) {
-        ifloggedin = false
-        UserDefaults.standard.set("", forKey: Constant.Key.Token)
-        loggedusername = ""
-        loggedID = ""
-        loggedemail = ""
-        performSegue(withIdentifier: "login", sender: "logout")
-    }
+   
     
 
     
@@ -187,16 +175,15 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             settingCard.addGestureRecognizer(tapGesture)
     
         })
-        
+        sync.imageView.setFAIconWithName(icon: .FACog, textColor: .black)
         sync.frame.origin.y = 30
         sync.center.x = scrollView.bounds.width/4
         sync.hero.id = "sync"
         self.scrollView.addSubview(sync)
-       // self.scrollView.contentSize.height += sync.frame.height + 20
+    
         
         /**
          account
-         */
         account = SettingCard.getSingleSettingCard(color: .white,title: "Account Plan", icon:UIImage(named: "accountPlan")!,action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(accountPlans))
@@ -207,6 +194,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         account.hero.id = "accountPlan"
         self.scrollView.addSubview(account)
         self.scrollView.contentSize.height += account.frame.height + 30
+        */
         
         /**
         help
@@ -216,8 +204,9 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             tapGesture.addTarget(self, action: #selector(helpSetting))
             settingCard.addGestureRecognizer(tapGesture)
         })
-        help.frame.origin.y = sync.frame.origin.y + sync.frame.height + 30
-        help.center.x = scrollView.bounds.width/4
+        help.imageView.setFAIconWithName(icon: .FAQuestion, textColor: .black)
+        help.frame.origin.y = 30
+        help.center.x = scrollView.bounds.width/4*3
         help.hero.id = "help"
         self.scrollView.addSubview(help)
         //self.scrollView.contentSize.height += help.frame.height + 20
@@ -225,13 +214,14 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
         About us
         */
-        aboutUs = SettingCard.getSingleSettingCard(color: .white, title: "About us", icon:UIImage(named: "aboutUs")!,action: { (settingCard) in
+        aboutUs = SettingCard.getSingleSettingCard(color: .white, title: "About us", icon:UIImage(),action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(aboutUsSetting))
             settingCard.addGestureRecognizer(tapGesture)
         })
+        aboutUs.imageView.setFAIconWithName(icon: .FAUsers, textColor: .black)
         aboutUs.frame.origin.y = sync.frame.origin.y + sync.frame.height + 30
-        aboutUs.center.x = scrollView.bounds.width/4 * 3
+        aboutUs.center.x = scrollView.bounds.width/4
         aboutUs.hero.id  = "aboutUs"
         self.scrollView.addSubview(aboutUs)
         self.scrollView.contentSize.height += aboutUs.frame.height + 30
@@ -244,14 +234,49 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             tapGesture.addTarget(self, action: #selector(rateUsSetting))
             settingCard.addGestureRecognizer(tapGesture)
         })
-        rateUs.frame.origin.y = help.frame.origin.y + help.frame.height + 30
-        rateUs.center.x = scrollView.bounds.width/4
+        rateUs.imageView.setFAIconWithName(icon: .FAStar, textColor: .black)
+        rateUs.frame.origin.y = sync.frame.origin.y + sync.frame.height + 30
+        rateUs.center.x = scrollView.bounds.width/4*3
         rateUs.hero.id = "rateUs"
         self.scrollView.addSubview(rateUs)
-       // self.scrollView.contentSize.height += rateUs.frame.height
+        
+        /**
+        Version
+        */
+        version = SettingCard.getSingleSettingCard(color: .white, title: "Version", icon:UIImage.init(icon:.FAMars, size: CGSize(width: 30, height: 30)), action: {settingcard in
+            let tapGesture = UITapGestureRecognizer()
+            tapGesture.addTarget(self, action: #selector(versions))
+            settingcard.addGestureRecognizer(tapGesture)
+        })
         
         
+        version.frame.origin.y = rateUs.frame.origin.y + rateUs.frame.height + 30
+        version.center.x = scrollView.bounds.width/4
+        version.hero.id = "version"
+        self.scrollView.addSubview(version)
         
+        /**
+         tag
+         */
+        tag = SettingCard.getSingleSettingCard(color: .white, title: "Tag", icon: UIImage.init(icon: .FATags, size: CGSize(width: 30, height: 30)), action: { (settingCard) in
+            let tapGesture = UITapGestureRecognizer()
+            tapGesture.addTarget(self, action: #selector(tags))
+            settingCard.addGestureRecognizer(tapGesture)
+        })
+        
+        tag.frame.origin.y = rateUs.frame.origin.y + rateUs.frame.height + 30
+        tag.center.x = scrollView.bounds.width/4*3
+        tag.hero.id = "tag"
+        self.scrollView.addSubview(tag)
+        
+    }
+    
+    @objc func tags(){
+        let tagVC = ClassController()
+        self.present(tagVC, animated: true, completion: nil)
+    }
+    
+    @objc func versions(){
         
     }
     
@@ -266,8 +291,6 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         let uv = AboutUsController()
         self.present(uv, animated: true, completion: nil)
     }
-    
-   
     
    
     
@@ -295,41 +318,31 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         }
     }
     
-    @objc func accountPlans(){
-        let accountPlanController = AccountPlanController()
-        accountPlanController.view.backgroundColor = .white
-        self.present(accountPlanController, animated: true, completion: nil)
-    }
     
     @objc func syncSetting(){
-        if(!isPremium()){
-            let vc = PremiumController()
-            self.present(vc, animated: true, completion: nil)
-            return
-        }
         let settingController = SettingController()
         settingController.view.backgroundColor = .white
         settingController.setTitle("Sync")
         let sync_under_wifi = SwitchSetting(title: "Sync only with Wifi", description: "Sync your notes to the cloud only if wifi presents.", tintColor:Constant.Color.themeColor, onSwitch: {
-            UserDefaults.standard.set(true, forKey: "auto-sync-if-wifi-presents")
+            UserDefaults.standard.set(true, forKey: Constant.Key.SyncWithWifi)
         }) {
-            UserDefaults.standard.set(false, forKey: "auto-sync-if-wifi-presents")
+            UserDefaults.standard.set(false, forKey: Constant.Key.SyncWithWifi)
         }
-        sync_under_wifi.paperSwitch.isOn = UserDefaults.standard.bool(forKey: "auto-sync-if-wifi-presents")
+        sync_under_wifi.paperSwitch.isOn = UserDefaults.standard.bool(forKey: Constant.Key.SyncWithWifi)
         if sync_under_wifi.paperSwitch.isOn{
             sync_under_wifi.titleLabel.textColor = .white
             sync_under_wifi.descrptionLabel.textColor = .white
         }
         
         let auto_sync = SwitchSetting(title: "Auto-Sync", description: "Sync your notes to the cloud automatically.",tintColor: Constant.Color.themeColor, onSwitch: {
-            UserDefaults.standard.set(true, forKey: "auto-sync")
+            UserDefaults.standard.set(true, forKey: Constant.Key.AutoSync)
         }, offSwitch: {
-            UserDefaults.standard.set(false, forKey: "auto-sync")
+            UserDefaults.standard.set(false, forKey: Constant.Key.AutoSync)
             sync_under_wifi.paperSwitch.isOn = false
             sync_under_wifi.switchValueChanged()
         })
         
-        auto_sync.paperSwitch.isOn = UserDefaults.standard.bool(forKey: "auto-sync")
+        auto_sync.paperSwitch.isOn = UserDefaults.standard.bool(forKey: Constant.Key.AutoSync)
         if auto_sync.paperSwitch.isOn{
             auto_sync.titleLabel.textColor = .white
             auto_sync.descrptionLabel.textColor = .white
@@ -345,11 +358,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     @objc func languageSetting(){
         
     }
-    /*deprecated
-    @objc func login(){
-        self.performSegue(withIdentifier: "login", sender: "")
-    }
-  */
+
     
     @objc func accountSetting(){
         self.performSegue(withIdentifier: "accountSetting", sender: "")

@@ -18,7 +18,7 @@ class CardEditorView:UIView{
     var cardBackGround = UIView()
     var card:Card?
     var subCards:[CardView] = [CardView]()
-    var examples:[CardView.ExaView] = [CardView.ExaView]()
+    var examples:[ExaView] = [ExaView]()
     override init(frame: CGRect) {
         super.init(frame: frame)
         cardTitle.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 50)
@@ -125,7 +125,7 @@ class CardEditorView:UIView{
         cardBackGround.backgroundColor = card?.getColor()
         
         for subview in cardBackGround.subviews{
-            if subview.isKind(of: CardView.self) || subview.isKind(of: CardView.ExaView.self){
+            if subview.isKind(of: CardView.self) || subview.isKind(of: ExaView.self){
                 subview.removeFromSuperview()
             }
         }

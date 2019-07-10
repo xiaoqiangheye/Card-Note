@@ -50,8 +50,8 @@ extension CardViewController:CoachMarksControllerDataSource{
             
         
         }
-        let autoSync = UserDefaults.standard.bool(forKey: Constant.Configuration.Cloud.AUTO_SYNC)
-        if isFirstLaunch && autoSync && isPremium(){
+        let autoSync = UserDefaults.standard.bool(forKey: Constant.Key.AutoSync)
+        if isFirstLaunch && autoSync{
             ifCanSync()
         }else{
             loadCard()
@@ -100,6 +100,19 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     override func viewDidLoad() {
+        Cloud.service(){bool in
+            if !bool!{
+                let alert = UIAlertController(title: "Service of Canote has Suspended.", message: "We sincerely apologize for the inconvenience.", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "OK :(", style: .default, handler: {action in
+                    terminate()
+                }))
+                
+                
+                self.present(alert, animated: true)
+            }
+        }
+        
         // self.view.backgroundColor = .clear
         internet = Reachability.init()
        
@@ -114,7 +127,6 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             filterButton.frame = CGRect(x: 40, y: 10, width: 70, height: 30)
             slideView.addSubview(filterButton)
             filterButton.titleLabel?.font = UIFont(name: "DevanagariSangamMN", size: 19)!
-            //filterButton.titleLabel?.textColor = UIColor.gray
             filterButton.setTitle(title, for: .normal)
             filterButton.setTitleColor(UIColor.gray, for: .normal)
             filterButton.layer.cornerRadius = 2
@@ -186,8 +198,8 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         //filterView
         filterView.isHidden = true
         self.view.addSubview(filterView)
-        let autoSync = UserDefaults.standard.bool(forKey: Constant.Configuration.Cloud.AUTO_SYNC)
-        if isFirstLaunch && autoSync && isPremium(){
+        let autoSync = UserDefaults.standard.bool(forKey: Constant.Key.AutoSync)
+        if isFirstLaunch && autoSync{
             ifCanSync()
         }else{
             loadCard()
@@ -249,16 +261,21 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     
     private func loadCard(constaints:[Constraint]){
         let manager = FileManager.default
-        var cardList:[Card]!
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent("card.txt")
-        if let dateRead = try? Data.init(contentsOf: url!){
-            cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-            if cardList == nil{
-                cardList = [Card]()
-            }
-        }
+        var cardList:[Card] = [Card]()
         
+        let url = Constant.Configuration.url.Card
+        do{
+            let array = try manager.contentsOfDirectory(atPath: url.path)
+            for file in array{
+                let fileUrl = url.appendingPathComponent(file)
+                let dataRead = try Data.init(contentsOf: fileUrl)
+                let card = NSKeyedUnarchiver.unarchiveObject(with: dataRead) as! Card
+                cardList.append(card)
+            }
+        }catch{
+            print("Failed to load file")
+        }
+       
         let sorted = cardList.sorted { (card1, card2) -> Bool in
             let time1 = card1.getTime()
             let time2 = card2.getTime()
@@ -283,7 +300,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             let parsedCardList = SearchEngine.loadCards(cards: sorted, keyWords: keyword)
             loadCardWithConstaints(parsedCardList, constaints)
         }else if string == ""{
-            loadCardWithConstaints(sorted                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           , constaints)
+            loadCardWithConstaints(sorted, constaints)
         }
     }
     
@@ -346,7 +363,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             
         var cumulatedY:CGFloat = 70
             for card in filterdCardList{
-                let cardView:CardView = CardView.getSingleCardView(card:card)
+                let cardView:CardView = CardView(card:card)
                 cardView.frame.origin.y = CGFloat(cumulatedY)
                 cumulatedY += cardView.bounds.height
                     + 30
@@ -466,43 +483,16 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         alertView.showWarning("Warning", subTitle: "Are you deleting this card From?")
     }
     
-    @objc private func shareCard(card:Card){
-        
-        /*//User.shareCard(card: card, states: [String]())
-        let shareView = ShareView.show(target: self.view, card: card)
-        shareView.shareBlock = {
-            User.shareCard(card: card, states: shareView.state)
-            shareView.cancel()
-        }
-         */
-    }
-        
+    
     
     @objc private func deleteCard(card:Card){
+        let url = Constant.Configuration.url.Card.appendingPathComponent(card.getId() + ".card")
         let manager = FileManager.default
-        var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-        url?.appendPathComponent("card.txt")
-        if let dateRead = try? Data.init(contentsOf: url!){
-            var cardList = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-            if cardList == nil{
-                cardList = [Card]()
-            }
-            var index = 0
-            for c in cardList!{
-                if c.getId() == card.getId(){
-                    cardList?.remove(at: index)
-                    break
-                }
-                index += 1
-            }
-            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList!)
-            do{
-                try datawrite.write(to: url!)
-            }catch{
-                print("Fail to delete Card")
-            }
+        do {
+            try manager.removeItem(at: url)
+        }catch{
+            print("Fail to delete Card")
         }
-        
     }
     
     @objc func tapped(_ sender:UITapGestureRecognizer){
@@ -519,7 +509,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     @objc func ifCanSync(){
-        let syncwithWIFI = UserDefaults.standard.bool(forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
+        let syncwithWIFI = UserDefaults.standard.bool(forKey: Constant.Key.SyncWithWifi)
         if(syncwithWIFI && !(internet.connection == .wifi)){
             let alertView = SCLAlertView()
             alertView.addButton("Use Cellular data for once") {
@@ -527,7 +517,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             }
             
             alertView.addButton("Use Cellular data if present") {
-                UserDefaults.standard.set(false, forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
+                UserDefaults.standard.set(false, forKey: Constant.Key.SyncWithWifi)
                 self.syncCard()
             }
             alertView.showWarning("WIFI Setting", subTitle: "Your setting allow sync only with wifi presents.")
@@ -537,16 +527,12 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     }
     
     @objc func syncCard(){
-        if(!isPremium()){
-            let vc = PremiumController()
-            self.present(vc, animated: true, completion: nil)
-            return
-        }
         self.isSynced = true
         let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
         rotateAnimation.fromValue = 0.0
         rotateAnimation.toValue = CGFloat(Double.pi * 2.0)
-        rotateAnimation.duration = 10
+        rotateAnimation.duration = 100
+        
         syncButton.setTitle("", for: .normal)
         syncButton.setFAIcon(icon: .FASpinner, iconSize: 20, forState: .normal)
         syncButton.setTitleColor(.gray, for: .normal)

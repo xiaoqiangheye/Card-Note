@@ -22,7 +22,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
     var speechRecognizer:SFSpeechRecognizer?
     var recognitionTask:SFSpeechRecognitionTask? = nil
     let request = SFSpeechAudioBufferRecognitionRequest()
-    var voiceCardView:CardView.VoiceCardView!
+    var voiceCardView:VoiceCardView!
     var textView:UITextView!
     var card:VoiceCard?
     var superCard:UIView!
@@ -158,8 +158,8 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         recognizeFileButton.isHidden = true
     }
     
-     private func getsingleVoiceView(card:VoiceCard)->CardView.VoiceCardView{
-        let view = CardView.VoiceCardView()
+     private func getsingleVoiceView(card:VoiceCard)->VoiceCardView{
+        let view = VoiceCardView(card:card)
         view.card = card
         view.backgroundColor = .white
         view.layer.cornerRadius = 10
@@ -308,23 +308,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
     }
     
     @objc private func recognizeFile(){
-        if !isPremium(){
-            let trial = UserDefaults.standard.integer(forKey: Constant.Key.VoiceTrial)
-            if trial <= 0{
-                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
-                return
-            }else{
-                let view = SCLAlertView()
-                
-                view.addButton("Start") {
-                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.VoiceTrial)
-                    self.startRecognizeFile()
-                }
-                
-                
-                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
-            }
-        }
+        self.startRecognizeFile()
     }
     @objc private func startRecognizeFile() {
         
@@ -356,24 +340,9 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
     
     
     @objc private func speech(){
-        if !isPremium(){
-            let trial = UserDefaults.standard.integer(forKey: Constant.Key.VoiceTrial)
-            if trial <= 0{
-                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
-                return
-            }else{
-                let view = SCLAlertView()
-                
-                view.addButton("Start") {
-                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.VoiceTrial)
-                    self.recordandRecognizeSpeech()
-                }
-                
-                
-                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
-            }
-        }
+        self.recordandRecognizeSpeech()
     }
+    
     @objc private func recordandRecognizeSpeech(){
         
         let text = self.textView.text == nil ? "" : self.textView.text

@@ -15,21 +15,16 @@ class Constant{
         static let SHARE_SECREAT_KET = "95b689872bae44ff9de22d57f3b5510c"
         struct url {
             static let manager = FileManager.default
-            static var url = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)
-            static var user:URL = url.appendingPathComponent(loggedID)
-            static let Card:URL = user
-            static let PicCard:URL = user
+            static var url = FileManager.default.urls(for: .documentDirectory, in:.userDomainMask).first!
+           // static var user:URL = url.appendingPathComponent(loggedID)
+            static let Card:URL = url.appendingPathComponent("card")
+            static let PicCard:URL = url.appendingPathComponent("pic")
             static let Audio:URL = url.appendingPathComponent("audio")
-            static let Map:URL = url.appendingPathComponent("mapPic")
             static let Movie:URL = url.appendingPathComponent("movie")
             static let temporary:URL = url.appendingPathComponent("temp")
             static let attributedText = url.appendingPathComponent("attr")
         }
         static var AccountPlan:String = "basic"
-        struct Cloud{
-            static let SYNC_ONLY_WITH_WIFI = "auto-sync-if-wifi-presents"
-            static let AUTO_SYNC = "auto-sync"
-        }
     }
     
     enum TextMode {
@@ -44,12 +39,7 @@ class Constant{
         case UnderLineMode
         case StrokeMode
     }
-    
-    enum AccountPlan:String{
-        case premium = "premium"
-        case basic = "basic"
-    }
-    
+        
     struct Color{
         static let 水荡漾清猿啼 = UIColor(red: 199/255, green: 255/255, blue: 236/236, alpha: 1)
         static let 西瓜红 = UIColor(red: 253/255, green: 91/255, blue: 120/255, alpha: 1)
@@ -79,5 +69,7 @@ class Constant{
         static let OCRTrial = "ocrtrial"
         static let TranslateTrial = "transtrial"
         static let VoiceTrial = "voicetrial"
+        static let AutoSync = "auto-sync"
+        static let SyncWithWifi = "auto-sync-if-wifi-presents"
     }
 }

@@ -139,22 +139,7 @@ class OCRController:UIViewController,PointDelegate{
     }
     
     @objc func recognize(){
-        if !isPremium(){
-            let trial = UserDefaults.standard.integer(forKey: Constant.Key.OCRTrial)
-            if trial <= 0{
-                AlertView.show(alert: "Your trial is ran out. We'd loved you to support us and subscribe to our Premium.")
-                return
-            }else{
-                let view = SCLAlertView()
-                view.addButton("Start") {
-                    UserDefaults.standard.set(trial - 1,forKey: Constant.Key.OCRTrial)
-                    self.startRecognize()
-                }
-                
-                
-                view.showInfo("Trial", subTitle: "You have " + String(trial) + " trials left")
-            }
-        }
+        self.startRecognize()
     }
     
     @objc func startRecognize(){

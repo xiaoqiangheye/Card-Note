@@ -13,7 +13,7 @@ import AVFoundation
 class RecordManager {
     var recorder: AVAudioRecorder?
     var player: AVAudioPlayer?
-    var file_path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+    var file_path = Constant.Configuration.url.Audio
     var canPlay:Bool = false
     var time:Int = 0
     var state:State = State.willRecord
@@ -30,8 +30,8 @@ class RecordManager {
     private var timer:Timer?
   
     
-    init(userID:String,fileName:String) {
-        file_path?.append("/audio/\(fileName)")
+    init(fileName:String) {
+        file_path.appendPathComponent(fileName)
     }
     
     //开始录音
@@ -60,7 +60,7 @@ class RecordManager {
         do {
             state = .recording
             let manager = FileManager.default
-            let url = URL(fileURLWithPath: file_path!)
+            let url = file_path
             let direct = url.deletingLastPathComponent()
             if !manager.fileExists(atPath: direct.path){
                try? manager.createDirectory(at: direct,withIntermediateDirectories: true, attributes: nil)
@@ -95,7 +95,7 @@ class RecordManager {
         if let recorder = self.recorder {
             if recorder.isRecording {
                 self.state = State.haveRecord
-                print("正在录音，马上结束它，文件保存到了：\(file_path!)")
+                print("正在录音，马上结束它，文件保存到了：\(file_path.absoluteString)")
                 canPlay = true
             }else {
                 print("没有录音，但是依然结束它")
@@ -131,12 +131,12 @@ class RecordManager {
     //播放
     func play()->Bool{
         do {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
                 try AVAudioSession.sharedInstance().setActive(true)
                 try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
          //  print(FileManager.default.fileExists(atPath: URL(fileURLWithPath: file_path!).path))
             state = State.playing
-            player = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: file_path!))
+            player = try AVAudioPlayer(contentsOf: file_path)
             print("歌曲长度：\(player!.duration)")
             player!.play()
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
@@ -179,7 +179,7 @@ class RecordManager {
         }
     }
     
-    static func play(filePath:String)->Bool
+    func play(filePath:String)->Bool
     {
         do {
             let player = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: filePath))
@@ -195,7 +195,7 @@ class RecordManager {
     
     func playWithAVPlayer()->Bool{
         do{
-            let player = AVPlayer(url: URL(fileURLWithPath: file_path!))
+            let player = AVPlayer(url: file_path)
             player.play()
             return true
         }catch _{

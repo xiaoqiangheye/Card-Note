@@ -16,7 +16,9 @@ class VoiceCard:Card{
     init(id:String,title:String) {
         super.init(title: title, tag: nil, description: "", id: id, definition: "", color: UIColor.white, cardType: "voice", modifytime: "")
         voicepath.append(contentsOf: "/\(id).wav")
-        voiceManager = RecordManager(userID: loggedID, fileName: "\(id).wav")
+        print(voicepath)
+        
+        voiceManager = RecordManager(fileName: "\(id).wav")
     }
     
     override func encode(with aCoder: NSCoder) {
@@ -33,7 +35,7 @@ class VoiceCard:Card{
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
       //  self.voicepath = (aDecoder.decodeObject(forKey: "voicePath") as? String)!
-        self.voiceManager = RecordManager(userID: loggedID, fileName: "\(self.getId()).wav")
+        self.voiceManager = RecordManager(fileName: "\(self.getId()).wav")
         voicepath.append(contentsOf: "/\(self.getId()).wav")
         let state = aDecoder.decodeObject(forKey: "state") as? String
         if state != nil{
@@ -44,9 +46,5 @@ class VoiceCard:Card{
         // fatalError("init(coder:) has not been implemented")
     }
     
-  
-    
-    
-    
-  
+
 }

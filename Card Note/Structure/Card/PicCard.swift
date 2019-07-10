@@ -17,7 +17,6 @@ class PicCard:Card{
     }
     
     required init?(coder aDecoder: NSCoder) {
-       // self.pic = aDecoder.decodeObject(forKey: "pic") as? UIImage
         super.init(coder: aDecoder)
         var url = Constant.Configuration.url.PicCard
         url.appendPathComponent(self.getId() + ".jpg")
@@ -25,22 +24,11 @@ class PicCard:Card{
         if im != nil{
             self.pic = im
         }else{
-            self.pic = #imageLiteral(resourceName: "bubble")
-            /*deprecared
-            User.getImage(email: loggedemail, cardID: self.getId(), completionHandler: { (image:UIImage?) in
-                if image != nil{
-                    DispatchQueue.main.async {
-                       self.pic = image
-                    }
-                }
-            })
-            */
+            
             Cloud.downloadAsset(id: self.getId(), type: "IMAGE") { (bool, error) in
                 self.pic = UIImage(named: (url.path))
             }
         }
-       
-       // fatalError("init(coder:) has not been implemented")
     }
     
    

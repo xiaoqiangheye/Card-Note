@@ -10,21 +10,13 @@ import UIKit
 import CoreData
 import SwiftyStoreKit
 
-var ifloggedin = false
-var loggedusername = ""
-var loggedemail = ""
-var loggedID = ""
-var emailVerification = ""
-var signUpEmail = ""
-var signUpPassword = ""
-var signUpUsername = ""
-var signUpAuthCode = ""
 var isFirstLaunch = true
+var app_version = ""
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate{
     var window: UIWindow?
     func createDirectory(){
-        let array = [Constant.Configuration.url.attributedText,Constant.Configuration.url.Audio,Constant.Configuration.url.Card,Constant.Configuration.url.Map,Constant.Configuration.url.Movie,Constant.Configuration.url.PicCard]
+        let array = [Constant.Configuration.url.attributedText,Constant.Configuration.url.Audio,Constant.Configuration.url.Card,Constant.Configuration.url.Movie,Constant.Configuration.url.PicCard]
         for url in array{
             if !FileManager.default.fileExists(atPath: url.path){
                 do{
@@ -43,7 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         //上次存储的版本号
         let save_version = UserDefaults.standard.object(forKey: "isFirstIntobs") as? String
         
-        
         //方法2：
         if app_version == save_version {
             return false
@@ -59,36 +50,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-       
+        //Override point for customization after application launch.
+        
+        
+        print("Start Initialization")
+        //version
+        app_version = (Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String)!
+        print("Version: " + app_version)
+        
+        //Lastest Version
+        Network.getVersion { (version, updatect, bool) in
+            if(bool && version != ""){
+                print("Lastest Version: \(version!)\nUpdate Contents: \(updatect!)")
+            }else{
+                print("get lastest version failed")
+            }
+        }
         
         //directory setting
         createDirectory()
         
         //if lauchedsetting
         isFirstLaunch = UserDefaults.standard.bool(forKey: "ifLauched")
-        let ifUpdateFirstLauch = isUpdateFirstLaunch()
-        if ifUpdateFirstLauch{
-            //add some settings
-        }
+        //let ifUpdateFirstLauch = isUpdateFirstLaunch()
+
         
         if !isFirstLaunch{
         UserDefaults.standard.set(true, forKey: Constant.Key.ifLauched)
-            let tags = [String]()
+        let tags = [String]()
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
             //other setting
-            //auto sync opened
-            UserDefaults.standard.set(false, forKey: Constant.Configuration.Cloud.AUTO_SYNC)
-            //auto sync if Wifi presents
-            UserDefaults.standard.set(false, forKey: Constant.Configuration.Cloud.SYNC_ONLY_WITH_WIFI)
-            //account Plan
-            UserDefaults.standard.set(Constant.AccountPlan.basic.rawValue,forKey: "accountPlan")
-            
-            //trial
-            UserDefaults.standard.set(5,forKey: Constant.Key.OCRTrial)
-            UserDefaults.standard.set(5,forKey: Constant.Key.TranslateTrial)
-            UserDefaults.standard.set(5,forKey: Constant.Key.VoiceTrial)
-            
+            //auto sync closed
+            UserDefaults.standard.set(false, forKey: Constant.Key.AutoSync)
+            //auto sync if Wifi presents closed
+            UserDefaults.standard.set(false, forKey: Constant.Key.SyncWithWifi)
+           
             
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
@@ -102,8 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             }catch{
                 print("fail to add")
             }
-           // PurchaseManager.restore()
-            
+         
         }else{
             let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)
             if tags == nil{
@@ -111,30 +106,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
                 UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
             }
         }
-        PurchaseManager.verifySubscriptions(types: PurchaseManager.products)
         
-       
-        
-        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
-            for purchase in purchases {
-                switch purchase.transaction.transactionState {
-                case .purchased, .restored:
-                    if purchase.needsFinishTransaction {
-                        // Deliver content from server, then:
-                        SwiftyStoreKit.finishTransaction(purchase.transaction)
-                    }
-                // Unlock content
-                case .failed, .purchasing, .deferred:
-                    break // do nothing
-                }
-            }
-        }
         return true
     }
     
     private func orientationCard()->Card{
-        let newOrientationCard = Card(title: "Your First Card", tag: nil, description: "", id: "first", definition: "", color: Constant.Color.blueLeft, cardType: Card.CardType.card.rawValue, modifytime: String(NSTimeIntervalSince1970))
-        newOrientationCard.setText(attr: NSAttributedString(string: "Welcome to Canote!"))
+        let newOrientationCard = Card(title: "Your First Card", tag: nil, description: "", id: "first", definition: "Welcome to Canote!", color: Constant.Color.blueLeft, cardType: Card.CardType.card.rawValue, modifytime: String(NSTimeIntervalSince1970))
         
         let textCard = TextCard(id: UUID().uuidString)
         textCard.setText(attr: NSAttributedString(string: "Now Let's get started! In this Card, you can add many forms of subcards you like, which includes Photos, Voices, Videos, Text, and Key Term. Those multimedia helps you record anything wherever you are.\n\n Click the float \"+\" Button on the right, and you can select the types of media you want to add."))

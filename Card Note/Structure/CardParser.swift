@@ -193,7 +193,6 @@ class CardParser{
         }else if card.getType() == "picture"{
             let manager = FileManager.default
             var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-            url?.appendPathComponent(loggedID)
             url?.appendPathComponent(card.getId() + ".jpg")
             let im = UIImage(named: (url?.path)!)
             if im != nil{

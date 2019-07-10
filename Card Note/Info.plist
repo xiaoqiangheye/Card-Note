@@ -4,55 +4,19 @@
 <dict>
 	<key></key>
 	<dict/>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIRequiresFullScreen</key>
+	<key>CFBundleAllowMixedLocalizations</key>
 	<true/>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>UTImportedTypeDeclarations</key>
-	<array>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-			</array>
-			<key>UTTypeIconFiles</key>
-			<array/>
-		</dict>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Add your photo to the photo card.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Save your location or other places into notes</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Canote</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Save your location or other places into notes</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-	</array>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>jpeg</string>
 			<key>CFBundleTypeIconFiles</key>
 			<array/>
+			<key>CFBundleTypeName</key>
+			<string>jpeg</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.adobe.pdf</string>
@@ -67,18 +31,93 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>cardnote</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+	<key>MGLMapboxAccessToken</key>
+	<string>pk.eyJ1IjoieGlhb3FpYW5naGV5ZSIsImEiOiJjamp0dGdlb3gwN3Q3M3BtYmh3cnVwZWUxIn0.wLR9qlCFU3BiaNcz7rGXbw</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>myqcloud.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string></string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.2</string>
-	<key>CFBundleAllowMixedLocalizations</key>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Save your location or other places into notes</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Save your location or other places into notes</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Record voice to the voice card.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Add your photo to the photo card.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Translate your voice into text</string>
+	<key>QCloudSecretID</key>
+	<string>AKIDCRdjfPSdQAkAORR6f3FSYVGrJnAZvyWx</string>
+	<key>QCloudSecretKey</key>
+	<string>QMCrKbgdQQK6h5HH5h9S9g1AA2lLjvuh</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -86,65 +125,24 @@
 			<array>
 				<string>public.jpeg</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>jpeg</string>
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
 			<string>pic</string>
-			<key>UTTypeDescription</key>
-			<string>jpeg</string>
 		</dict>
 	</array>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleVersion</key>
-	<string>1</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string></string>
-	<key>UIStatusBarHidden</key>
-	<true/>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Translate your voice into text</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>MGLMapboxAccessToken</key>
-	<string>pk.eyJ1IjoieGlhb3FpYW5naGV5ZSIsImEiOiJjamp0dGdlb3gwN3Q3M3BtYmh3cnVwZWUxIn0.wLR9qlCFU3BiaNcz7rGXbw</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Record voice to the voice card.</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>myqcloud.com</key>
-			<dict>
-				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-		</dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<false/>
-	</dict>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>CFBundleURLTypes</key>
+	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>CFBundleURLSchemes</key>
+			<key>UTTypeConformsTo</key>
 			<array>
-				<string>cardnote</string>
+				<string>public.data</string>
 			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
 		</dict>
 	</array>
-	<key>QCloudSecretID</key>
-	<string>AKIDCRdjfPSdQAkAORR6f3FSYVGrJnAZvyWx</string>
-	<key>QCloudSecretKey</key>
-	<string>QMCrKbgdQQK6h5HH5h9S9g1AA2lLjvuh</string>
 </dict>
 </plist>

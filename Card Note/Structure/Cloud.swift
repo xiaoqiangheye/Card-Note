@@ -8,17 +8,36 @@
 
 import Foundation
 import CloudKit
-
+import SCLAlertView
+import Alamofire
 
 let myContainer = CKContainer.default()
 //2、创建数据库
 let database = myContainer.publicCloudDatabase
+let publicData = myContainer.publicCloudDatabase
+
 class Cloud{
     
-    
+    class func service(completionHandler:@escaping  (Bool?)->()){
+        let query = CKQuery(recordType:"Terms" , predicate: NSPredicate(value: true))
+        publicData.perform(query, inZoneWith: nil) { (records, error) in
+            if error != nil{
+                print("Error Initizing Service" + (error?.localizedDescription)!)
+                completionHandler(true)
+            }else{
+                if(records != nil && !(records?.isEmpty)!){
+                    if records![0]["content"] == "0"{
+                       completionHandler(false)
+                    }else{
+                        completionHandler(true)
+                    }
+                }
+            }
+        }
+    }
     class func getTerms(completionHandler:@escaping (String?)->()){
         let query = CKQuery(recordType:"Terms" , predicate: NSPredicate(value: true))
-        database.perform(query, inZoneWith: nil) { (records, error) in
+        publicData.perform(query, inZoneWith: nil) { (records, error) in
             if error != nil{
                 print("Error querying terms" + (error?.localizedDescription)!)
                 completionHandler(nil)
@@ -31,23 +50,18 @@ class Cloud{
     }
     
     class func addCard(card:Card,completionHandler:@escaping (Bool)->()){
-        if !isPremium() {return}
         let cardRecord = CKRecord.init(recordType: "Card", recordID: CKRecordID.init(recordName: card.getId()))
         
         cardRecord["cardID"] = card.getId()
         
-        
-        let string = CardParser.CardToJSON(card)
-        if string != nil{
-            cardRecord["content"] = string
-        }
+        let url = Constant.Configuration.url.Card.appendingPathComponent(card.getId() + ".card")
+        cardRecord["data"] = CKAsset(fileURL: url)
         creatRecord(record: cardRecord) { (bool) in
             completionHandler(bool)
         }
     }
     
     class func addCards(cards:[Card],completionHandler:@escaping (Bool)->()){
-        if !isPremium() {return}
         var ifTrue = true
         var times = 0
         for card in cards{
@@ -69,20 +83,20 @@ class Cloud{
     class func updateCard(card:Card,completionHandler:@escaping (Bool)->()){
         database.fetch(withRecordID: CKRecordID.init(recordName: card.getId()), completionHandler: { record, error in
             if error != nil{
-            print("error fetch card" + (error?.localizedDescription)!)
-            //add Card Again
-            addCard(card: card, completionHandler: { (bool) in
-                    completionHandler(bool)
-                    return
+                print("error fetch card" + (error?.localizedDescription)!)
+                //add Card Again
+                addCard(card: card, completionHandler: { (bool) in
+                        completionHandler(bool)
+                        return
                 })
             }else{
-    // Modify the record
+                // Modify the record
                 record!["cardID"] = card.getId()
-                let string = CardParser.CardToJSON(card)
-                if string != nil{
-                record!["content"] = string
-                }
-             creatRecord(record: record!, completionHandler: { (bool) in
+                
+                var url = Constant.Configuration.url.Card
+                url.appendPathComponent(card.getId() + ".card")
+                record!["data"] = CKAsset(fileURL: url)
+                creatRecord(record: record!, completionHandler: { (bool) in
                     completionHandler(bool)
                 })
     }
@@ -103,13 +117,12 @@ class Cloud{
                     }else{
                         // Modify the record
                         record!["cardID"] = card.getId()
-                        let string = CardParser.CardToJSON(card)
-                        if string != nil{
-                            record!["content"] = string
-                        }
+                        var url = Constant.Configuration.url.Card
+                        url.appendPathComponent(card.getId() + ".card")
+                        record!["data"] = CKAsset(fileURL: url)
                         
                         creatRecord(record: record!, completionHandler: { (bool) in
-                            if !bool{                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                            if !bool{                                                                                             
                                 completionHandler(bool)
                                 successArray.append(0);
                                 return
@@ -133,11 +146,8 @@ class Cloud{
         
     }
     
-  
-    
+
     class func creatRecord(record:CKRecord,completionHandler:@escaping (Bool)->()) {
-        //将记录保存在数据库
-        if !isPremium() {return}
         database.save(record) { (record, error) in
             if (error != nil) {
                 print("creatRecord failure！" + (error?.localizedDescription)!)
@@ -150,8 +160,7 @@ class Cloud{
     }
     
     class func deleteRecordData(id:String,completionHandler:@escaping (Bool)->()) {
-        //将记录保存在数据库
-        if !isPremium() {return}
+        //delete the main card task
         database.delete(withRecordID: CKRecordID.init(recordName: id)) { (artworkRecord, error) in
             if (error != nil) {
                 print("deleteRecord failure！" + (error?.localizedDescription)!)
@@ -162,11 +171,20 @@ class Cloud{
             }
         }
         
+        //delete the child card and asset
+    }
+    
+    class func deleteAllRecordData(completion:@escaping (Bool)->()){
+        database.delete(withRecordZoneID: .default) { (id, error) in
+            if (error != nil){
+                completion(true)
+            }else{
+                completion(false)
+            }
+        }
     }
     
     class func fetchCard(id:String){
-        //在代码中获取我们保存好的内容
-        if !isPremium() {return}
         database.fetch(withRecordID: CKRecordID.init(recordName: id)) { (card, error) in
             if (error != nil) {
                 print("selectData failure！" + (error?.localizedDescription)!)
@@ -177,7 +195,6 @@ class Cloud{
     }
     
     class func queryTags(completionHandler:@escaping (Set<String>?)->()){
-        if !isPremium() {return}
         let query = CKQuery(recordType: "Tag", predicate: NSPredicate(value:true))
         database.perform(query, inZoneWith: nil) { (records, error) in
             if error != nil{
@@ -192,21 +209,24 @@ class Cloud{
         }
     }
     
+    
+    //TODO: should return optional type
     class func queryAllCard(completionhandler:@escaping ([Card])->()){
-        if !isPremium() {return}
         let query = CKQuery(recordType:"Card" , predicate: NSPredicate(value: true))
-        database.perform(query, inZoneWith: nil) { (records, error) in
+        database.perform(query, inZoneWith: .default) { (records, error) in
             if error != nil{
-              print("Error querying the cards." + (error?.localizedDescription)!)
-                
+                print("Error querying the cards." + (error?.localizedDescription)!)
                 let cardArray = [Card]()
                 completionhandler(cardArray)
             }else{
                 var cardArray = [Card]()
                 for record in records!{
-                    let content = record["content"]! as! String
-                    if let card = CardParser.JSONToCard(content){
-                        cardArray.append(card)
+                    let cardData = record["data"]! as! CKAsset
+                    do{
+                        let data = try Data(contentsOf: cardData.fileURL)
+                        let card = NSKeyedUnarchiver.unarchiveObject(with: data) as? Card
+                        cardArray.append(card!)
+                    }catch{
                     }
                 }
                 completionhandler(cardArray)
@@ -216,7 +236,6 @@ class Cloud{
     
     
     class private func queryAssets(query:CKQuery,completionHandler:@escaping (Bool,Error?)->()){
-        if !isPremium() {return}
         database.perform(query, inZoneWith: nil) { (records, error) in
             if (error == nil){
                 if(records != nil){
@@ -292,7 +311,6 @@ class Cloud{
     
     /*
     class private func upload(url:URL,type:String,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        
         let cardRecord = CKRecord.init(recordType: "ASSET", recordID: CKRecordID.init(recordName: id))
         cardRecord["file"] = CKAsset(fileURL: url)
         cardRecord["type"] = type
@@ -305,7 +323,6 @@ class Cloud{
  */
     
     class private func upload(url:URL,type:String,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        if !isPremium() {return}
         database.fetch(withRecordID: CKRecordID.init(recordName: id)) { (record, error) in
             if(record != nil){
                 record!["file"] = CKAsset(fileURL: url)
@@ -358,4 +375,5 @@ class Cloud{
             }
         }
     }
+
 }

@@ -64,7 +64,7 @@ class ShareView:SpringView{
         title.textAlignment = .center
         
         
-        let cardView = CardView.getSingleCardView(card: card)
+        let cardView = CardView(card: card)
         cardView.frame.origin.y = 40
         cardView.center.x = view.frame.width/2
         view.addSubview(cardView)

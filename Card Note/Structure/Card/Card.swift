@@ -39,7 +39,7 @@ class Card:NSObject,NSCoding,Encodable{
         
         get{
             if _color.count == 0{
-                return Constant.Color.blueLeft
+                return nil
             }else{
                 return UIColor(red: (_color[0]), green:(_color[1]), blue: (_color[2]), alpha: (_color[3]))
             }
@@ -52,7 +52,6 @@ class Card:NSObject,NSCoding,Encodable{
         case picture = "picture"
         case text = "text"
         case movie = "movie"
-        case plain = "plain"
         case voice = "voice"
     }
     
@@ -92,12 +91,10 @@ class Card:NSObject,NSCoding,Encodable{
          aCoder.encode(descriptions, forKey: "description")
          aCoder.encode(definition, forKey: "definition")
          aCoder.encode(color, forKey: "color")
-        //aCoder.encode(parentCard, forKey: "parentCard")
          aCoder.encode(childCards, forKey: "childCards")
          aCoder.encode(title, forKey: "title")
          aCoder.encode(type, forKey: "type")
          aCoder.encode(modifyTime, forKey: "modifytime")
-        //aCoder.encode(examples, forKey: "examples")
     }
     
     
@@ -149,33 +146,7 @@ class Card:NSObject,NSCoding,Encodable{
         self.modifyTime = modifytime
     }
     
-    func getText()->NSAttributedString?{
-        var url = Constant.Configuration.url.attributedText
-        url.appendPathComponent(self.getId() + "_DEFINITION.rtf")
-        do{
-            let data = try Data(contentsOf: url)
-            var ducumentAttribute:NSDictionary?
-            let attr = try NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType:NSAttributedString.DocumentType.rtf], documentAttributes: &ducumentAttribute)
-            return attr
-        }catch let error{
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-    
-    func setText(attr:NSAttributedString){
-        var url = Constant.Configuration.url.attributedText
-        url.appendPathComponent(self.getId() + "_DEFINITION.rtf")
-        let range = NSRange(location: 0, length: attr.length)
-        do{
-            let data = try attr.data(from: range, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType:NSAttributedString.DocumentType.rtf])
-            try data.write(to: url)
-        }catch let error{
-            print(error.localizedDescription)
-        }
-        
-    }
-    
+
     
     func setTag(_ tag:[String]){
         let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags) as! [String]
@@ -247,17 +218,6 @@ class Card:NSObject,NSCoding,Encodable{
     func updateTime(_ time:String){
         self.modifyTime = time
     }
-    /*
-    func getExamples()->[String]{
-        return examples
-    }
-    func setExamples(_ examples:[String]){
-        self.examples = examples
-    }
-    */
-    
-    
-    
    
     
     func addChildNote(_ child:Card){

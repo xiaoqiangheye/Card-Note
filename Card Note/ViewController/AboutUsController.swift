@@ -41,7 +41,7 @@ class AboutUsController:UIViewController{
                 }
             }else{
                 DispatchQueue.main.async {
-                    self.textView.text = "Something wrong with the Internet."
+                    self.textView.text = "Something went wrong."
                     self.textView.textAlignment = .center
                 }
             }
@@ -56,7 +56,7 @@ class AboutUsController:UIViewController{
         footer = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
         footer.font = UIFont.systemFont(ofSize: 20)
         footer.textColor = .white
-        footer.text = "© 2018 Canote"
+        footer.text = "© 2019 Canote"
         footer.sizeToFit()
         footer.center.x = self.view.center.x
         footerBackGround.addSubview(footer)

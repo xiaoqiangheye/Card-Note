@@ -20,45 +20,47 @@ class AccountPlanController:UIViewController,UIScrollViewDelegate{
     private var premiumView:AccountPlanView!
     private var planLabel:UILabel!
     override func viewDidLoad() {
+        self.view.backgroundColor = Constant.Color.themeColor
+        
         titleLabel = UILabel(frame: CGRect(x: 0, y: UIDevice.current.Xdistance(), width: Int(UIScreen.main.bounds.width), height: 50))
         titleLabel.center.x = UIScreen.main.bounds.width/2
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .white
         titleLabel.textAlignment = .center
         titleLabel.text = "Account Plan"
-        titleLabel.addBottomLine(width:2,color:.black)
+        titleLabel.backgroundColor = Constant.Color.themeColor
+        titleLabel.addBottomLine(width:2,color:.white)
         self.view.addSubview(titleLabel)
         
         backButton = UIButton(frame: CGRect(x: 10, y: UIDevice.current.Xdistance(), width: 30, height: 30))
         backButton.setFAIcon(icon: FAType.FAChevronCircleLeft, iconSize: 30, forState: .normal)
-        backButton.setTitleColor(.black, for: .normal)
+        backButton.setTitleColor(.white, for: .normal)
         backButton.addTarget(self, action: #selector(dismissView), for: .touchDown)
         self.view.addSubview(backButton)
         self.view.bringSubview(toFront: backButton)
         
         planLabel = UILabel(frame: CGRect(x: 0, y:titleLabel.frame.origin.y + titleLabel.frame.height, width: UIScreen.main.bounds.width, height: 50))
-        planLabel.textColor = .black
-        planLabel.backgroundColor = .white
+        planLabel.textColor = .white
+        planLabel.backgroundColor = .clear
         planLabel.textAlignment = .center
-        planLabel.addBottomLine(width:2,color:.black)
+        planLabel.addBottomLine(width:2,color:.white)
         self.view.addSubview(planLabel)
         
         
         let resoreButton = UIButton(frame: CGRect(x: 0, y:planLabel.frame.origin.y + planLabel.frame.height, width: UIScreen.main.bounds.width, height: 50))
         resoreButton.setTitle("RESTORE", for: .normal)
         resoreButton.titleLabel?.textAlignment = .left
-        resoreButton.backgroundColor = .white
-        resoreButton.setTitleColor(.black, for: .normal)
-        resoreButton.setTitleColor(Constant.Color.translusentGray, for: .focused)
+        resoreButton.backgroundColor = .clear
+        resoreButton.setTitleColor(.white, for: .focused)
         resoreButton.addTarget(self, action: #selector(restore), for: .touchDown)
-        resoreButton.addBottomLine(width: 2, color: .black)
+        resoreButton.addBottomLine(width: 2, color: .white)
         self.view.addSubview(resoreButton)
         
         let premium = UIButton(frame: CGRect(x: 0, y:resoreButton.frame.origin.y + resoreButton.frame.height, width: UIScreen.main.bounds.width, height: 50))
         premium.setTitle("PREMIUM", for: .normal)
-        premium.backgroundColor = .white
-        premium.setTitleColor(.black, for: .normal)
-        premium.setTitleColor(Constant.Color.translusentGray, for: .focused)
+        premium.backgroundColor = .clear
+        premium.setTitleColor(.white, for: .normal)
+
         premium.addTarget(self, action: #selector(premiumTaped), for: .touchDown)
         self.view.addSubview(premium)
     }

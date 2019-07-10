@@ -11,6 +11,11 @@ import UIKit
 import SwiftyJSON
 
 
+func isAutoSyncOn()->Bool{
+    return UserDefaults.standard.bool(forKey: Constant.Key.AutoSync)
+}
+
+
 extension String {
     //返回第一次出现的指定子字符串在此字符串中的索引
     //（如果backwards参数设置为true，则返回最后出现的位置）
@@ -94,6 +99,10 @@ func getCurrentLanguage() -> String{
     
 }
 
+func terminate(){
+    exit(0)
+}
+
 
 func cutFullImageWithView(view:UIView)->UIImage{
     UIGraphicsBeginImageContextWithOptions(view.frame.size, false, UIScreen.main.scale)
@@ -131,18 +140,6 @@ func cutFullImageWithView(scrollView:UIScrollView) -> UIImage
 func writeImageToAlbum(image:UIImage)
 {
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-}
-
-
-func isPremium()->Bool{
-    if Constant.Configuration.AccountPlan == Constant.AccountPlan.basic.rawValue || Constant.Configuration.AccountPlan == ""{
-        print("AccountPlan is " + Constant.Configuration.AccountPlan)
-        return false
-    }else if Constant.Configuration.AccountPlan == Constant.AccountPlan.premium.rawValue{
-        return true
-    }else{
-        return false
-    }
 }
 
 
@@ -203,19 +200,7 @@ func convertCGPoint(_ point1:CGPoint,_ rect1:CGSize,_ rect2:CGSize)->CGPoint{
 
 func sync(completionHandler:@escaping (Bool)->()){
     let manager = FileManager.default
-    var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-    url?.appendPathComponent("card.txt")
-    if !manager.fileExists(atPath: (url?.path)!){
-        try? manager.createDirectory(atPath: (url?.deletingLastPathComponent().path)!, withIntermediateDirectories: true, attributes: nil)
-        manager.createFile(atPath: (url?.path)!, contents: nil, attributes: nil)
-        let cardList = [Card]()
-        let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList)
-        do{
-            try datawrite.write(to: url!)
-        }catch{
-            print("fail to add")
-        }
-    }
+    let url = Constant.Configuration.url.Card
     
     
         Cloud.queryTags { (tags) in
@@ -227,19 +212,26 @@ func sync(completionHandler:@escaping (Bool)->()){
             }
         }
     
-    
-    
-   
-        Cloud.queryAllCard { (cards) in
-            //get local cards
-            if let dateRead = try? Data.init(contentsOf: url!){
-                var locals = NSKeyedUnarchiver.unarchiveObject(with: dateRead) as? [Card]
-                var cardCopiedList = Dictionary<String,Card>()
-                if locals == nil{
-                    locals = [Card]()
+    Cloud.downloadAllAsset { (bool, error) in
+        if bool && error == nil{
+            Cloud.queryAllCard { (cards) in
+                //get local cards
+                var locals = [Card]()
+                do{
+                    let array = try manager.contentsOfDirectory(atPath: url.path)
+                    for file in array{
+                        let fileUrl = url.appendingPathComponent(file)
+                        let dataRead = try Data.init(contentsOf: fileUrl)
+                        let card = NSKeyedUnarchiver.unarchiveObject(with: dataRead) as! Card
+                        locals.append(card)
+                    }
+                }catch{
+                    print("Failed to load file")
                 }
+                
+                var cardCopiedList = Dictionary<String,Card>()
                 var localMap = Dictionary<String,Card>()
-                for local in locals!{
+                for local in locals{
                     localMap[local.getId()] = local
                     cardCopiedList[local.getId()] = local
                 }
@@ -255,33 +247,24 @@ func sync(completionHandler:@escaping (Bool)->()){
                         let result:ComparisonResult = (dateIn.compare(datelo as Date))
                         if result == ComparisonResult.orderedDescending{
                             //update the localCard if Internet is more recent
-                            cardCopiedList[card.getId()] = card
+                            let u = url.appendingPathComponent(card.getId() + ".card")
+                            NSKeyedArchiver.archiveRootObject(card, toFile: u.path)
                         }else if result == ComparisonResult.orderedAscending{
                             //update the internetCard if local is more recent
                             Cloud.updateCard(card: card, completionHandler: { (bool) in
                                 if !bool{completionHandler(false)}
                             })
+                            
                         }
                         localMap.removeValue(forKey: card.getId())
                     }else{
-                        cardCopiedList[card.getId()] = card
+                        let u = url.appendingPathComponent(card.getId() + ".card")
+                        manager.createFile(atPath: u.path, contents: nil, attributes: nil)
+                        NSKeyedArchiver.archiveRootObject(card, toFile: u.path)
                     }
                 }
                 
-                let values = cardCopiedList.values
-                var cardList = [Card]()
-                for value in values{
-                    cardList.append(value)
-                }
                 
-                let datawrite = NSKeyedArchiver.archivedData(withRootObject: cardList)
-                
-                do{
-                    try datawrite.write(to: url!)
-                }catch{
-                    print("fail to add")
-                    completionHandler(false)
-                }
                 
                 //add local Card to InterNet
                 if(!(localMap.isEmpty)){
@@ -293,9 +276,10 @@ func sync(completionHandler:@escaping (Bool)->()){
                 }
                 
             }
-            
+        }else{
+            completionHandler(false)
         }
-    
+    }
 }
 
 
