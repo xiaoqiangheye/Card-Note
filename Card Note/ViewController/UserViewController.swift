@@ -26,6 +26,9 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     
     
     var mailController:MFMailComposeViewController?
+    
+    
+    
     class SettingCard:UIView{
         var imageView:UIImageView!
         class func getSingleNameCard()->SettingCard{
@@ -73,7 +76,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         }
         
         class func getSingleSettingCard(color:UIColor,title:String, icon:UIImage,action: (SettingCard)->())->SettingCard{
-            let view = SettingCard(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+            let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width*0.4, height: UIScreen.main.bounds.width*0.4))
             view.backgroundColor = color
             view.imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
             view.imageView.center.x = view.frame.width/2
@@ -87,8 +90,9 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             label.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2 + 50)
             label.textAlignment = .center
             view.addSubview(label)
-            
-            view.layer.cornerRadius = 10
+            //view.layer.borderColor = UIColor.gray.cgColor
+            //view.layer.borderWidth = 0.5
+            //view.layer.cornerRadius = 10
           //  view.backgroundColor = Constant.Color.darkWhite
             //view.addBottomLine()
             action(view)
@@ -104,6 +108,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     override func viewDidLoad() {
         self.view.backgroundColor = Constant.Color.blueWhite
         
+        /*
         //layer
         let gl = CAGradientLayer.init()
         gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:CGFloat(UIDevice.current.Xdistance()) + 60);
@@ -113,20 +118,27 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         gl.locations = [NSNumber(value:0),NSNumber(value:1)]
         gl.cornerRadius = 0
         self.view.layer.addSublayer(gl)
+         
+        */
+        
         
         //title
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width * 0.7, height: gl.frame.height/2))
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width * 0.7, height:CGFloat(UIDevice.current.Xdistance())/2))
         titleLabel.center.y = 50
         titleLabel.center.x = UIScreen.main.bounds.width/2
         titleLabel.font = UIFont.systemFont(ofSize: 20)
-        titleLabel.textColor = .white
+        titleLabel.textColor = .black
         titleLabel.textAlignment = .center
         titleLabel.text = "Me"
         self.view.addSubview(titleLabel)
+ 
+        
+        
+        
         /**
          scrollView
          */
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: gl.frame.height, width: UIScreen.main.bounds.width, height: self.view.bounds.height - gl.frame.height))
+        scrollView = UIScrollView(frame: CGRect(x: 0, y: CGFloat(UIDevice.current.Xdistance() + 20), width: UIScreen.main.bounds.width, height: self.view.bounds.height - CGFloat(UIDevice.current.Xdistance()) - 20))
         scrollView.delegate = self
         scrollView.contentSize.width = UIScreen.main.bounds.width
         scrollView.contentSize.height = 100
@@ -175,7 +187,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             settingCard.addGestureRecognizer(tapGesture)
     
         })
-        sync.imageView.setFAIconWithName(icon: .FACog, textColor: .black)
+        sync.imageView.setFAIconWithName(icon: .FARefresh,  textColor: .black)
         sync.frame.origin.y = 30
         sync.center.x = scrollView.bounds.width/4
         sync.hero.id = "sync"
@@ -209,22 +221,23 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         help.center.x = scrollView.bounds.width/4*3
         help.hero.id = "help"
         self.scrollView.addSubview(help)
-        //self.scrollView.contentSize.height += help.frame.height + 20
+        
         
         /**
         About us
         */
-        aboutUs = SettingCard.getSingleSettingCard(color: .white, title: "About us", icon:UIImage(),action: { (settingCard) in
+        aboutUs = SettingCard.getSingleSettingCard(color: .white, title: "Terms", icon:UIImage(),action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(aboutUsSetting))
             settingCard.addGestureRecognizer(tapGesture)
         })
-        aboutUs.imageView.setFAIconWithName(icon: .FAUsers, textColor: .black)
-        aboutUs.frame.origin.y = sync.frame.origin.y + sync.frame.height + 30
+        
+        aboutUs.imageView.setFAIconWithName(icon: .FAUsers,  textColor: .black)
+        aboutUs.frame.origin.y = sync.frame.origin.y + sync.frame.height + 20
         aboutUs.center.x = scrollView.bounds.width/4
         aboutUs.hero.id  = "aboutUs"
         self.scrollView.addSubview(aboutUs)
-        self.scrollView.contentSize.height += aboutUs.frame.height + 30
+        self.scrollView.contentSize.height += aboutUs.frame.height + 20
         
         /**
         Rate us
@@ -235,36 +248,36 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             settingCard.addGestureRecognizer(tapGesture)
         })
         rateUs.imageView.setFAIconWithName(icon: .FAStar, textColor: .black)
-        rateUs.frame.origin.y = sync.frame.origin.y + sync.frame.height + 30
+        rateUs.frame.origin.y = sync.frame.origin.y + sync.frame.height + 20
         rateUs.center.x = scrollView.bounds.width/4*3
         rateUs.hero.id = "rateUs"
         self.scrollView.addSubview(rateUs)
-        
+       // self.scrollView.contentSize.height += rateUs.frame.height
         /**
         Version
         */
-        version = SettingCard.getSingleSettingCard(color: .white, title: "Version", icon:UIImage.init(icon:.FAMars, size: CGSize(width: 30, height: 30)), action: {settingcard in
+        version = SettingCard.getSingleSettingCard(color: .white, title: "Version", icon:UIImage.init(icon:.FACloudDownload, size: CGSize(width: 50, height: 50)), action: {settingcard in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(versions))
             settingcard.addGestureRecognizer(tapGesture)
         })
         
         
-        version.frame.origin.y = rateUs.frame.origin.y + rateUs.frame.height + 30
+        version.frame.origin.y = rateUs.frame.origin.y + rateUs.frame.height + 20
         version.center.x = scrollView.bounds.width/4
         version.hero.id = "version"
         self.scrollView.addSubview(version)
-        
+        self.scrollView.contentSize.height += version.frame.height
         /**
          tag
          */
-        tag = SettingCard.getSingleSettingCard(color: .white, title: "Tag", icon: UIImage.init(icon: .FATags, size: CGSize(width: 30, height: 30)), action: { (settingCard) in
+        tag = SettingCard.getSingleSettingCard(color: .white, title: "Tag", icon: UIImage.init(icon: .FATags, size: CGSize(width: 50, height: 50)), action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(tags))
             settingCard.addGestureRecognizer(tapGesture)
         })
         
-        tag.frame.origin.y = rateUs.frame.origin.y + rateUs.frame.height + 30
+        tag.frame.origin.y = rateUs.frame.origin.y + rateUs.frame.height + 20
         tag.center.x = scrollView.bounds.width/4*3
         tag.hero.id = "tag"
         self.scrollView.addSubview(tag)
@@ -277,19 +290,22 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     }
     
     @objc func versions(){
-        
+        let versionVC = VersionController()
+        self.present(versionVC, animated: true, completion: nil)
     }
     
     @objc func rateUsSetting(){
         let urlString = NSString(format: "itms-apps://itunes.apple.com/app/id%@?action=write-review","1410342694")//替换为对应的APPID
-       
         UIApplication.shared.open(URL(string:urlString as String)!, options: [:], completionHandler: nil)
     }
     
     @objc func aboutUsSetting()
     {
-        let uv = AboutUsController()
-        self.present(uv, animated: true, completion: nil)
+        //let url = URL(string: "http://www.cardnotebook.com/terms.php")
+        let vc = WebViewController()
+        self.present(vc, animated: true) {
+          //  vc.load(url: url!)
+        }
     }
     
    
@@ -334,8 +350,10 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             sync_under_wifi.descrptionLabel.textColor = .white
         }
         
-        let auto_sync = SwitchSetting(title: "Auto-Sync", description: "Sync your notes to the cloud automatically.",tintColor: Constant.Color.themeColor, onSwitch: {
+        let auto_sync = SwitchSetting(title: "iCloud", description: "Sync your notes to the iCloud automatically.",tintColor: Constant.Color.themeColor, onSwitch: {
             UserDefaults.standard.set(true, forKey: Constant.Key.AutoSync)
+            //when turns on, there needs to be an sync
+            needToSync = true
         }, offSwitch: {
             UserDefaults.standard.set(false, forKey: Constant.Key.AutoSync)
             sync_under_wifi.paperSwitch.isOn = false
@@ -382,3 +400,6 @@ extension UserViewController:UINavigationControllerDelegate,MFMailComposeViewCon
         }
     }
 }
+
+// Helper function inserted by Swift 4.2 migrator.
+

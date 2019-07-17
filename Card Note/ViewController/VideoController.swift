@@ -25,9 +25,7 @@ class VideoController:UIViewController,StatusDelegate,ProGressBarDelegate{
     private var forwardButton:UIButton!
     private var timer:Timer = Timer()
     private var bartimer:Timer = Timer()
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
-        return true
-    }
+   
     
     override func viewWillDisappear(_ animated : Bool) {
         super.viewWillDisappear(animated)

@@ -76,7 +76,7 @@ class AccountPlanView:UIView{
 extension UILabel{
     class func heightWithConstrainedWidth ( width :  CGFloat , font :  UIFont,  str : NSString )  ->  CGFloat  {
         let constraintRect =  CGSize ( width : width , height :  CGFloat . greatestFiniteMagnitude )
-        let boundingBox =  str.boundingRect ( with: constraintRect , options :  NSStringDrawingOptions . usesLineFragmentOrigin , attributes :  [ kCTFontAttributeName as NSAttributedStringKey : font ], context :  nil )
+        let boundingBox =  str.boundingRect ( with: constraintRect , options :  NSStringDrawingOptions . usesLineFragmentOrigin , attributes :  [ kCTFontAttributeName as NSAttributedString.Key : font ], context :  nil )
         // 返回boundingBox的。高度
         return boundingBox.height
     }

@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+import Font_Awesome_Swift
 @objc protocol FilterViewDelegate:NSObjectProtocol{
     @objc func filterViewFilterClicked(constraints:[Constraint])
     @objc optional func filterViewDidExit()

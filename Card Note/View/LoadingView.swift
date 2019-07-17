@@ -227,7 +227,7 @@ extension LoadingView: CAAnimationDelegate {
         colorAnim.fromValue = fromColor.cgColor
         colorAnim.duration = time
         colorAnim.autoreverses = false
-        colorAnim.fillMode = kCAFillModeForwards;
+        colorAnim.fillMode = kCAFillModeForwards
         colorAnim.isRemovedOnCompletion = false;
         colorAnim.repeatCount = animRepeatTime
         view.layer.add(colorAnim, forKey: "backgroundColor")

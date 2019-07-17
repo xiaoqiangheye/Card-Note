@@ -74,8 +74,8 @@ class VoiceCardView:CardView,SFSpeechRecognizerDelegate,ProGressBarDelegate{
         
         // view.controllerButton.setTitle("录音", for: UIControlState.normal)
         
-        view.controllerButton.setTitleColor(.black, for: UIControlState.normal)
-        view.controllerButton.addTarget(view, action: #selector(view.voiceViewControllButtonClicked(_:)), for:UIControlEvents.touchDown)
+        view.controllerButton.setTitleColor(.black, for: UIControl.State.normal)
+        view.controllerButton.addTarget(view, action: #selector(view.voiceViewControllButtonClicked(_:)), for:UIControl.Event.touchDown)
         view.recognizer = SFSpeechRecognizer()
         
         //view.addSubview(view.conversionButton)

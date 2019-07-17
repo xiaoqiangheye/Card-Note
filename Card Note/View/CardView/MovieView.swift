@@ -22,6 +22,7 @@ class MovieView:CardView,ProGressBarDelegate,StatusBarDelegate{
     var statusBar:StatusBar!
     var timer:Timer = Timer()
     var loadingView:UIButton!
+
     
     override init(card: Card) {
         super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.6))

@@ -50,7 +50,7 @@ class Cloud{
     }
     
     class func addCard(card:Card,completionHandler:@escaping (Bool)->()){
-        let cardRecord = CKRecord.init(recordType: "Card", recordID: CKRecordID.init(recordName: card.getId()))
+        let cardRecord = CKRecord.init(recordType: "Card", recordID: CKRecord.ID.init(recordName: card.getId()))
         
         cardRecord["cardID"] = card.getId()
         
@@ -62,26 +62,27 @@ class Cloud{
     }
     
     class func addCards(cards:[Card],completionHandler:@escaping (Bool)->()){
-        var ifTrue = true
-        var times = 0
+        var array = [Bool]()
         for card in cards{
             addCard(card: card) { (bool) in
-                if !bool{
-                    completionHandler(false)
-                    ifTrue = false
-                }
-                if times == cards.count && ifTrue == true{
-                    completionHandler(true)
-                }
-                times += 1
+                array.append(bool)
             }
         }
+        
+        while(array.count != cards.count){
+            if(array.contains(false)){
+                completionHandler(false)
+                break
+            }
+        }
+        
+        completionHandler(true)
         
     }
     
     
     class func updateCard(card:Card,completionHandler:@escaping (Bool)->()){
-        database.fetch(withRecordID: CKRecordID.init(recordName: card.getId()), completionHandler: { record, error in
+        database.fetch(withRecordID: CKRecord.ID.init(recordName: card.getId()), completionHandler: { record, error in
             if error != nil{
                 print("error fetch card" + (error?.localizedDescription)!)
                 //add Card Again
@@ -107,7 +108,7 @@ class Cloud{
     class func updateCards(cards:[Card],completionHandler:@escaping (Bool)->()){
             var successArray = [Int]()
             for card in cards{
-                database.fetch(withRecordID: CKRecordID.init(recordName: card.getId()), completionHandler: { record, error in
+                database.fetch(withRecordID: CKRecord.ID.init(recordName: card.getId()), completionHandler: { record, error in
                     if error != nil{
                         print("error fetch card" + (error?.localizedDescription)!)
                         //add Card Again
@@ -159,18 +160,44 @@ class Cloud{
         }
     }
     
+    
+    
     class func deleteRecordData(id:String,completionHandler:@escaping (Bool)->()) {
         //delete the main card task
-        database.delete(withRecordID: CKRecordID.init(recordName: id)) { (artworkRecord, error) in
-            if (error != nil) {
-                print("deleteRecord failure！" + (error?.localizedDescription)!)
-                completionHandler(false)
-            } else {
-                print("deleteRecord success！")
-                completionHandler(true)
-            }
-        }
         
+        do{
+            let url = Constant.Configuration.url.Card.appendingPathComponent(id + ".card")
+            let card = NSKeyedUnarchiver.unarchiveObject(with: try Data.init(contentsOf: url)) as! Card
+            
+            
+            database.delete(withRecordID: CKRecord.ID.init(recordName: id)) { (artworkRecord, error) in
+                if (error != nil) {
+                    print("deleteRecord failure！" + (error?.localizedDescription)!)
+                    completionHandler(false)
+                } else {
+                    print("deleteRecord success！")
+                    var array = [Bool]()
+                    for sub in card.getChilds(){
+                        database.delete(withRecordID: CKRecord.ID.init(recordName: sub.getId()), completionHandler: { (id, error) in
+                            if (error != nil){
+                                completionHandler(false)
+                            }else{
+                                array.append(true)
+                            }
+                        })
+                    }
+                    
+                    while(array.count != card.getChilds().count){
+                        
+                    }
+                    
+                    completionHandler(true)
+                }
+            }
+        }catch(let e){
+            print(e.localizedDescription)
+            AlertView.show(alert: "Failed.")
+        }
         //delete the child card and asset
     }
     
@@ -185,7 +212,7 @@ class Cloud{
     }
     
     class func fetchCard(id:String){
-        database.fetch(withRecordID: CKRecordID.init(recordName: id)) { (card, error) in
+        database.fetch(withRecordID: CKRecord.ID.init(recordName: id)) { (card, error) in
             if (error != nil) {
                 print("selectData failure！" + (error?.localizedDescription)!)
             } else {
@@ -267,8 +294,9 @@ class Cloud{
                         
                     }
                     completionHandler(true,nil)
-                }
+                }else{
                     completionHandler(false,error)
+                }
             }else{
                     completionHandler(false,error)
             }
@@ -276,13 +304,14 @@ class Cloud{
     }
     
     class func downloadAsset(id:String,type:String,completionHandler:@escaping (Bool,Error?)->()){
-        let reference = CKReference(recordID: CKRecordID(recordName: id), action: CKReferenceAction.none)
+        let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: id), action: .none)
+      
         let query = CKQuery(recordType: "ASSET", predicate: NSPredicate(format: "recordID = %@ AND type = %@", reference,type))
         queryAssets(query: query,completionHandler:completionHandler)
     }
     
     class func downloadAsset(id:String,type:String)->CKQueryOperation{
-        let reference = CKReference(recordID: CKRecordID(recordName: id), action: CKReferenceAction.none)
+        let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: id), action:.none )
         let query = CKQuery(recordType: "ASSET", predicate: NSPredicate(format: "recordID = %@ AND type = %@", reference,type))
         return downloadOperation(query: query)
     }
@@ -323,14 +352,14 @@ class Cloud{
  */
     
     class private func upload(url:URL,type:String,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        database.fetch(withRecordID: CKRecordID.init(recordName: id)) { (record, error) in
+        database.fetch(withRecordID: CKRecord.ID.init(recordName: id)) { (record, error) in
             if(record != nil){
                 record!["file"] = CKAsset(fileURL: url)
                 creatRecord(record: record!, completionHandler: { (bool) in
                     completionHandler(bool,nil);
                 })
             }else{
-                let cardRecord = CKRecord.init(recordType: "ASSET", recordID: CKRecordID.init(recordName: id))
+                let cardRecord = CKRecord.init(recordType: "ASSET", recordID: CKRecord.ID.init(recordName: id))
                 cardRecord["file"] = CKAsset(fileURL: url)
                 cardRecord["type"] = type
                 creatRecord(record: cardRecord) { (bool) in
@@ -357,7 +386,7 @@ class Cloud{
     }
     
     class func createTag(tag:String,completionHandler:@escaping (Bool,Error?)->()){
-        let tag = CKRecord(recordType: "Tag", recordID: CKRecordID.init(recordName: tag))
+        let tag = CKRecord(recordType: "Tag", recordID: CKRecord.ID.init(recordName: tag))
         creatRecord(record: tag) { (bool) in
             completionHandler(bool,nil)
         }
@@ -366,7 +395,7 @@ class Cloud{
     class func modifyTag(tag:String, with:String,completionHandler:@escaping (Bool,Error?)->()){
         deleteRecordData(id: tag) { (bool) in
             if bool{
-                let new = CKRecord(recordType: "Tag", recordID: CKRecordID.init(recordName: with))
+                let new = CKRecord(recordType: "Tag", recordID: CKRecord.ID.init(recordName: with))
                 creatRecord(record: new, completionHandler: { (bool) in
                     completionHandler(bool,nil)
                 })

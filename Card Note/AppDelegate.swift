@@ -49,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }
     }
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         //Override point for customization after application launch.
         
         
@@ -58,14 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         app_version = (Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String)!
         print("Version: " + app_version)
         
-        //Lastest Version
-        Network.getVersion { (version, updatect, bool) in
-            if(bool && version != ""){
-                print("Lastest Version: \(version!)\nUpdate Contents: \(updatect!)")
-            }else{
-                print("get lastest version failed")
-            }
-        }
+     
+        
         
         //directory setting
         createDirectory()
@@ -87,14 +81,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
            
             
             let manager = FileManager.default
-            var url = manager.urls(for: .documentDirectory, in:.userDomainMask).first
-            url?.appendPathComponent("card.txt")
+            var url = Constant.Configuration.url.Card
+            url.appendPathComponent("first.card")
             let orientation = orientationCard()
-            var cardList = [Card]()
-            cardList.append(orientation)
-            let datawrite = NSKeyedArchiver.archivedData(withRootObject:cardList as Any)
+            let datawrite = NSKeyedArchiver.archivedData(withRootObject:orientation as Any)
             do{
-                try datawrite.write(to: url!)
+                try datawrite.write(to: url)
             }catch{
                 print("fail to add")
             }

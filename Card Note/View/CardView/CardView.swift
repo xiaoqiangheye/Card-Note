@@ -24,6 +24,7 @@ class CardView: UIView{
     weak var uimenu:UIMenuController!
     private var observeButton:UIButton!
     internal var _isEditMode = false
+    private var gl:CAGradientLayer!
     var isEditMode:Bool{
         get{
             return _isEditMode
@@ -53,6 +54,19 @@ class CardView: UIView{
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    final func setColor(color:UIColor){
+        gl.removeFromSuperlayer()
+        gl = CAGradientLayer.init()
+        gl.frame = CGRect(x:0,y:0,width:self.frame.width,height:self.frame.height);
+        gl.startPoint = CGPoint(x:0, y:0);
+        gl.endPoint = CGPoint(x:1, y:1);
+        gl.colors = [color.cgColor,getRightColorFromLeftGradient(left: color).cgColor]
+        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        gl.cornerRadius = 20
+        self.layer.addSublayer(gl)
+    }
+    
     static func decorateCard(cardView:CardView){
         let x = UIScreen.main.bounds.width
         let y = UIScreen.main.bounds.height
@@ -76,15 +90,19 @@ class CardView: UIView{
         var blue:CGFloat = 0
         var alpha:CGFloat = 0
         card!.getColor().getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        let gl = CAGradientLayer.init()
-        gl.frame = CGRect(x:0,y:0,width:cardView.frame.width,height:cardView.frame.height);
-        gl.startPoint = CGPoint(x:0, y:0);
-        gl.endPoint = CGPoint(x:1, y:1);
-        gl.colors = [card!.getColor().cgColor,getRightColorFromLeftGradient(left: card!.getColor()).cgColor]
-        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
-        gl.cornerRadius = 20
-        cardView.layer.addSublayer(gl)
-        
+        cardView.gl = CAGradientLayer.init()
+        cardView.gl.frame = CGRect(x:0,y:0,width:cardView.frame.width,height:cardView.frame.height);
+        cardView.gl.startPoint = CGPoint(x:0, y:0);
+        cardView.gl.endPoint = CGPoint(x:1, y:1);
+        cardView.gl.colors = [card!.getColor().cgColor,getRightColorFromLeftGradient(left: card!.getColor()).cgColor]
+        cardView.gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        cardView.gl.cornerRadius = 20
+        if cardView.layer.sublayers != nil{
+            for layer in (cardView.layer.sublayers)!{
+                layer.removeFromSuperlayer()
+            }
+        }
+        cardView.layer.addSublayer(cardView.gl)
         let title:String = card!.getTitle()
         let label = UILabel(frame: CGRect(x:20,y:20,width:cardView.bounds.width-20,height:25))
         label.text = title
@@ -149,7 +167,7 @@ class CardView: UIView{
         
         
         cardView.layer.frame.size = cardView.frame.size
-        gl.frame.size = cardView.frame.size
+        cardView.gl.frame.size = cardView.frame.size
     }
     
     func reload(){
@@ -168,7 +186,7 @@ class CardView: UIView{
                 let image = cutFullImageWithView(view: self)
                 let shareView = SCLAlertView()
                 shareView.addButton("To Other Apps", action: {
-                    let imageData = UIImageJPEGRepresentation(image, 1)
+                    let imageData = UIImageJPEGRepresentation(image,1)
                     do{
                         let id = UUID().uuidString + ".jpeg"
                         let url = Constant.Configuration.url.temporary.appendingPathComponent(id)
@@ -392,14 +410,14 @@ class CardView: UIView{
         var blue:CGFloat = 0
         var alpha:CGFloat = 0
         card.getColor().getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        let gl = CAGradientLayer.init()
-        gl.frame = CGRect(x:0,y:0,width:cardView.frame.width,height:cardView.frame.height);
-        gl.startPoint = CGPoint(x:0, y:0);
-        gl.endPoint = CGPoint(x:1, y:1);
-        gl.colors = [card.getColor().cgColor,getRightColorFromLeftGradient(left: card.getColor()).cgColor]
-        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
-        gl.cornerRadius = 20
-        cardView.layer.addSublayer(gl)
+        cardView.gl = CAGradientLayer.init()
+        cardView.gl.frame = CGRect(x:0,y:0,width:cardView.frame.width,height:cardView.frame.height);
+        cardView.gl.startPoint = CGPoint(x:0, y:0);
+        cardView.gl.endPoint = CGPoint(x:1, y:1);
+        cardView.gl.colors = [card.getColor().cgColor,getRightColorFromLeftGradient(left: card.getColor()).cgColor]
+        cardView.gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        cardView.gl.cornerRadius = 20
+        cardView.layer.addSublayer(cardView.gl)
         
         let title:String = card.getTitle()
         let label = UILabel(frame: CGRect(x:20,y:20,width:cardView.bounds.width-20,height:25))
@@ -454,7 +472,7 @@ class CardView: UIView{
         
         
         cardView.layer.frame.size = cardView.frame.size
-        gl.frame.size = cardView.frame.size
+        cardView.gl.frame.size = cardView.frame.size
         
         
         let longTapGesture = UILongPressGestureRecognizer()

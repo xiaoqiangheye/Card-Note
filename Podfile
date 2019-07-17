@@ -6,16 +6,19 @@ target 'Card Note' do
   use_frameworks!
 pod 'Alamofire', '~> 4.7'
 pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
+
 pod 'Font-Awesome-Swift'
 pod 'Spring'
 pod 'SwiftMessages'
-pod 'Hero', '~> 1.2.0'
+pod 'Hero'
 pod 'SCLAlertView'
 pod 'RAMPaperSwitch'
 pod 'SwiftyStoreKit'
 pod 'Instructions', '~> 1.2.0'
 pod 'SwiftyJSON'
 pod 'ReachabilitySwift'
+#pod 'YPImagePicker'
+#pod 'FMPhotoPicker'
   # Pods for Card Note
 
   target 'Card NoteTests' do

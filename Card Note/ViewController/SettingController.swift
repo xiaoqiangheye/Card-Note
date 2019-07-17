@@ -27,11 +27,11 @@ class SettingController:UIViewController{
         self.view.addSubview(titleLabel)
         
     backButton = UIButton(frame: CGRect(x: 10, y: 50, width: 30, height: 30))
-    backButton.setFAIcon(icon: FAType.FAChevronCircleLeft, iconSize: 30, forState: .normal)
+    backButton.setFAIcon(icon: FAType.FATimes, iconSize: 30, forState: .normal)
     backButton.setTitleColor(.black, for: .normal)
     backButton.addTarget(self, action: #selector(dismissView), for: .touchDown)
     self.view.addSubview(backButton)
-    self.view.bringSubview(toFront: backButton)
+        self.view.bringSubview(toFront: backButton)
         
         
     scrollView = UIScrollView(frame: CGRect(x: 0, y: 100, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 50))

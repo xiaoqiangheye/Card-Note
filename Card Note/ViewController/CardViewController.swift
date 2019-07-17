@@ -15,6 +15,8 @@ import SwiftMessages
 import Font_Awesome_Swift
 import Instructions
 import Reachability
+
+//coarchmarks
 extension CardViewController:CoachMarksControllerDataSource{
     func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
         return 4
@@ -51,15 +53,23 @@ extension CardViewController:CoachMarksControllerDataSource{
         
         }
         let autoSync = UserDefaults.standard.bool(forKey: Constant.Key.AutoSync)
-        if isFirstLaunch && autoSync{
-            ifCanSync()
-        }else{
-            loadCard()
-        }
         
+        if autoSync{
+            ifCanSync()
+        }
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
     }
     
+}
+
+
+
+//all the enums
+extension CardViewController{
+    enum SortType{
+        case modifytime
+        case title
+    }
 }
 
 class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate,UIDocumentInteractionControllerDelegate{
@@ -69,11 +79,22 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     var slideView:UIView!
     var docController:UIDocumentInteractionController!
     let coachMarksController = CoachMarksController()
-    var filterView = FilterView()
+    
+    //nav
     var syncButton:UIButton!
     var filterButton:UIButton!
+    var filterView = FilterView()
+    var sortButton:UIButton!
+    var sortView:UIView!
+    var ascendDecend:UIButton!
+    var isAscend:Bool = false
+    
+    
     var isSynced = false
     var internet:Reachability!
+    var sortType:SortType = .modifytime
+    
+    //Add New Card Button Clicked
     @IBAction func addNewCard(_ sender:UIButton){
         
         let vc = storyboard?.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
@@ -97,14 +118,19 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if(needToSync){
+            ifCanSync()
+        }
     }
     
+    
     override func viewDidLoad() {
+        checkVersion()
         Cloud.service(){bool in
             if !bool!{
                 let alert = UIAlertController(title: "Service of Canote has Suspended.", message: "We sincerely apologize for the inconvenience.", preferredStyle: .alert)
                 
-                alert.addAction(UIAlertAction(title: "OK :(", style: .default, handler: {action in
+                alert.addAction(UIAlertAction(title: "OK :)", style: .default, handler: {action in
                     terminate()
                 }))
                 
@@ -115,7 +141,17 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         
         // self.view.backgroundColor = .clear
         internet = Reachability.init()
-       
+        internet.whenReachable = { reachability in
+            if reachability.connection == .wifi {
+                print("Reachable via WiFi")
+                let syncwithWIFI = UserDefaults.standard.bool(forKey: Constant.Key.SyncWithWifi)
+                if(syncwithWIFI){
+                    needToSync = true
+                }
+            } else {
+                print("Reachable via Cellular")
+            }
+        }
         
         filterView.delegate = self
         coachMarksController.dataSource = self
@@ -124,7 +160,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         }
         func createButtonUnderBar(title:String)->UIButton{
             let filterButton = UIButton()
-            filterButton.frame = CGRect(x: 40, y: 10, width: 70, height: 30)
+            filterButton.frame = CGRect(x: 40, y: 10, width: 65, height: 30)
             slideView.addSubview(filterButton)
             filterButton.titleLabel?.font = UIFont(name: "DevanagariSangamMN", size: 19)!
             filterButton.setTitle(title, for: .normal)
@@ -168,15 +204,37 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         slideView = UIView(frame: CGRect(x: 0, y:0, width: UIScreen.main.bounds.width, height: 50))
         slideView.backgroundColor = .white
        
-        //filter Button
+        //filter, Sync, Sort Button
         filterButton = createButtonUnderBar(title: "Filter")
-        syncButton = createButtonUnderBar(title: "Sync")
-        filterButton.frame = CGRect(x: 40, y: 30, width: 70, height: 30)
+        
+        syncButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        syncButton.setFAIcon(icon: .FASpinner, forState: .normal)
+        syncButton.setTitleColor(.gray, for: .normal)
+        syncButton.isHidden = true
+        
+        sortButton = createButtonUnderBar(title: "Sort")
+        
+        filterButton.frame = CGRect(x: 40, y: 30, width: 65, height: 30)
         filterButton.addTarget(self, action: #selector(showFilter), for: .touchDown)
-        syncButton.frame = CGRect(x: 110, y: 30, width: 70, height: 30)
-        syncButton.addTarget(self, action: #selector(ifCanSync), for: .touchDown)
+        sortButton.frame = CGRect(x: 110, y: 30, width: 65, height: 30)
+        sortButton.addTarget(self, action: #selector(sortSetting), for: .touchDown)
+        syncButton.frame.origin = CGPoint(x: 220, y: 30)
+        ascendDecend = UIButton(frame: CGRect(x: 185, y: 30, width: 30, height: 30))
+        ascendDecend.setFAIcon(icon: .FASortDesc, iconSize: 20, forState: .normal)
+        ascendDecend.layer.cornerRadius = 15
+        ascendDecend.backgroundColor = Constant.Color.blueWhite
+        ascendDecend.layer.shadowOffset = CGSize(width: 0, height: 5)
+        ascendDecend.layer.shadowColor = Constant.Color.darkWhite.cgColor
+        ascendDecend.layer.shadowOpacity = 0.8
+        ascendDecend.setTitleColor(.gray, for: .normal)
+        ascendDecend.addTarget(self, action: #selector(setAscend), for: .touchDown)
+        
+        
+        
         slideView.addSubview(filterButton)
+        slideView.addSubview(sortButton)
         slideView.addSubview(syncButton)
+        slideView.addSubview(ascendDecend)
         
         scrollView = UIScrollView()
         scrollView.delegate = self
@@ -199,11 +257,20 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         filterView.isHidden = true
         self.view.addSubview(filterView)
         let autoSync = UserDefaults.standard.bool(forKey: Constant.Key.AutoSync)
-        if isFirstLaunch && autoSync{
+        loadCard()
+        if autoSync{
             ifCanSync()
-        }else{
-            loadCard()
         }
+    }
+    
+    @objc private func setAscend(){
+        isAscend = !isAscend
+        if(isAscend){
+            ascendDecend.setFAIcon(icon: .FASortAsc, iconSize: 20, forState: .normal)
+        }else{
+            ascendDecend.setFAIcon(icon: .FASortDesc, iconSize: 20, forState: .normal)
+        }
+        loadCard()
     }
     
     @objc private func showFilter(){
@@ -211,6 +278,80 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             filterView.center.x = self.view.bounds.width/2
             filterView.center.y = self.view.bounds.height/2
             filterView.isHidden = false
+        }
+    }
+    
+    
+    @objc private func sortSetting(){
+        if(sortView == nil){
+            sortView = getSortPanel()
+            sortView.center.x = self.view.bounds.width/2
+            sortView.center.y = self.view.bounds.height/2
+            self.view.addSubview(sortView)
+        }else{
+            sortView.removeFromSuperview()
+            sortView = nil
+        }
+    }
+    
+    private func getSortPanel()->UIView{
+        let sortView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 90))
+        sortView.backgroundColor = .white
+        sortView.layer.cornerRadius = 10
+        sortView.layer.masksToBounds = true
+        
+        let exitButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        exitButton.setFAIcon(icon: .FATimes, forState: .normal)
+        exitButton.addTarget(self, action: #selector(sortSetting), for: .touchDown)
+        exitButton.setTitleColor(.black, for: .normal)
+        sortView.addSubview(exitButton)
+        
+        let name = UIButton(frame: CGRect(x: 0, y: 30, width: 100, height: 30))
+        name.setTitle("Name", for: .normal)
+        name.setTitleColor(.black, for: .normal)
+        name.addTarget(self, action: #selector(setSortTypeName), for: .touchDown)
+        sortView.addSubview(name)
+        name.addBottomLine()
+        
+        let time = UIButton(frame: CGRect(x: 0, y: 60, width: 100, height: 30))
+        time.setTitle("Time", for: .normal)
+        time.setTitleColor(.black, for: .normal)
+        time.addTarget(self, action: #selector(setSortTypeTime), for: .touchDown)
+        sortView.addSubview(time)
+        
+        
+        return sortView
+    }
+    
+    @objc private func setSortTypeTime(){
+        sortType = .modifytime
+        sortView.removeFromSuperview()
+        sortView = nil
+        loadCard()
+    }
+    
+    @objc private func setSortTypeName(){
+        sortType = .title
+        sortView.removeFromSuperview()
+        sortView = nil
+        loadCard()
+    }
+    
+    
+    private func checkVersion(){
+        Network.getVersion { (version, updatect, bool) in
+            if(bool && version != ""){
+                print("Lastest Version: \(version!)\nUpdate Contents: \(updatect!)")
+                //if version different, notify to update
+                if version != app_version{
+                    showMsgbox(_message: "There is a new update! More Functions!", _title: "New Update", vc: self, completionHandler: {
+                        let urlString = NSString(format: "itms-apps://itunes.apple.com/app/id%@","1410342694")//替换为对应的APPID
+                        UIApplication.shared.open(URL(string:urlString as String)!, options: [:], completionHandler: nil)
+                    })
+                }
+            }else{
+                print("get lastest version failed")
+            }
         }
     }
     
@@ -275,16 +416,25 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         }catch{
             print("Failed to load file")
         }
-       
+        
+        
         let sorted = cardList.sorted { (card1, card2) -> Bool in
-            let time1 = card1.getTime()
-            let time2 = card2.getTime()
-            let date1 = NSDate(timeIntervalSince1970: TimeInterval(time1)!)
-            let date2 = NSDate(timeIntervalSince1970: TimeInterval(time2)!)
-            if date1.compare(date2 as Date) == ComparisonResult.orderedAscending{
-                return false
+            if(sortType == .modifytime){
+                let time1 = card1.getTime()
+                let time2 = card2.getTime()
+                let date1 = NSDate(timeIntervalSince1970: TimeInterval(time1)!)
+                let date2 = NSDate(timeIntervalSince1970: TimeInterval(time2)!)
+                if date1.compare(date2 as Date) == ComparisonResult.orderedAscending{
+                    return isAscend
+                }else{
+                    return !isAscend
+                }
             }else{
-                return true
+                if card1.getTitle().compare(card2.getTitle()) == .orderedAscending{
+                    return isAscend
+                }else{
+                    return !isAscend
+                }
             }
         }
         
@@ -429,7 +579,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
            let image = cutFullImageWithView(scrollView: cardEditor.scrollView)
            let shareView = SCLAlertView()
             shareView.addButton("To Other Apps", action: {
-                let imageData = UIImageJPEGRepresentation(image, 1)
+                let imageData = UIImageJPEGRepresentation(image,1)
                 do{
                 let id = UUID().uuidString + ".jpeg"
                 let url = Constant.Configuration.url.temporary.appendingPathComponent(id)
@@ -467,10 +617,10 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         }
         alertView.addButton("local repository and iCloud") {
              controllPanel.removeFromSuperview()
-            self.deleteCard(card: cardView.card)
-            self.loadCard()
             Cloud.deleteRecordData(id: cardView.card.getId(), completionHandler: { (bool) in
                 DispatchQueue.main.async {
+                self.deleteCard(card: cardView.card)
+                self.loadCard()
                 if bool{
                    AlertView.show(success: "Succeed!")
                 }else{
@@ -510,6 +660,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     
     @objc func ifCanSync(){
         let syncwithWIFI = UserDefaults.standard.bool(forKey: Constant.Key.SyncWithWifi)
+        /*
         if(syncwithWIFI && !(internet.connection == .wifi)){
             let alertView = SCLAlertView()
             alertView.addButton("Use Cellular data for once") {
@@ -524,30 +675,43 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         }else{
             syncCard()
         }
+         */
+        
+        if(!syncwithWIFI){
+            syncCard()
+            needToSync = false
+        }else if(syncwithWIFI && internet.connection == .wifi){
+            syncCard()
+            needToSync = false
+        }
     }
+    
+    
     
     @objc func syncCard(){
         self.isSynced = true
         let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
         rotateAnimation.fromValue = 0.0
         rotateAnimation.toValue = CGFloat(Double.pi * 2.0)
-        rotateAnimation.duration = 100
-        
-        syncButton.setTitle("", for: .normal)
+        rotateAnimation.duration = 3
+        rotateAnimation.repeatCount = 100000
+        rotateAnimation.delegate = self
+        rotateAnimation.isRemovedOnCompletion = false
         syncButton.setFAIcon(icon: .FASpinner, iconSize: 20, forState: .normal)
         syncButton.setTitleColor(.gray, for: .normal)
         syncButton.titleLabel!.layer.add(rotateAnimation, forKey: "rotate")
-        syncButton.isEnabled = false
+        syncButton.isHidden = false
         sync { [unowned self] (bool) in
-            DispatchQueue.main.async {
-                self.syncButton.titleLabel!.layer.removeAllAnimations()
-                self.syncButton.setTitle("Sync", for: .normal)
-                self.syncButton.titleLabel?.font = UIFont(name: "Farah", size: 18)
-                self.syncButton.isEnabled = true
-            }
             if bool{
                 DispatchQueue.main.async {
-                    AlertView.show(success: "Sync Succeed.")
+                    //AlertView.show(success: "Sync Succeed.")
+                    self.syncButton.layer.removeAllAnimations()
+                    self.syncButton.setFAIcon(icon: .FACheck, forState: .normal)
+                    UIView.animate(withDuration: 1, delay: 1, options: UIView.AnimationOptions.init(), animations: {
+                        
+                    }, completion: { (bool) in
+                        self.syncButton.isHidden = true
+                    })
                     self.loadCard()
                 }
             }else{
@@ -558,7 +722,11 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         }
     }
     
+    
+    
 }
+
+
 
 extension CardViewController:CardEditorDelegate{
     func cardEditor(DidFinishSaveCard card: Card) {
@@ -580,4 +748,19 @@ extension CardViewController:FilterViewDelegate{
         filterButton.setTitleColor(UIColor.gray, for: .normal)
         loadCard()
     }
+}
+
+extension CardViewController:CAAnimationDelegate{
+    func animationDidStart(_ anim: CAAnimation) {
+        
+    }
+    
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        
+    }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+    return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(string: key), value)})
 }

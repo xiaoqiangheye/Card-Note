@@ -14,6 +14,7 @@ import ChameleonFramework
 import Hero
 import MobileCoreServices
 import Spring
+//import YPImagePicker
 
 
 class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate,AttributedTextViewDelegate, UIPickerViewDelegate,UIPickerViewDataSource,CardEditorDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate{
@@ -359,6 +360,10 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         colorButton.backgroundColor = .white
         colorButton.layer.cornerRadius = 15
         colorButton.isHidden = true
+        if self.type == .add{
+             colorButton.isHidden = false
+             colorButton.center.y = self.cardColor.frame.origin.y + self.cardColor.frame.height
+        }
         colorButton.addTarget(self, action: #selector(showPalette), for: .touchDown)
         //self.view.addSubview(colorButton)
         
@@ -461,7 +466,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
        self.view.addSubview(scrollView)
         
 
-      self.view.bringSubview(toFront: addButton)
+        self.view.bringSubview(toFront: addButton)
         
     let centerDefault = NotificationCenter.default
         centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -651,7 +656,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         let gesture = UITapGestureRecognizer(target: self, action: #selector(showPalette))
         palette.addGestureRecognizer(gesture)
         self.view.addSubview(palette)
-        self.view.bringSubview(toFront: palette)
+            self.view.bringSubview(toFront: palette)
         ifPaletteShowed = true
         }else{
             for subView in self.view.subviews{
@@ -1087,8 +1092,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 switch subView.card.getType(){
                 case Card.CardType.card.rawValue:
                     let cardView = subView as! CardView.SubCardView
-                    cardView.content.text = card.getDefinition()
-                    cardView.title.text = card.getTitle()
+                    //cardView.content.text = card.getDefinition()
+                    //cardView.title.text = card.getTitle()
+                    //cardView.setColor(color: card.getColor())
+                    
+                    CardView.decorateCard(cardView: cardView)
                 case Card.CardType.voice.rawValue:
                     let cardView = subView as! VoiceCardView
                     cardView.reload()
@@ -1329,15 +1337,54 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
-            print("choose form album")
+            print("Choose from Album")
+        
+            let vc = self.presentHGImagePicker(maxSelected:10) {[unowned self] (assets) in
+                //结果处理
+                print("共选择了\(assets.count)张图片，分别如下：")
+                for asset in assets {
+                    print(asset)
+                    asset.getImage(completionHandler: { (image) in
+                        let piccard = PicCard(image)
+                        var url = Constant.Configuration.url.PicCard
+                        url.appendPathComponent(piccard.getId() + ".jpg")
+                        
+                        let data = UIImageJPEGRepresentation(image,0.5)
+                        ((try? data?.write(to: url)) as ()??)
+                        let picView = PicView(card: piccard)
+                        let tapGesture = UITapGestureRecognizer()
+                        tapGesture.numberOfTapsRequired = 1
+                        tapGesture.numberOfTouchesRequired = 1
+                        tapGesture.addTarget(self, action: #selector(self.updatePic))
+                        picView.addGestureRecognizer(tapGesture)
+                        self.cardViewAddPanGesture(picView)
+                        picView.delegate = self
+                        picView.commentView.delegate = self
+                        if self.subCards.count > 0{
+                            picView.frame.origin.y = (self.subCards.last?.frame.origin.y)! + (self.subCards.last?.frame.height)! + 20
+                            
+                        }else{
+                            picView.frame.origin.y = self.definition.frame.origin.y + self.definition.frame.height + 20
+                        }
+                        self.subCards.append(picView)
+                        self.scrollView.addSubview(picView)
+                        self.scrollView.contentSize.height = picView.frame.origin.y + picView.frame.height + 20
+                    })
+                }
+            }
+            
+            /*
             let cameraPicker = UIImagePickerController()
             self.picTureAction = "addPic"
             cameraPicker.delegate = self
             cameraPicker.sourceType = .savedPhotosAlbum
             cameraPicker.mediaTypes = [kUTTypeImage as String]
             //在需要的地方present出来
-            self.present(cameraPicker, animated: true, completion: nil)
+            */
+            
+           // self.present(picView, animated: true, completion: nil)
         }
+        
         let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (action) in
             let cameraPicker = UIImagePickerController()
             self.picTureAction = "addPic"
@@ -1385,6 +1432,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     
+   
+    
     
    internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         //获得照片
@@ -1394,8 +1443,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         let piccard = PicCard(image)
             var url = Constant.Configuration.url.PicCard
             url.appendPathComponent(piccard.getId() + ".jpg")
-                let data = UIImageJPEGRepresentation(image, 0.5)
-            try? data?.write(to: url)
+            
+            let data = UIImageJPEGRepresentation(image,0.5)
+            ((try? data?.write(to: url)) as ()??)
         let picView = PicView(card: piccard)
         let tapGesture = UITapGestureRecognizer()
             tapGesture.numberOfTapsRequired = 1
@@ -1423,7 +1473,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 var url = Constant.Configuration.url.PicCard
                 url.appendPathComponent((selectedPictureView?.card as! PicCard).getId() + ".jpg")
                 let data = UIImageJPEGRepresentation(((selectedPictureView)?.image.image)!,0.5)
-                try? data?.write(to: url)
+                ((try? data?.write(to: url)) as ()??)
             }
         }else if picTureAction == "addVideo"{
             let videoURL = info[UIImagePickerControllerMediaURL] as! URL
@@ -1778,6 +1828,8 @@ extension CardEditor:PaletteProtocal{
         self.setColor(color: didSelectColor)
     }
 }
+
+
 
 
 

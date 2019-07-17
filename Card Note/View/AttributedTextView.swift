@@ -45,13 +45,13 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             }
             self.textView.autocorrectionType = .no
             self.textView.spellCheckingType = .no
-            self.font = self.textView.attributedText.attribute(NSAttributedStringKey.font, at:  location, effectiveRange: &range) as? UIFont
-            self.fontColor = self.textView.attributedText.attribute(NSAttributedStringKey.foregroundColor, at: location, effectiveRange: &range) as? UIColor
-            self.backColor = self.textView.attributedText.attribute(NSAttributedStringKey.backgroundColor, at:  location, effectiveRange: &range) as? UIColor
-            self.isUnderlined = (self.textView.attributedText.attribute(NSAttributedStringKey.underlineStyle, at:  location, effectiveRange: &range)) == nil ? 0:1
-            self.isItalic = self.textView.attributedText.attribute(NSAttributedStringKey.obliqueness, at:  location, effectiveRange: &range) == nil ? 0:0.5
-            self.isStrike = self.textView.attributedText.attribute(NSAttributedStringKey.strikethroughStyle, at: location, effectiveRange: &range) == nil ? 0:1
-            self.isBold = ((self.textView.attributedText.attribute(NSAttributedStringKey.font, at: location, effectiveRange: &range) as? UIFont)?.fontName.lowercased().contains("bold"))! ? 1:0
+            self.font = self.textView.attributedText.attribute(NSAttributedString.Key.font, at:  location, effectiveRange: &range) as? UIFont
+            self.fontColor = self.textView.attributedText.attribute(NSAttributedString.Key.foregroundColor, at: location, effectiveRange: &range) as? UIColor
+            self.backColor = self.textView.attributedText.attribute(NSAttributedString.Key.backgroundColor, at:  location, effectiveRange: &range) as? UIColor
+            self.isUnderlined = (self.textView.attributedText.attribute(NSAttributedString.Key.underlineStyle, at:  location, effectiveRange: &range)) == nil ? 0:1
+            self.isItalic = self.textView.attributedText.attribute(NSAttributedString.Key.obliqueness, at:  location, effectiveRange: &range) == nil ? 0:0.5
+            self.isStrike = self.textView.attributedText.attribute(NSAttributedString.Key.strikethroughStyle, at: location, effectiveRange: &range) == nil ? 0:1
+            self.isBold = ((self.textView.attributedText.attribute(NSAttributedString.Key.font, at: location, effectiveRange: &range) as? UIFont)?.fontName.lowercased().contains("bold"))! ? 1:0
             
         }else{
             self.font = UIFont.systemFont(ofSize: 20)
@@ -204,7 +204,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             setStrike()
             underline()
             Obliqueness()
-            self.textView.typingAttributes[NSAttributedStringKey.kern.rawValue] = 0
+            self.textView.typingAttributes[NSAttributedString.Key.kern.rawValue] = 0
         }
     }
     
@@ -217,13 +217,13 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
         if textView.attributedText.length > 0{
             print(textView.text)
             var range = NSMakeRange(textView.attributedText.length - 1, 1)
-            self.font = self.textView.attributedText.attribute(NSAttributedStringKey.font, at: at, effectiveRange: &range) as? UIFont
-            self.fontColor = self.textView.attributedText.attribute(NSAttributedStringKey.foregroundColor, at: at, effectiveRange: &range) as? UIColor
-            self.backColor = self.textView.attributedText.attribute(NSAttributedStringKey.backgroundColor, at: at, effectiveRange: &range) as? UIColor
-            self.isUnderlined = (self.textView.attributedText.attribute(NSAttributedStringKey.underlineStyle, at: at, effectiveRange: &range)) == nil ? 0:1
-            self.isItalic = self.textView.attributedText.attribute(NSAttributedStringKey.obliqueness, at: at, effectiveRange: &range) == nil ? 0:0.5
-            self.isStrike = self.textView.attributedText.attribute(NSAttributedStringKey.strikethroughStyle, at: at, effectiveRange: &range) == nil ? 0:1
-            self.isBold = ((self.textView.attributedText.attribute(NSAttributedStringKey.font, at: at, effectiveRange: &range) as? UIFont)?.fontName.lowercased().contains("bold"))! ? 1:0
+            self.font = self.textView.attributedText.attribute(NSAttributedString.Key.font, at: at, effectiveRange: &range) as? UIFont
+            self.fontColor = self.textView.attributedText.attribute(NSAttributedString.Key.foregroundColor, at: at, effectiveRange: &range) as? UIColor
+            self.backColor = self.textView.attributedText.attribute(NSAttributedString.Key.backgroundColor, at: at, effectiveRange: &range) as? UIColor
+            self.isUnderlined = (self.textView.attributedText.attribute(NSAttributedString.Key.underlineStyle, at: at, effectiveRange: &range)) == nil ? 0:1
+            self.isItalic = self.textView.attributedText.attribute(NSAttributedString.Key.obliqueness, at: at, effectiveRange: &range) == nil ? 0:0.5
+            self.isStrike = self.textView.attributedText.attribute(NSAttributedString.Key.strikethroughStyle, at: at, effectiveRange: &range) == nil ? 0:1
+            self.isBold = ((self.textView.attributedText.attribute(NSAttributedString.Key.font, at: at, effectiveRange: &range) as? UIFont)?.fontName.lowercased().contains("bold"))! ? 1:0
             
             
             if isUnderlined == 0{
@@ -279,8 +279,8 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                 break
             }else if character == "."{
                 var range:NSRange = NSRange()
-                let attributeOfLigature = textView.attributedText.attribute(NSAttributedStringKey.ligature, at: index - 1, effectiveRange: &range) == nil ? 0 : 1
-                 let attributeOfFont = (textView.attributedText.attribute(NSAttributedStringKey.font, at: index - 1, effectiveRange: &range)) as? UIFont
+                let attributeOfLigature = textView.attributedText.attribute(NSAttributedString.Key.ligature, at: index - 1, effectiveRange: &range) == nil ? 0 : 1
+                 let attributeOfFont = (textView.attributedText.attribute(NSAttributedString.Key.font, at: index - 1, effectiveRange: &range)) as? UIFont
                 if attributeOfLigature == 1 || attributeOfFont == UIFont(name: "Avenir-Medium", size: 18){
                     textMode = Constant.TextMode.OrderedListStartMode
                 }
@@ -330,8 +330,8 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                 break
             }else if character == "."{
                 var range:NSRange = NSRange()
-                let attributeOfLigature = (textView.attributedText.attribute(NSAttributedStringKey.ligature, at: index - 1, effectiveRange: &range)) == nil ? 0 : 1
-                let attributeOfFont = (textView.attributedText.attribute(NSAttributedStringKey.font, at: index - 1, effectiveRange: &range)) as? UIFont
+                let attributeOfLigature = (textView.attributedText.attribute(NSAttributedString.Key.ligature, at: index - 1, effectiveRange: &range)) == nil ? 0 : 1
+                let attributeOfFont = (textView.attributedText.attribute(NSAttributedString.Key.font, at: index - 1, effectiveRange: &range)) as? UIFont
                 if attributeOfLigature == 1 || attributeOfFont == UIFont(name: "Avenir-Medium", size: 18){
                     textMode = Constant.TextMode.OrderedListStartMode
                 }
@@ -368,11 +368,11 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             paragraph.headIndent = 0
             paragraph.firstLineHeadIndent = 0
             paragraph.lineBreakMode = .byCharWrapping
-            attributedString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraph, range: NSRange(location: index - 1, length: length))
+            attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraph, range: NSRange(location: index - 1, length: length))
         
             textView.attributedText = attributedString
             textView.selectedRange = NSRange(location: location - 2, length: 0)
-            textView.typingAttributes[NSAttributedStringKey.paragraphStyle.rawValue] = paragraph
+            textView.typingAttributes[NSAttributedString.Key.paragraphStyle.rawValue] = paragraph
             reset()
             
             self.textMode = Constant.TextMode.OrderedListEndMode
@@ -400,8 +400,8 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                     }
                 }else if character == "." && orderIndex == 1{
                     var range:NSRange = NSRange()
-                    let attributeOfLigature = (textView.attributedText.attribute(NSAttributedStringKey.ligature, at: newIndex, effectiveRange: &range)) == nil ? 0 : 1
-                    let attributeOfFont = (textView.attributedText.attribute(NSAttributedStringKey.font, at: newIndex, effectiveRange: &range)) as? UIFont
+                    let attributeOfLigature = (textView.attributedText.attribute(NSAttributedString.Key.ligature, at: newIndex, effectiveRange: &range)) == nil ? 0 : 1
+                    let attributeOfFont = (textView.attributedText.attribute(NSAttributedString.Key.font, at: newIndex, effectiveRange: &range)) as? UIFont
                     if attributeOfLigature == 1 || attributeOfFont == UIFont(name: "Avenir-Medium", size: 18){
                         textMode = Constant.TextMode.OrderedListStartMode
                     }
@@ -422,7 +422,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             let paragraph = NSMutableParagraphStyle()
             paragraph.firstLineHeadIndent = 10
             let bullet = "\(order + 1)."
-            let attributedBullet = NSAttributedString(string: bullet, attributes: [NSAttributedStringKey.font:UIFont(name: "Avenir-Medium", size: 18)!,NSAttributedStringKey.ligature:1, NSAttributedStringKey.paragraphStyle:paragraph])
+            let attributedBullet = NSAttributedString(string: bullet, attributes: [NSAttributedString.Key.font:UIFont(name: "Avenir-Medium", size: 18)!,NSAttributedString.Key.ligature:1, NSAttributedString.Key.paragraphStyle:paragraph])
             let attributedString = NSMutableAttributedString(attributedString: textView.attributedText)
             if index <= 0{
                 index = 0
@@ -457,8 +457,8 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                     break
                 }else if character == "\u{2022}"{
                     var range:NSRange = NSRange()
-                    let attributeOfKern = textView.attributedText.attribute(NSAttributedStringKey.kern, at: index, effectiveRange: &range) == nil ? 0:15
-                    let attributeOfFont = textView.attributedText.attribute(NSAttributedStringKey.font, at: index, effectiveRange: &range) as! UIFont
+                    let attributeOfKern = textView.attributedText.attribute(NSAttributedString.Key.kern, at: index, effectiveRange: &range) == nil ? 0:15
+                    let attributeOfFont = textView.attributedText.attribute(NSAttributedString.Key.font, at: index, effectiveRange: &range) as! UIFont
                     let size = attributeOfFont.pointSize
                     if attributeOfKern == 15 && size == 20{
                         textMode = Constant.TextMode.UnorderedListMode
@@ -504,8 +504,8 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                     break
                 }else if character == "\u{2022}"{
                     var range:NSRange = NSRange()
-                    let attributeOfKern = textView.attributedText.attribute(NSAttributedStringKey.kern, at: index, effectiveRange: &range) == nil ? 0:15
-                    let attributeOfFont = textView.attributedText.attribute(NSAttributedStringKey.font, at: index, effectiveRange: &range) as! UIFont
+                    let attributeOfKern = textView.attributedText.attribute(NSAttributedString.Key.kern, at: index, effectiveRange: &range) == nil ? 0:15
+                    let attributeOfFont = textView.attributedText.attribute(NSAttributedString.Key.font, at: index, effectiveRange: &range) as! UIFont
                     let size = attributeOfFont.pointSize
                     if attributeOfKern == 15 && size == 20{
                         textMode = Constant.TextMode.UnorderedListMode
@@ -537,10 +537,10 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                 paragraph.headIndent = 0
                 paragraph.firstLineHeadIndent = 0
                  paragraph.lineBreakMode = .byCharWrapping
-                attributedString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraph, range: NSRange(location: index - 1, length: length))
+                attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraph, range: NSRange(location: index - 1, length: length))
                 textView.attributedText = attributedString
                 textView.selectedRange = NSRange(location: location - 1, length: 0)
-                textView.typingAttributes[NSAttributedStringKey.paragraphStyle.rawValue] = paragraph
+                textView.typingAttributes[NSAttributedString.Key.paragraphStyle.rawValue] = paragraph
                 reset()
                 self.textMode = Constant.TextMode.UnorderedListEndMode
             }else{
@@ -556,7 +556,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
                 let paragraph = NSMutableParagraphStyle()
                 paragraph.firstLineHeadIndent = 10
                 let bullet = "\u{2022}"
-                let attributedBullet = NSAttributedString(string: bullet, attributes: [NSAttributedStringKey.font:UIFont(name: "Avenir-Medium", size: 20),NSAttributedStringKey.kern:15,NSAttributedStringKey.paragraphStyle:paragraph])
+                let attributedBullet = NSAttributedString(string: bullet, attributes: [NSAttributedString.Key.font:UIFont(name: "Avenir-Medium", size: 20),NSAttributedString.Key.kern:15,NSAttributedString.Key.paragraphStyle:paragraph])
                 let attributedString = NSMutableAttributedString(attributedString: textView.attributedText)
               
                 if index <= 0{
@@ -594,7 +594,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
     }
     
     @objc func fontincrease() {
-        self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont(name: (self.font?.fontName)!, size: (self.font?.pointSize)! + 1)
+        self.textView.typingAttributes[NSAttributedString.Key.font.rawValue] = UIFont(name: (self.font?.fontName)!, size: (self.font?.pointSize)! + 1)
     }
     /**
      字体增大
@@ -602,7 +602,7 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
      :param: sender
      */
     @objc func fontdecase() {
-        self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont(name: (self.font?.fontName)!, size: (self.font?.pointSize)! - 1)
+        self.textView.typingAttributes[NSAttributedString.Key.font.rawValue] = UIFont(name: (self.font?.fontName)!, size: (self.font?.pointSize)! - 1)
     }
     /**
      设置斜体
@@ -611,14 +611,14 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
      */
     @objc func Obliqueness() {
         if isItalic == 0{
-            textView.typingAttributes[NSAttributedStringKey.obliqueness.rawValue] = 0.5
+            textView.typingAttributes[NSAttributedString.Key.obliqueness.rawValue] = 0.5
             isItalic = 0.5
             obliButton.setTitleColor(Constant.Color.勿忘草色, for: .normal)
             
         }
         else{
             isItalic = 0
-           textView.typingAttributes[NSAttributedStringKey.obliqueness.rawValue] = nil
+           textView.typingAttributes[NSAttributedString.Key.obliqueness.rawValue] = nil
             obliButton.setTitleColor(UIColor.black, for: .normal)
         }
     }
@@ -630,11 +630,11 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
     @objc func underline() {
         if isUnderlined == 0{
             isUnderlined = 1
-        self.textView.typingAttributes[NSAttributedStringKey.underlineStyle.rawValue] = 1
+        self.textView.typingAttributes[NSAttributedString.Key.underlineStyle.rawValue] = 1
         underl.setTitleColor(Constant.Color.勿忘草色, for: .normal)
         }else{
             isUnderlined = 0
-        self.textView.typingAttributes[NSAttributedStringKey.underlineStyle
+        self.textView.typingAttributes[NSAttributedString.Key.underlineStyle
             .rawValue] = nil
         underl.setTitleColor(UIColor.black, for: .normal)
         }
@@ -644,32 +644,32 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
     
    @objc func setFont(fontName:String){
     self.font = UIFont(name: fontName, size: (CGFloat)((self.font?.pointSize)!))
-    self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont(name: fontName, size: (CGFloat)((self.font?.pointSize)!))
+    self.textView.typingAttributes[NSAttributedString.Key.font.rawValue] = UIFont(name: fontName, size: (CGFloat)((self.font?.pointSize)!))
     }
     
     @objc func setFontSize(size:CGFloat){
         self.font = UIFont(name: (self.font?.fontName)!, size: size)
-        self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont(name: (self.font?.fontName)!, size: size)
+        self.textView.typingAttributes[NSAttributedString.Key.font.rawValue] = UIFont(name: (self.font?.fontName)!, size: size)
     }
     
     @objc func setFontColor(color:UIColor){
         self.fontColor = color
-        self.textView.typingAttributes[NSAttributedStringKey.foregroundColor.rawValue] = color
+        self.textView.typingAttributes[NSAttributedString.Key.foregroundColor.rawValue] = color
     }
     
     @objc func setBgColor(color:UIColor){
         self.backColor = color
-        self.textView.typingAttributes[NSAttributedStringKey.backgroundColor.rawValue] = color
+        self.textView.typingAttributes[NSAttributedString.Key.backgroundColor.rawValue] = color
     }
     
     @objc func setStrike(){
         if isStrike == 0{
         self.isStrike = 1
-        self.textView.typingAttributes[NSAttributedStringKey.strikethroughStyle.rawValue] = 1
+        self.textView.typingAttributes[NSAttributedString.Key.strikethroughStyle.rawValue] = 1
         strikeButton.setTitleColor(Constant.Color.勿忘草色, for: .normal)
         }else{
         self.isStrike = 0
-        self.textView.typingAttributes[NSAttributedStringKey.strikethroughStyle.rawValue] = nil
+        self.textView.typingAttributes[NSAttributedString.Key.strikethroughStyle.rawValue] = nil
         strikeButton.setTitleColor(.black, for: .normal)
         }
     }
@@ -681,16 +681,21 @@ class AttributedTextView:UIView,UIScrollViewDelegate{
             print("\((self.font?.fontName)!)-Bold")
             print(array)
             if array.contains("\((self.font?.familyName)!)-Bold"){
-            self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont(name: "\((self.font?.familyName)!)-Bold", size: (self.font?.pointSize)!)
+            self.textView.typingAttributes[NSAttributedString.Key.font.rawValue] = UIFont(name: "\((self.font?.familyName)!)-Bold", size: (self.font?.pointSize)!)
             }else{
-                self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] = UIFont.boldSystemFont(ofSize: (self.font?.pointSize)!)
+                self.textView.typingAttributes[NSAttributedString.Key.font.rawValue] = UIFont.boldSystemFont(ofSize: (self.font?.pointSize)!)
             }
             
             BoldButton.setTitleColor(Constant.Color.勿忘草色, for: .normal)
         }else if isBold == 1{
             self.isBold = 0
-            self.textView.typingAttributes[NSAttributedStringKey.font.rawValue] =  UIFont.systemFont(ofSize: (self.font?.pointSize)!)
+            self.textView.typingAttributes[NSAttributedString.Key.font.rawValue] =  UIFont.systemFont(ofSize: (self.font?.pointSize)!)
             BoldButton.setTitleColor(.black, for: .normal)
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKeyDictionary(_ input: [NSAttributedString.Key: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }

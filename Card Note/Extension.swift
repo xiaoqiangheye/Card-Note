@@ -11,8 +11,21 @@ import UIKit
 import SwiftyJSON
 
 
+var needToSync = false
+
 func isAutoSyncOn()->Bool{
     return UserDefaults.standard.bool(forKey: Constant.Key.AutoSync)
+}
+
+
+func showMsgbox(_message: String, _title: String = "Message", vc:UIViewController, completionHandler:@escaping ()->() = {}){
+    let alert = UIAlertController(title: _title, message: _message, preferredStyle: UIAlertController.Style.alert)
+    let btnOK = UIAlertAction(title: "OK", style: .default) { (action) in
+        completionHandler()
+    }
+    alert.addAction(btnOK)
+    vc.present(alert, animated: true, completion: nil)
+    
 }
 
 
@@ -332,7 +345,7 @@ func resetImgSize(sourceImage : UIImage,maxImageLenght : CGFloat,maxSizeKB : CGF
     
     UIGraphicsEndImageContext()
     
-    var imageData = UIImageJPEGRepresentation(newImage!, 1.0)
+    var imageData = UIImageJPEGRepresentation(newImage!,1.0)
     
     var sizeOriginKB : CGFloat = CGFloat((imageData?.count)!) / 1024.0;
     

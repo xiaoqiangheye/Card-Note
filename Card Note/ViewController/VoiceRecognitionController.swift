@@ -166,7 +166,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
         view.frame = CGRect(x:0, y:0, width: self.view.frame.width * 0.8, height: 100)
         view.center.x = UIScreen.main.bounds.width/2
         view.controllerButton.frame = CGRect(x:30, y:0, width: 30, height:30)
-        view.controllerButton.setTitleColor(.black, for: UIControlState.normal)
+        view.controllerButton.setTitleColor(.black, for: UIControl.State.normal)
         loadingView = LoadingView(frame: CGRect(x: view.controllerButton.frame.origin.x + 30, y: 0, width: 50, height: 30))
         if card.voiceManager?.state == .willRecord || card.voiceManager?.state == .recording{
             view.controllerButton.setFAIcon(icon: .FAMicrophone, iconSize: 30, forState: .normal)
@@ -192,7 +192,7 @@ class VoiceRecognitionController:UIViewController,SFSpeechRecognitionTaskDelegat
             view.addSubview(view.timerLable)
             view.addSubview(view.progressBar)
         }
-        view.controllerButton.addTarget(self, action: #selector(controllerClicked), for:UIControlEvents.touchDown)
+        view.controllerButton.addTarget(self, action: #selector(controllerClicked), for:UIControl.Event.touchDown)
         // view.controllerButton.setTitle("录音", for: UIControlState.normal)
         view.recognizer = SFSpeechRecognizer()
         view.addSubview(view.controllerButton)
