@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Xkh-ER-z3I">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UkG-Ey-Caz">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,8 +16,8 @@
                     <view key="view" contentMode="scaleToFill" id="B3I-xz-mrk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="F5l-Kl-Hpa"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eYj-cw-tvc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -32,8 +31,8 @@
                     <view key="view" contentMode="scaleToFill" id="Jh5-9G-5ki">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="tYQ-qw-P55"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Dp-VB-805" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -47,8 +46,8 @@
                     <view key="view" contentMode="scaleToFill" id="Lt7-Sl-v4k">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="qvp-zZ-Mja"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <segue destination="UkG-Ey-Caz" kind="presentation" identifier="main" animates="NO" id="sSv-fo-Ha4"/>
@@ -73,8 +72,8 @@
                     <view key="view" contentMode="scaleToFill" id="yEu-Ac-1Qr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="wcU-fX-7ml"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Me" id="zg4-NQ-538"/>
                     <connections>
@@ -90,7 +89,7 @@
             <objects>
                 <viewController storyboardIdentifier="cardEditor" id="mU0-QR-a5V" customClass="CardEditor" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="p2g-HL-l4q">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xWd-Cw-ppf" customClass="FloatButton" customModule="Card_Note" customModuleProvider="target">
@@ -102,8 +101,8 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="rGh-lJ-2mE"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 2" id="22z-sa-Hcf"/>
                     <connections>
@@ -117,12 +116,12 @@
         <!--Account Setting Controller-->
         <scene sceneID="7Og-yE-v3y">
             <objects>
-                <viewController storyboardIdentifier="accountSetting" id="mq9-4y-N2o" customClass="AccountSettingController" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="accountSetting" modalPresentationStyle="fullScreen" id="mq9-4y-N2o" customClass="AccountSettingController" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bys-xP-UDk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="T0q-3Y-QL1"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xb3-nm-0JD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -146,8 +145,8 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="crS-RS-ZDz"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Mine" id="j9u-FN-neg"/>
                     <connections>
@@ -162,20 +161,45 @@
         <!--Tap Bar Controller-->
         <scene sceneID="H3a-sT-hpg">
             <objects>
-                <tabBarController id="UkG-Ey-Caz" customClass="TapBarController" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="main" wantsFullScreenLayout="YES" modalPresentationStyle="fullScreen" id="UkG-Ey-Caz" customClass="TapBarController" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="haP-Oy-48i">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="NO"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
-                        <segue destination="Qu0-bc-r3N" kind="relationship" relationship="viewControllers" id="w7P-kr-XCO"/>
-                        <segue destination="ady-hy-OCl" kind="relationship" relationship="viewControllers" id="7BT-Lm-uln"/>
+                        <segue destination="Qu0-bc-r3N" kind="relationship" relationship="viewControllers" id="kY4-FX-oaK"/>
+                        <segue destination="ady-hy-OCl" kind="relationship" relationship="viewControllers" id="Vax-ek-3Sd"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iKd-Pq-Lcn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="854" y="-27"/>
         </scene>
+        <!--Tools-->
+        <scene sceneID="BUc-G5-5yl">
+            <objects>
+                <viewController id="nm5-Ie-lbi" customClass="ToolsController" customModule="Card_Note" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3bH-LC-qjg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="cyz-bd-ThI"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Tools" id="i9y-Yo-bVs"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9yF-2d-X04" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2324" y="-27"/>
+        </scene>
     </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

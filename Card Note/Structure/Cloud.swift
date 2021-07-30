@@ -11,9 +11,8 @@ import CloudKit
 import SCLAlertView
 import Alamofire
 
-let myContainer = CKContainer.default()
-//2、创建数据库
-let database = myContainer.publicCloudDatabase
+let myContainer = CKContainer.init(identifier: "iCloud.com.wei.cardnote")
+let database = myContainer.privateCloudDatabase
 let publicData = myContainer.publicCloudDatabase
 
 class Cloud{
@@ -168,29 +167,12 @@ class Cloud{
         do{
             let url = Constant.Configuration.url.Card.appendingPathComponent(id + ".card")
             let card = NSKeyedUnarchiver.unarchiveObject(with: try Data.init(contentsOf: url)) as! Card
-            
-            
             database.delete(withRecordID: CKRecord.ID.init(recordName: id)) { (artworkRecord, error) in
                 if (error != nil) {
                     print("deleteRecord failure！" + (error?.localizedDescription)!)
                     completionHandler(false)
                 } else {
                     print("deleteRecord success！")
-                    var array = [Bool]()
-                    for sub in card.getChilds(){
-                        database.delete(withRecordID: CKRecord.ID.init(recordName: sub.getId()), completionHandler: { (id, error) in
-                            if (error != nil){
-                                completionHandler(false)
-                            }else{
-                                array.append(true)
-                            }
-                        })
-                    }
-                    
-                    while(array.count != card.getChilds().count){
-                        
-                    }
-                    
                     completionHandler(true)
                 }
             }
@@ -252,7 +234,13 @@ class Cloud{
                     do{
                         let data = try Data(contentsOf: cardData.fileURL)
                         let card = NSKeyedUnarchiver.unarchiveObject(with: data) as? Card
-                        cardArray.append(card!)
+                        if card != nil{
+                            cardArray.append(card!)
+                        }else{
+                            deleteRecordData(id: record.recordID.recordName, completionHandler: { (bool) in
+                                
+                            })
+                        }
                     }catch{
                     }
                 }
@@ -321,37 +309,16 @@ class Cloud{
         queryAssets(query: query,completionHandler:completionHandler)
     }
     
-    class func uploadDefinition(id:String,url:URL,completionHandler:@escaping (Bool,Error?)->()){
-        upload(text: url, id: id + "_DEFINITION", completionHandler: completionHandler)
-    }
-    
-    class func downloadDefinition(id:String,completionHandler:@escaping (Bool,Error?)->()){
-        downloadAsset(id: id + "_DEFINITION", type: "TEXT", completionHandler: completionHandler)
-    }
-    
-    class func downloadDefinition(id:String)->CKQueryOperation{
-        return downloadAsset(id: id + "_DEFINITION", type: "TEXT")
-    }
+   
     
     class func downloadOperation(query:CKQuery)->CKQueryOperation{
         let opr = CKQueryOperation(query: query)
         return opr
     }
     
-    /*
-    class private func upload(url:URL,type:String,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        let cardRecord = CKRecord.init(recordType: "ASSET", recordID: CKRecordID.init(recordName: id))
-        cardRecord["file"] = CKAsset(fileURL: url)
-        cardRecord["type"] = type
-        creatRecord(record: cardRecord) { (bool) in
-           completionHandler(bool,nil)
-            
-        }
-        
-    }
- */
+   
     
-    class private func upload(url:URL,type:String,id:String,completionHandler:@escaping (Bool,Error?)->()){
+    class private func upload(url:URL,type:String,id:String,parentID:String, completionHandler:@escaping (Bool,Error?)->()){
         database.fetch(withRecordID: CKRecord.ID.init(recordName: id)) { (record, error) in
             if(record != nil){
                 record!["file"] = CKAsset(fileURL: url)
@@ -362,6 +329,7 @@ class Cloud{
                 let cardRecord = CKRecord.init(recordType: "ASSET", recordID: CKRecord.ID.init(recordName: id))
                 cardRecord["file"] = CKAsset(fileURL: url)
                 cardRecord["type"] = type
+                cardRecord["parent"] = CKReference(recordID: CKRecord.ID.init(recordName: parentID), action: .deleteSelf)
                 creatRecord(record: cardRecord) { (bool) in
                     completionHandler(bool,nil)
                 }
@@ -369,20 +337,20 @@ class Cloud{
         }
     }
     
-    class func upload(image url:URL,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        upload(url: url, type: "IMAGE",id:id,completionHandler:completionHandler)
+    class func upload(image url:URL,id:String,parentID:String, completionHandler:@escaping (Bool,Error?)->()){
+        upload(url: url, type: "IMAGE",id:id,parentID:parentID,completionHandler:completionHandler)
     }
     
-    class func upload(video url:URL,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        upload(url: url, type: "VIDEO",id:id,completionHandler:completionHandler)
+    class func upload(video url:URL,id:String,parentID:String, completionHandler:@escaping (Bool,Error?)->()){
+        upload(url: url, type: "VIDEO",id:id,parentID:parentID,completionHandler:completionHandler)
     }
     
-    class func upload(audio url:URL,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        upload(url: url, type: "AUDIO",id:id,completionHandler:completionHandler)
+    class func upload(audio url:URL,id:String,parentID:String, completionHandler:@escaping (Bool,Error?)->()){
+        upload(url: url, type: "AUDIO",id:id,parentID:parentID,completionHandler:completionHandler)
     }
     
-    class func upload(text url:URL,id:String,completionHandler:@escaping (Bool,Error?)->()){
-        upload(url:url,type:"TEXT",id:id,completionHandler:completionHandler)
+    class func upload(text url:URL,id:String,parentID:String, completionHandler:@escaping (Bool,Error?)->()){
+        upload(url:url,type:"TEXT",id:id,parentID:parentID,completionHandler:completionHandler)
     }
     
     class func createTag(tag:String,completionHandler:@escaping (Bool,Error?)->()){
@@ -402,6 +370,41 @@ class Cloud{
             }else{
                 completionHandler(false,nil)
             }
+        }
+    }
+    
+    class func deleteTag(tag:String, completionHandler:@escaping (Bool, Error?)->()){
+        database.delete(withRecordID: CKRecord.ID.init(recordName: tag)) { id, error in
+            if(error == nil){
+                completionHandler(true, nil)
+            } else{
+                completionHandler(false, error)
+            }
+        }
+    }
+    
+    class func queryRestRecognition(completionHandler:@escaping (Int?)->()){
+        let query = CKQuery(recordType: "num_recognition", predicate: NSPredicate(value:true))
+        database.perform(query, inZoneWith: nil) { (records, error) in
+            if error != nil{
+                completionHandler(nil)
+            }else{
+                if records!.count >= 0{
+                    completionHandler(records![0]["num"])
+                } else {
+                    //add record to query
+                    setRecognitionNum { bool in }
+                    completionHandler(nil)
+                }
+            }
+        }
+    }
+    
+    class func setRecognitionNum(completionHandler:@escaping (Bool)->()){
+        let num = CKRecord(recordType: "num_recognition", recordID: CKRecord.ID.init(recordName: "num_recognition"))
+        num["num"] = 10
+        creatRecord(record: num) { (bool) in
+            completionHandler(bool)
         }
     }
 

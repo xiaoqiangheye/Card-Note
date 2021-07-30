@@ -52,6 +52,7 @@ class PicView:CardView{
             view.frame = CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height: changedy)
             view.image.frame = CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height: changedy)
             view.image.image = pic.pic
+            view.loadingView.isHidden = true
         }
         
         view.center.x = UIScreen.main.bounds.width/2
@@ -114,7 +115,12 @@ class PicView:CardView{
             self.becomeFirstResponder()
             uimenu = UIMenuController.shared
             uimenu.arrowDirection = .default
-            uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "FootNote", action: #selector(self.addComment)),UIMenuItem(title: "Hide FootNote", action: #selector(self.hideComment)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Extract Text", action: #selector(self.extractText)),UIMenuItem(title: "Share", action: #selector(self.share))]
+            uimenu.menuItems = [UIMenuItem(title: NSLocalizedString("move", comment: ""), action: #selector(self.editMode)),
+                                UIMenuItem(title: NSLocalizedString("extract_text", comment: ""), action: #selector(self.extractText)),
+                                UIMenuItem(title: NSLocalizedString("footnote", comment: ""), action: #selector(self.addComment)),
+                                UIMenuItem(title: NSLocalizedString("hide_footnote", comment: ""), action: #selector(self.hideComment)),
+                                UIMenuItem(title: NSLocalizedString("delete", comment: ""), action: #selector(self.deleteCard)),
+                                UIMenuItem(title: NSLocalizedString("share", comment: ""), action: #selector(self.share))]
             uimenu.setTargetRect(self.bounds, in: self)
             uimenu.setMenuVisible(true, animated: true)
             

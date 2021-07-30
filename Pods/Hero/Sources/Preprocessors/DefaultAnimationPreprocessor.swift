@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if canImport(UIKit)
+
 import UIKit
 
 public enum HeroDefaultAnimationType {
@@ -31,10 +33,43 @@ public enum HeroDefaultAnimationType {
       case "right": return .right
       case "up": return .up
       case "down": return .down
+      case "leading": return .leading
+      case "trailing": return .trailing
       default: return nil
       }
     }
+
+    public static var leadingToTrailing: CascadeDirection {
+      return !Locale.isDeviceLanguageRightToLeft ? .leftToRight : .rightToLeft
+    }
+
+    public static var trailingToLeading: CascadeDirection {
+      return !Locale.isDeviceLanguageRightToLeft ? .rightToLeft : .leftToRight
+    }
+
+    public static var leading: Direction {
+      return !Locale.isDeviceLanguageRightToLeft ? .left : .right
+    }
+
+    public static var trailing: Direction {
+      return !Locale.isDeviceLanguageRightToLeft ? .right : .left
+    }
   }
+
+  public enum Strategy {
+    case forceLeftToRight, forceRightToLeft, userInterface
+    func defaultDirection(presenting: Bool) -> Direction {
+      switch self {
+      case .forceLeftToRight:
+        return presenting ? .left : .right
+      case .forceRightToLeft:
+        return presenting ? .right : .left
+      case .userInterface:
+        return presenting ? .leading : .trailing
+      }
+    }
+  }
+
   case auto
   case push(direction: Direction)
   case pull(direction: Direction)
@@ -249,9 +284,11 @@ class DefaultAnimationPreprocessor: BasePreprocessor {
       if animators.contains(where: { $0.canAnimate(view: toView, appearing: true) || $0.canAnimate(view: fromView, appearing: false) }) {
         defaultAnimation = .none
       } else if inNavigationController {
-        defaultAnimation = presenting ? .push(direction:.left) : .pull(direction:.right)
+        let direction = hero.defaultAnimationDirectionStrategy.defaultDirection(presenting: presenting)
+        defaultAnimation = .push(direction: direction)
       } else if inTabBarController {
-        defaultAnimation = presenting ? .slide(direction:.left) : .slide(direction:.right)
+        let direction = hero.defaultAnimationDirectionStrategy.defaultDirection(presenting: presenting)
+        defaultAnimation = .slide(direction: direction)
       } else {
         defaultAnimation = .fade
       }
@@ -351,3 +388,5 @@ class DefaultAnimationPreprocessor: BasePreprocessor {
     }
   }
 }
+
+#endif

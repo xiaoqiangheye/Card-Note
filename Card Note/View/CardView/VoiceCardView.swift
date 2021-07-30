@@ -26,14 +26,19 @@ class VoiceCardView:CardView,SFSpeechRecognizerDelegate,ProGressBarDelegate{
     override init(card: Card) {
         super.init(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height:100))
         self.card = card
-        VoiceCardView.decorateView(view: self)
+        decorateView(view: self)
+    }
+    
+    init(withOutdecoration card:Card) {
+        super.init(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width * 0.8, height:100))
+        self.card = card
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    static func decorateView(view:VoiceCardView){
+    func decorateView(view:VoiceCardView){
         let card = view.card as! VoiceCard
         view.backgroundColor = .white
         view.layer.shadowColor = Constant.Color.translusentGray.cgColor
@@ -134,14 +139,18 @@ class VoiceCardView:CardView,SFSpeechRecognizerDelegate,ProGressBarDelegate{
             self.becomeFirstResponder()
             uimenu = UIMenuController.shared
             uimenu.arrowDirection = .default
-            uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Share", action: #selector(share))]
+            uimenu.menuItems = [UIMenuItem(title: NSLocalizedString("Voice Translate", comment: ""), action: #selector(recognition)),
+                                UIMenuItem(title: NSLocalizedString("move", comment: ""), action: #selector(self.editMode)),
+                                UIMenuItem(title: NSLocalizedString("delete", comment: ""), action: #selector(self.deleteCard)),
+                                UIMenuItem(title: NSLocalizedString("share", comment: ""), action: #selector(share)),
+                                ]
             uimenu.setTargetRect(self.bounds, in: self)
             uimenu.setMenuVisible(true, animated: true)
         }
     }
     
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if action == #selector(share) || action == #selector(editMode) || action == #selector(deleteCard){
+        if action == #selector(share) || action == #selector(editMode) || action == #selector(deleteCard) || action == #selector(recognition){
             return true
         }else{
             return false
@@ -167,8 +176,12 @@ class VoiceCardView:CardView,SFSpeechRecognizerDelegate,ProGressBarDelegate{
         alertView.showNotice("Sharing", subTitle: "It's nice to have your card open to public.")
     }
     
-    @objc func openRecognition(){
-        if delegate != nil{
+    @objc func recognition(){
+        let voiceCard = card as! VoiceCard
+        
+            voiceCard.voiceManager?.stop()
+        
+        if(delegate != nil){
             delegate?.voiceView?(recognition: self)
         }
     }

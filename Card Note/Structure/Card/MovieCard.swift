@@ -9,9 +9,10 @@
 import Foundation
 class MovieCard:Card{
     var path:String
-    init(id:String) {
+    init(id:String,parent:Card) {
         self.path = Constant.Configuration.url.Movie.appendingPathComponent(id + ".mov").path
         super.init(title: "", tag: nil, description: "", id: id, definition: "", color: nil, cardType: Card.CardType.movie.rawValue, modifytime: "")
+        self.setParent(card: parent)
     }
     
     override func encode(with aCoder: NSCoder) {

@@ -25,6 +25,9 @@ class Constant{
             static let attributedText = url.appendingPathComponent("attr")
         }
         static var AccountPlan:String = "basic"
+        static var one_month = "com.wei.cardnote.one_month"
+        static var one_year = "com.wei.cardnote.one_year"
+        static var for_ever = "com.wei.cardnote.forever"
     }
     
     enum TextMode {
@@ -72,4 +75,6 @@ class Constant{
         static let AutoSync = "auto-sync"
         static let SyncWithWifi = "auto-sync-if-wifi-presents"
     }
+    
+    static var purchased = false
 }

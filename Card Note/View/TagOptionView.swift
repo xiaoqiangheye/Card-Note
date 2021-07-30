@@ -74,7 +74,7 @@ class TagOptionView:UIView,UIScrollViewDelegate{
     
     func loadTag(_ existingTag:[String]){
         let tags = UserDefaults.standard.array(forKey: Constant.Key.Tags)
-        if tags == nil || tags?.count == 0{return}
+        
         var cumulatedHeight:CGFloat = 0
         let createTagView = UIButton(frame: CGRect(x: 0, y: cumulatedHeight, width: self.frame.width * 0.8, height: 30))
         createTagView.center.x = self.frame.width/2

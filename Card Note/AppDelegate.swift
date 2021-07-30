@@ -9,12 +9,17 @@
 import UIKit
 import CoreData
 import SwiftyStoreKit
+import GoogleMobileAds
+
 
 var isFirstLaunch = true
 var app_version = ""
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate{
+class AppDelegate: UIResponder, UIApplicationDelegate, GADFullScreenContentDelegate{
     var window: UIWindow?
+    var ad: GADAppOpenAd?
+    var loadtime: Date?
+    
     func createDirectory(){
         let array = [Constant.Configuration.url.attributedText,Constant.Configuration.url.Audio,Constant.Configuration.url.Card,Constant.Configuration.url.Movie,Constant.Configuration.url.PicCard]
         for url in array{
@@ -49,6 +54,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         }
     }
     
+    
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         //Override point for customization after application launch.
         
@@ -59,6 +67,80 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         print("Version: " + app_version)
         
      
+        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
+                for purchase in purchases {
+                    switch purchase.transaction.transactionState {
+                    case .purchased, .restored:
+                        if purchase.needsFinishTransaction {
+                            // Deliver content from server, then:
+                            SwiftyStoreKit.finishTransaction(purchase.transaction)
+                        }
+                        // Unlock content
+                        Constant.purchased = true
+                    case .failed, .purchasing, .deferred:
+                        break
+                    }
+                }
+            }
+        
+        let appleValidator = AppleReceiptValidator(service: .production, sharedSecret: "714c8f5be61e48c3994b8480fe1f6f8c")
+        SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
+            switch result {
+            case .success(let receipt):
+                let productId = Constant.Configuration.for_ever
+                // Verify the purchase of Consumable or NonConsumable
+                let purchaseResult = SwiftyStoreKit.verifyPurchase(
+                    productId: productId,
+                    inReceipt: receipt)
+                    
+                switch purchaseResult {
+                case .purchased(let receiptItem):
+                    print("\(productId) is purchased: \(receiptItem)")
+                    UserDefaults.standard.set(true, forKey: "VIP")
+                    
+                case .notPurchased:
+                    print("The user has never purchased \(productId)")
+                }
+            case .error(let error):
+                print("Receipt verification failed: \(error)")
+            }
+        }
+        
+        
+        SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
+            switch result {
+                case .success(let receipt):
+                    var set = Set<String>()
+                    set.insert(Constant.Configuration.one_month)
+                    set.insert(Constant.Configuration.one_year)
+                    let purchaseResult1 = SwiftyStoreKit.verifySubscriptions(ofType: .autoRenewable, productIds: set, inReceipt: receipt)
+                   
+                    let productId = Constant.Configuration.for_ever
+                    // Verify the purchase of Consumable or NonConsumable
+                    let purchaseResult2 = SwiftyStoreKit.verifyPurchase(
+                        productId: productId,
+                        inReceipt: receipt)
+                        
+                    switch purchaseResult1 {
+                    case .purchased(let expiryDate, let items):
+                        UserDefaults.standard.set(true, forKey: "VIP")
+                    case .expired(let expiryDate, let items):
+                        UserDefaults.standard.set(false, forKey: "VIP")
+                    case .notPurchased:
+                        break
+                    }
+                    
+                    switch purchaseResult2 {
+                    case .purchased:
+                        UserDefaults.standard.set(true, forKey: "VIP")
+                    case .notPurchased:
+                       break
+                    }
+
+                case .error(let error):
+                    print("Receipt verification failed: \(error)")
+                }
+        }
         
         
         //directory setting
@@ -69,7 +151,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         //let ifUpdateFirstLauch = isUpdateFirstLaunch()
 
         
+        //setup ads
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [ "a5f3c997bb11c3f04951753dae5850f3" ]
+        
+        //set rest recognition
+        let date = Date()
+        let lastdate = UserDefaults.standard.object(forKey: "date") as? Date
+        if(lastdate != nil){
+            let day1 = date.get(.day)
+            let day2 = lastdate!.get(.day)
+            if(day1 > day2) {
+                UserDefaults.standard.set(10, forKey: "num")
+                UserDefaults.standard.set(Date(), forKey: "date")
+            }
+        } else {
+            UserDefaults.standard.set(10, forKey: "num")
+            UserDefaults.standard.set(Date(), forKey: "date")
+        }
+        
+        
         if !isFirstLaunch{
+        UserDefaults.standard.set(false, forKey: "VIP")
         UserDefaults.standard.set(true, forKey: Constant.Key.ifLauched)
         let tags = [String]()
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
@@ -157,7 +260,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        if(!UserDefaults.standard.bool(forKey: "VIP")){
+            trytoPresentAd()
+        }
     }
+    
+    func requestOpenAd(){
+        self.ad = nil
+        GADAppOpenAd.load(withAdUnitID: "ca-app-pub-3940256099942544/5662855259", request: GADRequest.init(), orientation: .portrait) { ad, error in
+            if(error != nil){
+                print("failed to load the ad" + error!.localizedDescription)
+                return
+            }
+            print("request ad success")
+            self.ad = ad
+            self.ad?.fullScreenContentDelegate = self
+            self.loadtime = Date()
+        }
+    }
+    
+    func trytoPresentAd(){
+        if(self.ad != nil && self.wasLoadTimeLessThanNHoursAgo(n: 4)){
+            let root = topViewControllerWithRootViewController(rootViewController: window?.rootViewController)
+            self.ad?.present(fromRootViewController: root!)
+        } else {
+            requestOpenAd()
+        }
+    }
+    
+    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        print("didFailToPresentFullScreenContentWithError" + error.localizedDescription)
+        self.requestOpenAd()
+    }
+    
+    func adDidPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        print("presnet ad success")
+    }
+    
+    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        print("DidDismissFullScreenContent")
+        self.requestOpenAd()
+    }
+    
+    func wasLoadTimeLessThanNHoursAgo(n: Int) -> Bool{
+        let now = Date()
+        let time = now.timeIntervalSince(loadtime!)
+        let second = 3600.0
+        let intervalInhours = time / second
+        return intervalInhours < Double(n)
+    }
+    
+    
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.

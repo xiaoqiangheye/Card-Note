@@ -8,7 +8,13 @@
 
 import Foundation
 import SwiftyJSON
+import Alamofire
 class TranslationManager{
+    
+    class func gTranslate(text:String,completionHandler:@escaping (String?)->()){
+        let language = getCurrentLanguage()
+        gTranslate(text: text, toLanguage: language, fromLanguage: "auto", completionHandler: completionHandler)
+    }
     class func gTranslate(text:String,toLanguage:String,fromLanguage:String,completionHandler:@escaping (String?)->()){
         var url = "https://translation.googleapis.com/language/translate/v2?"
         let q = text.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
@@ -16,7 +22,7 @@ class TranslationManager{
         let format = "text"
         let source = fromLanguage
         let model = "nmt"
-        let key = "AIzaSyDp4psXj4wq5o3lMW64o-qjI_YynH8scIQ"
+        let key = "AIzaSyDiwIsaj-S4u4U-cVRN9IByUi-ez4NoAYw"
         
         url.append("q=\(q)&")
         url.append("key=\(key)&")
@@ -36,6 +42,7 @@ class TranslationManager{
                     let list = json["data"]
                     let translations = list["translations"].arrayValue
                     if translations.count > 0{
+                        minusOneRecognition()
                         let text = translations[0]["translatedText"].stringValue
                         completionHandler(text)
                     }else{
@@ -55,7 +62,7 @@ class TranslationManager{
     
     class func translate(text:String,from:String,to:String,completionHandler:@escaping (String?)->()){
         let yd = YDTranslateInstance.shared()
-        yd?.appKey = "0388377d12128473"
+        yd?.appKey = "3af11feba012109e"
         var results = ""
         let translateRequest = YDTranslateRequest()
         let parameters = YDTranslateParameters.targeting()
@@ -138,7 +145,7 @@ class TranslationManager{
     
     class func translate(text:String,completionHandler:@escaping (String?)->()){
         let yd = YDTranslateInstance.shared()
-        yd?.appKey = "0388377d12128473"
+        yd?.appKey = "3af11feba012109e"
         var results = ""
         let translateRequest = YDTranslateRequest()
         let parameters = YDTranslateParameters.targeting()

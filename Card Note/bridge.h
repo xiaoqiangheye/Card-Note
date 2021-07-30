@@ -8,8 +8,9 @@
 
 #ifndef bridge_h
 #define bridge_h
-#import "FanYiSDK.h"
+
 #import "OCRSDK.h"
+#import "TranslateSDK.h"
 #import <CommonCrypto/CommonCrypto.h>
 //#import "APIKey.h"
 #endif /* bridge_h */

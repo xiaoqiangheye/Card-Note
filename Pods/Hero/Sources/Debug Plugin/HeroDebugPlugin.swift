@@ -20,9 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if canImport(UIKit) && os(iOS)
+
 import UIKit
 
-#if os(iOS)
 public class HeroDebugPlugin: HeroPlugin {
   public static var showOnTop: Bool = false
 
@@ -101,7 +102,7 @@ extension HeroDebugPlugin: HeroDebugViewDelegate {
     let a = CABasicAnimation(keyPath: "zPosition")
     a.fromValue = view.layer.value(forKeyPath: "zPosition")
     a.toValue = NSNumber(value: Double(to))
-    a.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+    a.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
     a.duration = 0.4
     view.layer.add(a, forKey: "zPosition")
     view.layer.zPosition = to
@@ -165,7 +166,7 @@ extension HeroDebugPlugin: HeroDebugViewDelegate {
     let a = CABasicAnimation(keyPath: "sublayerTransform")
     a.fromValue = hero.container.layer.value(forKeyPath: "sublayerTransform")
     a.toValue = NSValue(caTransform3D: t)
-    a.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+    a.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
     a.duration = 0.4
 
     UIView.animate(withDuration: 0.4) {
@@ -176,4 +177,5 @@ extension HeroDebugPlugin: HeroDebugViewDelegate {
     hero.container.layer.sublayerTransform = t
   }
 }
+
 #endif

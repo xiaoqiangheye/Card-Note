@@ -11,9 +11,10 @@ import UIKit
 
 class PicCard:Card{
     var pic:UIImage!
-    init(_ pic:UIImage) {
+    init(_ pic:UIImage,parent:Card) {
         self.pic = pic
         super.init(title: "", tag: nil, description: "", id: UUID().uuidString, definition: "", color: .clear, cardType: Card.CardType.picture.rawValue, modifytime: "")
+        self.setParent(card: parent)
     }
     
     required init?(coder aDecoder: NSCoder) {

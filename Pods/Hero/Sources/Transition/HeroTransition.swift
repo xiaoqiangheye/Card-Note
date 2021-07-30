@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if canImport(UIKit)
+
 import UIKit
 
 /**
@@ -55,6 +57,7 @@ open class HeroTransition: NSObject {
   public var containerColor: UIColor = .black
   public var isUserInteractionEnabled = false
   public var viewOrderingStrategy: HeroViewOrderingStrategy = .auto
+  public var defaultAnimationDirectionStrategy: HeroDefaultAnimationType.Strategy = .forceLeftToRight
 
   public internal(set) var state: HeroTransitionState = .possible {
     didSet {
@@ -69,11 +72,11 @@ open class HeroTransition: NSObject {
   public var isTransitioning: Bool { return state != .possible }
   public internal(set) var isPresenting: Bool = true
 
-  @available(*, deprecated, message: "Use isTransitioning instead")
+  @available(*, renamed: "isTransitioning")
   public var transitioning: Bool {
     return isTransitioning
   }
-  @available(*, deprecated, message: "Use isPresenting instead")
+  @available(*, renamed: "isPresenting")
   public var presenting: Bool {
     return isPresenting
   }
@@ -212,3 +215,5 @@ extension HeroTransition: HeroProgressRunnerDelegate {
     self.progress = progress
   }
 }
+
+#endif

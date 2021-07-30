@@ -71,12 +71,10 @@ class ExaView:CardView,UITextViewDelegate{
     
     @objc override func observeMode(){
         super.observeMode()
-        self.textView.isEditable = false
     }
     
     @objc override func editMode() {
         super.editMode()
-        self.textView.isEditable = true
     }
     
     
@@ -93,7 +91,11 @@ class ExaView:CardView,UITextViewDelegate{
             self.becomeFirstResponder()
             uimenu = UIMenuController.shared
             uimenu.arrowDirection = .default
-            uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Share", action: #selector(self.share)),UIMenuItem(title: "Translate", action: #selector(translate)),UIMenuItem(title: "Cancel Translation", action: #selector(hideTranslate))]
+            uimenu.menuItems = [UIMenuItem(title: NSLocalizedString("move", comment: ""), action: #selector(self.editMode)),
+                                UIMenuItem(title: NSLocalizedString("delete", comment: ""), action: #selector(self.deleteCard)),
+                                UIMenuItem(title: NSLocalizedString("share", comment: ""), action: #selector(self.share)),
+                                UIMenuItem(title: NSLocalizedString("Translate", comment: ""), action: #selector(translate)),
+                                UIMenuItem(title: NSLocalizedString("cancel_translate", comment: ""), action: #selector(hideTranslate))]
             uimenu.setTargetRect(self.bounds, in: self)
             uimenu.setMenuVisible(true, animated: true)
         }
@@ -105,6 +107,7 @@ class ExaView:CardView,UITextViewDelegate{
         translateTextView.frame = textView.frame
         translateTextView.isEditable = false
         translateTextView.isSelectable = false
+        translateTextView.backgroundColor = .clear
         translateTextView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(menuController(_:))))
         
         translateTitle.textColor = .black

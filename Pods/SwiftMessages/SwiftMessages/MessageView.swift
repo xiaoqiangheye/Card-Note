@@ -88,7 +88,7 @@ open class MessageView: BaseView, Identifiable, AccessibleMessage {
 
     /**
      An optional prefix for the `accessibilityMessage` that can
-     be used to futher clarify the message for VoiceOver. For example, 
+     be used to further clarify the message for VoiceOver. For example,
      the view's background color or icon might convey that a message is
      a warning, in which case one may specify the value "warning".
      */
@@ -108,7 +108,7 @@ open class MessageView: BaseView, Identifiable, AccessibleMessage {
         return backgroundView
     }
 
-    open var additonalAccessibilityElements: [NSObject]? {
+    open var additionalAccessibilityElements: [NSObject]? {
         var elements: [NSObject] = []
         func getAccessibleSubviews(view: UIView) {
             for subview in view.subviews {
@@ -172,12 +172,6 @@ extension MessageView {
          This view is typically used with `.center` presentation style.         
          */
         case centeredView = "CenteredView"
-
-        /**
-         A standard message view like `MessageView`, but without
-         stack views for iOS 8.
-         */
-        case messageViewIOS8 = "MessageViewIOS8"
     }
     
     /**
@@ -212,11 +206,10 @@ extension MessageView {
 /*
  MARK: - Layout adjustments
 
- This extention provides a few convenience functions for adjusting the layout.
+ This extension provides a few convenience functions for adjusting the layout.
  */
 
 extension MessageView {
-    @available(iOS 9, *)
     /**
      Constrains the image view to a specified size. By default, the size of the
      image view is determined by its `intrinsicContentSize`.
@@ -224,7 +217,7 @@ extension MessageView {
      - Parameter size: The size to be translated into Auto Layout constraints.
      - Parameter contentMode: The optional content mode to apply.
      */
-    public func configureIcon(withSize size: CGSize, contentMode: UIViewContentMode? = nil) {
+    public func configureIcon(withSize size: CGSize, contentMode: UIView.ContentMode? = nil) {
         var views: [UIView] = []
         if let iconImageView = iconImageView { views.append(iconImageView) }
         if let iconLabel = iconLabel { views.append(iconLabel) }
@@ -243,7 +236,7 @@ extension MessageView {
 /*
  MARK: - Theming
  
- This extention provides a few convenience functions for setting styles,
+ This extension provides a few convenience functions for setting styles,
  colors and icons. You are encouraged to write your own such functions
  if these don't exactly meet your needs.
  */
@@ -297,7 +290,7 @@ extension MessageView {
         bodyLabel?.textColor = foregroundColor
         button?.backgroundColor = foregroundColor
         button?.tintColor = backgroundColor
-        button?.contentEdgeInsets = UIEdgeInsetsMake(7.0, 7.0, 7.0, 7.0)
+        button?.contentEdgeInsets = UIEdgeInsets(top: 7.0, left: 7.0, bottom: 7.0, right: 7.0)
         button?.layer.cornerRadius = 5.0
         iconImageView?.isHidden = iconImageView?.image == nil
         iconLabel?.isHidden = iconLabel?.text == nil
@@ -388,43 +381,12 @@ extension MessageView {
         bodyLabel?.text = body
         iconImageView?.image = iconImage
         iconLabel?.text = iconText
-        button?.setImage(buttonImage, for: UIControlState())
-        button?.setTitle(buttonTitle, for: UIControlState())
+        button?.setImage(buttonImage, for: .normal)
+        button?.setTitle(buttonTitle, for: .normal)
         self.buttonTapHandler = buttonTapHandler
         iconImageView?.isHidden = iconImageView?.image == nil
         iconLabel?.isHidden = iconLabel?.text == nil
     }
 }
 
-/*
- MARK: - Configuring the width
- 
- This extension provides a few convenience functions for configuring the
- background view's width. You are encouraged to write your own such functions
- if these don't exactly meet your needs.
- */
-
-extension MessageView {
-
-    /**
-     A shortcut for configuring the left and right layout margins. For views that
-     have `backgroundView` as a subview of `MessageView`, the background view should
-     be pinned to the left and right `layoutMargins` in order for this configuration to work.
-    */
-    public func configureBackgroundView(sideMargin: CGFloat) {
-        layoutMargins.left = sideMargin
-        layoutMargins.right = sideMargin
-    }
-
-    /**
-     A shortcut for adding a width constraint to the `backgroundView`. When calling this
-     method, it is important to ensure that the width constraint doesn't conflict with
-     other constraints. The CardView.nib and TabView.nib layouts are compatible with
-     this method.
-     */
-    public func configureBackgroundView(width: CGFloat) {
-        let constraint = NSLayoutConstraint(item: backgroundView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: width)
-        backgroundView.addConstraint(constraint)
-    }
-}
 

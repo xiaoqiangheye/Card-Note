@@ -13,20 +13,28 @@ class ExampleCard:Card{
     init() {
         let date = NSDate()
         let interval = date.timeIntervalSince1970
-        super.init(title: "Key", tag: nil, description: "", id: UUID().uuidString, definition: "Value", color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
+        super.init(title: NSLocalizedString("key", comment: ""), tag: nil, description: "", id: UUID().uuidString, definition: NSLocalizedString("value", comment: ""), color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
+        
        // self.example = example
     }
+    
+    convenience init(parent:Card){
+        self.init()
+        self.setParent(card:parent)
+    }
+    
     
     init(key:String,value:String){
         let date = NSDate()
         let interval = date.timeIntervalSince1970
         super.init(title: key, tag: nil, description: "", id: UUID().uuidString, definition: value, color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
+        
     }
     
     init(id:String,title:String){
         let date = NSDate()
         let interval = date.timeIntervalSince1970
-         super.init(title: title, tag: nil, description: "", id: id, definition: "", color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
+        super.init(title: title, tag: nil, description: "", id: id, definition: "", color: nil, cardType: CardType.example.rawValue,modifytime:String(interval))
     }
     
     override func encode(with aCoder: NSCoder) {

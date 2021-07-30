@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
+#if canImport(UIKit)
+import QuartzCore
 
 protocol HeroProgressRunnerDelegate: class {
   func updateProgress(progress: Double)
@@ -35,8 +36,9 @@ class HeroProgressRunner {
   }
   internal var timePassed: TimeInterval = 0.0
   internal var duration: TimeInterval = 0.0
+    internal var isReversed: Bool = false
+
   internal var displayLink: CADisplayLink?
-  internal var isReversed: Bool = false
 
   @objc func displayUpdate(_ link: CADisplayLink) {
     timePassed += isReversed ? -link.duration : link.duration
@@ -61,12 +63,14 @@ class HeroProgressRunner {
     self.isReversed = reverse
     self.duration = totalTime
     displayLink = CADisplayLink(target: self, selector: #selector(displayUpdate(_:)))
-    displayLink!.add(to: RunLoop.main, forMode: RunLoopMode(rawValue: RunLoopMode.commonModes.rawValue))
+    displayLink!.add(to: .main, forMode: RunLoop.Mode.common)
   }
 
   func stop() {
     displayLink?.isPaused = true
-    displayLink?.remove(from: RunLoop.main, forMode: RunLoopMode(rawValue: RunLoopMode.commonModes.rawValue))
+    displayLink?.remove(from: RunLoop.main, forMode: RunLoop.Mode.common)
     displayLink = nil
   }
 }
+
+#endif

@@ -22,6 +22,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if canImport(UIKit)
+
 import UIKit
 
 public enum CascadeDirection {
@@ -29,8 +31,8 @@ public enum CascadeDirection {
   case bottomToTop
   case leftToRight
   case rightToLeft
-  case radial(center:CGPoint)
-  case inverseRadial(center:CGPoint)
+  case radial(center: CGPoint)
+  case inverseRadial(center: CGPoint)
   var comparator: (UIView, UIView) -> Bool {
     switch self {
     case .topToBottom:
@@ -62,9 +64,21 @@ public enum CascadeDirection {
       self = .rightToLeft
     case "topToBottom":
       self = .topToBottom
+    case "leadingToTrailing":
+      self = .leadingToTrailing
+    case "trailingToLeading":
+      self = .trailingToLeading
     default:
       return nil
     }
+  }
+
+  public static var leadingToTrailing: CascadeDirection {
+    return !Locale.isDeviceLanguageRightToLeft ? .leftToRight : .rightToLeft
+  }
+
+  public static var trailingToLeading: CascadeDirection {
+    return !Locale.isDeviceLanguageRightToLeft ? .rightToLeft : .leftToRight
   }
 
   private func topToBottomComperator(lhs: UIView, rhs: UIView) -> Bool {
@@ -124,3 +138,5 @@ class CascadePreprocessor: BasePreprocessor {
     }
   }
 }
+
+#endif

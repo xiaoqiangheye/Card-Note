@@ -27,7 +27,7 @@ class LoadingView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = UIColor.clear
         
         let roundOneView: UIView = {
             let roundOne = UIView.init()

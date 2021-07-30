@@ -1,0 +1,35 @@
+/* 
+  localization.strings
+  Card Note
+
+  Created by Wei Wei on 7/14/21.
+  Copyright © 2021 WeiQiang. All rights reserved.
+*/
+
+
+
+"Filter" = "Filter";
+"Sort" = "Sort";
+
+
+"OCR" = "OCR";
+"Translate" = "Translate";
+"Voice Translate" = "Voice Translate";
+"Sync" = "Sync";
+"Help" = "Help";
+"Version" = "Version";
+"Tag" = "Tag";
+"Rate us" = "Rate us";
+"Terms" = "Terms";
+"Name" = "Name";
+"Time" = "Time";
+
+
+"Success" = "Success";
+"Failure" = "Failure";
+
+
+"Welcome to Card Note. Ready for a walk?" = "Welcome to Card Note. Ready for a walk?";
+"Click '+' to add a new card." = "Click '+' to add a new card.";
+
+"CFBundleDisplayName" = "Canote";

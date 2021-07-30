@@ -79,7 +79,10 @@ class TextView:CardView,UITextViewDelegate{
             self.becomeFirstResponder()
             uimenu = UIMenuController.shared
             uimenu.arrowDirection = .default
-            uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "Translate", action: #selector(self.translate)),UIMenuItem(title: "Cancel Translation", action: #selector(self.hideTranslate)),UIMenuItem(title: "Share", action: #selector(self.share)),UIMenuItem(title: "Delete", action: #selector(deleteCard))]
+            uimenu.menuItems = [UIMenuItem(title: NSLocalizedString("move", comment: ""), action: #selector(self.editMode)),
+                                UIMenuItem(title: NSLocalizedString("Translate", comment: ""), action: #selector(self.translate)),
+                                UIMenuItem(title: NSLocalizedString("share", comment: ""), action: #selector(self.share)),
+                                UIMenuItem(title: NSLocalizedString("delete", comment: ""), action: #selector(deleteCard))]
             uimenu.setTargetRect(self.bounds, in: self)
             uimenu.setMenuVisible(true, animated: true)
         }
@@ -96,6 +99,7 @@ class TextView:CardView,UITextViewDelegate{
     
     
     @objc override func translate(){
+        /*
         translateTextView.textColor = .black
         translateTextView.frame.size = self.frame.size
         translateTextView.frame.origin = CGPoint(x: 0, y: 0)
@@ -123,7 +127,8 @@ class TextView:CardView,UITextViewDelegate{
                 SwiftMessages.show(view: view)
             }
         }
-        
+         */
+        delegate?.cardView?(translate: self, text: textView.text)
     }
     
 }

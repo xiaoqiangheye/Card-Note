@@ -1,0 +1,84 @@
+/* 
+  Localizable.strings
+  Card Note
+
+  Created by Wei Wei on 7/15/21.
+  Copyright © 2021 WeiQiang. All rights reserved.
+*/
+"Filter" = "筛选";
+"Sort" = "排序";
+
+
+"OCR" = "图片识别";
+"Translate" = "翻译";
+"Voice Translate" = "声音识别";
+"Sync" = "同步";
+"Help" = "帮助";
+"Version" = "版本";
+"Tag" = "标签管理";
+"Rate Us" = "评价我们";
+"Terms" = "条款";
+"Name" = "标题";
+"Time" = "修改时间";
+
+
+"Success" = "成功";
+"Failure" = "失败";
+
+
+//guidance
+"first_step" = "欢迎使用轻识别，准备好进入教程了吗";
+"second_step" = "点击 + 可以添加一个新卡片";
+"third_step" = "这是一个搜索栏可以搜索卡片";
+"fourth_step" = "这是一个工具栏可以进行卡片筛选和排序";
+
+
+//cardeditor
+"Save" = "保存";
+"title" = "标题";
+"definition" = "我是一张小卡片";
+"definition_label" = "卡片描述";
+"subcard" = "子卡片";
+"key_value" = "定义卡";
+"text_card" = "文字框";
+"photo_card" = "图片卡";
+"video_card" = "视频卡";
+"voice_card" = "语音卡";
+
+"select_from" = "从哪里选择素材";
+"album" = "素材库";
+"cancel" = "取消";
+"take_photo" = "拍摄素材";
+
+"key" = "标题";
+"value" = "定义";
+
+"used_up" = "今日次数用完";
+"cancel" = "取消";
+"VIP" = "开通会员";
+"used_up_message" = "谢谢您的使用。因为识别成本的关系，每日上限为十次，今日次数已经用光，明日可以继续使用。欢迎加入我们的实惠的会员订阅获得无限次数";
+
+
+
+//cardview
+"move" = "移动";
+"extract_text" = "文字识别";
+"footnote" = "脚注";
+"hide_footnote" = "隐藏脚注";
+"delete" = "删除";
+"share" = "分享";
+"cancel_translate" = "取消翻译";
+
+
+//VIP
+"forever" = "永久";
+"one_month" = "每个月";
+"one_year" = "每年";
+"month" = "月";
+"year" = "年";
+"privilege" = "普通用户：每天最多识别10次，有开屏广告。会员：去除所有广告，无限制语音识别，翻译，文字识别，批量文字识别";
+"purchase" = "升级";
+
+"restore" = "恢复购买";
+
+"CFBundleDisplayName" = "轻识别";

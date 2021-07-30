@@ -1,0 +1,34 @@
+/* 
+  localization.strings
+  Card Note
+
+  Created by Wei Wei on 7/14/21.
+  Copyright © 2021 WeiQiang. All rights reserved.
+*/
+
+
+"Filter" = "筛选";
+"Sort" = "排序";
+
+
+"OCR" = "图片识别文字";
+"Translate" = "翻译";
+"Voice Translate" = "语音实时转文字";
+"Sync" = "同步";
+"Help" = "帮助";
+"Version" = "版本";
+"Tag" = "标签设置";
+"Rate us" = "评价我们";
+"Terms" = "条款";
+"Name" = "标题";
+"Time" = "修改时间";
+
+
+"Success" = "成功";
+"Failure" = "失败";
+
+
+"Welcome to Card Note. Ready for a walk?" = "欢迎使用轻识别。准备好进入教程了吗？";
+"Click '+' to add a new card." = "点击 + 可以添加一张新卡片";
+
+"CFBundleDisplayName" = "轻识别";

@@ -17,6 +17,7 @@ pod 'SwiftyStoreKit'
 pod 'Instructions', '~> 1.2.0'
 pod 'SwiftyJSON'
 pod 'ReachabilitySwift'
+pod 'Google-Mobile-Ads-SDK'
 #pod 'YPImagePicker'
 #pod 'FMPhotoPicker'
   # Pods for Card Note

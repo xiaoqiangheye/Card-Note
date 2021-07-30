@@ -3,13 +3,13 @@
 "22z-sa-Hcf.title" = "Item 2";
 
 /* Class = "UIButton"; normalTitle = "下一步"; ObjectID = "5gc-qt-nAU"; */
-"5gc-qt-nAU.normalTitle" = "下一步";
+"5gc-qt-nAU.normalTitle" = "Next Step";
 
 /* Class = "UIButton"; normalTitle = "开始"; ObjectID = "5ia-LQ-ClP"; */
-"5ia-LQ-ClP.normalTitle" = "开始";
+"5ia-LQ-ClP.normalTitle" = "Begin";
 
 /* Class = "UIButton"; normalTitle = "注册"; ObjectID = "CeQ-gF-1fb"; */
-"CeQ-gF-1fb.normalTitle" = "注册";
+"CeQ-gF-1fb.normalTitle" = "Sign Up";
 
 /* Class = "UIButton"; normalTitle = "add card"; ObjectID = "DCX-Yi-o8G"; */
 "DCX-Yi-o8G.normalTitle" = "add card";
@@ -18,19 +18,19 @@
 "DH2-O2-8pm.normalTitle" = "Done";
 
 /* Class = "UITextField"; placeholder = "您的邮箱"; ObjectID = "QT4-AF-HWQ"; */
-"QT4-AF-HWQ.placeholder" = "您的邮箱";
+"QT4-AF-HWQ.placeholder" = "Email";
 
 /* Class = "UILabel"; text = "欢迎使用卡片记"; ObjectID = "Sp1-fq-yP6"; */
-"Sp1-fq-yP6.text" = "欢迎使用卡片记";
+"Sp1-fq-yP6.text" = "Welcome to Canote";
 
 /* Class = "UIButton"; normalTitle = "确认"; ObjectID = "WKe-PH-cTL"; */
-"WKe-PH-cTL.normalTitle" = "确认";
+"WKe-PH-cTL.normalTitle" = "OK";
 
 /* Class = "UITextField"; placeholder = "您的密码"; ObjectID = "ZIT-IN-3W2"; */
-"ZIT-IN-3W2.placeholder" = "您的密码";
+"ZIT-IN-3W2.placeholder" = "Password";
 
 /* Class = "UIButton"; normalTitle = "登录"; ObjectID = "hh4-Oz-9uF"; */
-"hh4-Oz-9uF.normalTitle" = "登录";
+"hh4-Oz-9uF.normalTitle" = "Login";
 
 /* Class = "UITabBarItem"; title = "Us"; ObjectID = "idQ-pc-2CU"; */
 "idQ-pc-2CU.title" = "Us";
@@ -39,7 +39,7 @@
 "j9u-FN-neg.title" = "Mine";
 
 /* Class = "UIButton"; normalTitle = "下一步"; ObjectID = "wF9-lG-kom"; */
-"wF9-lG-kom.normalTitle" = "下一步";
+"wF9-lG-kom.normalTitle" = "Next Step";
 
 /* Class = "UIButton"; normalTitle = "add"; ObjectID = "xWd-Cw-ppf"; */
 "xWd-Cw-ppf.normalTitle" = "add";

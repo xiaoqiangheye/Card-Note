@@ -13,6 +13,15 @@ import UIKit
 class VoiceCard:Card{
     var voicepath = Constant.Configuration.url.Audio.absoluteString
     var voiceManager:RecordManager?
+    init(id:String,title:String,parent:Card) {
+        super.init(title: title, tag: nil, description: "", id: id, definition: "", color: UIColor.white, cardType: "voice", modifytime: "")
+        voicepath.append(contentsOf: "/\(id).wav")
+        print(voicepath)
+        
+        voiceManager = RecordManager(fileName: "\(id).wav")
+        self.setParent(card: parent)
+    }
+    
     init(id:String,title:String) {
         super.init(title: title, tag: nil, description: "", id: id, definition: "", color: UIColor.white, cardType: "voice", modifytime: "")
         voicepath.append(contentsOf: "/\(id).wav")

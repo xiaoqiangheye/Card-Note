@@ -1,0 +1,18 @@
+
+/* Class = "UITabBarItem"; title = "Item 2"; ObjectID = "22z-sa-Hcf"; */
+"22z-sa-Hcf.title" = "Item 2";
+
+/* Class = "UIButton"; normalTitle = "add card"; ObjectID = "DCX-Yi-o8G"; */
+"DCX-Yi-o8G.normalTitle" = "add card";
+
+/* Class = "UITabBarItem"; title = "Tools"; ObjectID = "i9y-Yo-bVs"; */
+"i9y-Yo-bVs.title" = "Tools";
+
+/* Class = "UITabBarItem"; title = "Mine"; ObjectID = "j9u-FN-neg"; */
+"j9u-FN-neg.title" = "Mine";
+
+/* Class = "UIButton"; normalTitle = "add"; ObjectID = "xWd-Cw-ppf"; */
+"xWd-Cw-ppf.normalTitle" = "add";
+
+/* Class = "UITabBarItem"; title = "Me"; ObjectID = "zg4-NQ-538"; */
+"zg4-NQ-538.title" = "Me";

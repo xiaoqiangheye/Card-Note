@@ -215,8 +215,17 @@ class TagView:UIView{
             }
             index += 1
         }
+        
         UserDefaults.standard.set(tags, forKey: Constant.Key.Tags)
         UserDefaults.standard.synchronize()
+        
+        Cloud.deleteTag(tag: tagString) { bool, error in
+            if(!bool){
+                DispatchQueue.main.async {
+                    AlertView.show(alert: "delete tag failed")
+                }
+            }
+        }
         if delegate != nil{
             delegate?.tagView?(didDelete: self, tag: (self.tagLabel.text)!)
         }

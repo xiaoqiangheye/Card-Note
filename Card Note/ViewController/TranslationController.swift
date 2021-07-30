@@ -8,8 +8,10 @@
 
 import Foundation
 import UIKit
-import Font_Awesome_Swift
 import SCLAlertView
+import Font_Awesome_Swift
+
+
 var languageDictionary = NSDictionary(contentsOf: URL(fileURLWithPath:Bundle.main.path(forResource: "languageList", ofType: "plist")!))
 class TranslationController:UIViewController{
     var backButton:UIButton!
@@ -22,13 +24,19 @@ class TranslationController:UIViewController{
     var conversionButton:UIButton!
     var translateButton:UIButton!
     var copyButton:UIButton!
+    var addToCardButton:UIButton!
+    
+
     @objc func endEditing(){
         self.view.endEditing(true)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.8)
+    }
+    
     
     override func viewDidLoad() {
-        self.view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.8)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
         backButton = UIButton(frame: CGRect(x: 25, y: 25, width: 30, height: 30))
         backButton.setFAIcon(icon: FAType.FATimes, iconSize: 30, forState: .normal)
@@ -66,6 +74,9 @@ class TranslationController:UIViewController{
         
         originalText = UITextView(frame: CGRect(x: 0, y: 50, width: self.view.frame.width * 0.8, height: 200))
         originalText.delegate = self
+        originalText.textColor = .black
+        originalText.isEditable = true
+        originalText.backgroundColor = .white
         superCard.addSubview(originalText)
         
         
@@ -143,6 +154,11 @@ class TranslationController:UIViewController{
     
     //translate
     func translate(from:String,to:String,text:String){
+        if(!checkRestRecognition()){
+            popOutWindow(vc:self)
+            return
+        }
+        
         var f = ""
         if from != "Auto"{
         f = languageDictionary![from] as! String
@@ -179,6 +195,7 @@ class TranslationController:UIViewController{
                 self.translate(from:self.fromLanguageLabel.title(for: .normal)!, to:self.toLanguageLabel.title(for: .normal)!, text: self.originalText.text)
             }
     }
+    
     
 }
 

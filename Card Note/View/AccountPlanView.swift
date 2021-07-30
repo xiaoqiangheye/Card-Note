@@ -54,8 +54,8 @@ class AccountPlanView:UIView{
             title.text = "Basic"
             advantageView.text = "Unlimited note cards\nNo AI Support\nMay have Ads"
         case Plan.premium:
-            self.backgroundColor = UIColor.flatPurple
-            self.layer.shadowColor = UIColor.flatPurple.cgColor
+            self.backgroundColor = UIColor.flatPurple()
+            self.layer.shadowColor = UIColor.flatPurple().cgColor
             title.text = "Premium"
             advantageView.text = "Unlimited note cards\nAI Support\n\t-OCR\n\t-Translation\n\t-Voice Recognition\nNo Ads"
         }

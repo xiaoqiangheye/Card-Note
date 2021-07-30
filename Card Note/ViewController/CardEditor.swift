@@ -36,7 +36,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     var doneButton: UIButton!
     @IBOutlet var addButton: UIButton!
     var color:UIColor = Constant.Color.blueLeft
-    var card:Card?
+    var card:Card!
     var type:CardEditor.type?
     var textMode:Constant.TextMode!
     var subCards:[CardView] = [CardView]()
@@ -50,6 +50,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     var addVoiceView:UIView!
     var addMapView:UIView!
     var addMovieView:UIView!
+    var addTranslate:UIView!
+    var addOCR:UIView!
+    var addVoiceTranslate:UIView!
     var addButtonList = [UIView]()
     ///////////////////////////////
     var cumulatedheight:Int = 0
@@ -304,7 +307,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     override func viewDidLoad() {
         self.hero.isEnabled = true
         if self.card != nil{
-        self.view.hero.id = self.card?.getId()
+            self.view.hero.id = self.card?.getId()
         }
         self.view.backgroundColor = .clear
         var backGroundHeight:CGFloat = 100
@@ -330,7 +333,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         cardColor.layer.addSublayer(gl)
         
         let saveButton = UIButton(frame: CGRect(x: 0, y: 20, width: 100, height: 30))
-        saveButton.setTitle("Save", for: .normal)
+        
+        saveButton.setTitle(NSLocalizedString("Save", comment: ""), for: .normal)
         saveButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         saveButton.setTitleColor(.white, for: .normal)
         saveButton.setTitleColor(.white, for: .focused)
@@ -386,7 +390,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         cardTitle.isScrollEnabled = false
         cardColor.addSubview(cardTitle)
         if(card == nil){
-            cardTitle.text = "Title"
+            cardTitle.text = NSLocalizedString("title", comment: "")
         }else{
             cardTitle.isSelectable = false
             cardTitle.isEditable = false
@@ -405,7 +409,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         }
         definitionLabel = UILabel()
         definitionLabel.font =  UIFont.boldSystemFont(ofSize: 20)
-        definitionLabel.text = "Definition"
+        definitionLabel.text = NSLocalizedString("definition_label", comment: "")
         definitionLabel.frame = CGRect(x:20, y: tagInputView.frame.origin.y + tagInputView.frame.height + 20, width: self.view.bounds.width, height: 20)
         definitionLabel.textColor = UIColor(red: 132/255, green: 141/255, blue: 163/255, alpha: 1)
         
@@ -423,7 +427,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             let constrainSize = CGSize(width:definition.frame.size.width,height:CGFloat(MAXFLOAT))
             definition.sizeThatFits(constrainSize)
         }else{
-            definition.text = "What does this card record?"
+            definition.text = NSLocalizedString("definition", comment: "")
         }
     
 
@@ -468,7 +472,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
 
         self.view.bringSubview(toFront: addButton)
         
-    let centerDefault = NotificationCenter.default
+        let centerDefault = NotificationCenter.default
         centerDefault.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         centerDefault.addObserver(self, selector: #selector(keyboardWillExit), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
@@ -476,6 +480,11 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         //addButtonSetting
         addButtonSetting()
         
+        //init a new card if it's add
+        if self.card == nil{
+            let time = NSTimeIntervalSince1970
+            self.card = Card(title: NSLocalizedString("title", comment: ""), tag: nil, description: "", id: UUID().uuidString, definition: definition.text, color: self.color, cardType: Card.CardType.card.rawValue, modifytime: String(time))
+        }
     }
     
     
@@ -880,12 +889,17 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     @IBAction func save(_ sender: Any) {
         let manager = FileManager.default
         if self.type == CardEditor.type.add{
+            self.card.setTitle(cardTitle.text)
+            self.card.setColor(color)
+            self.card.setDefinition(definition.text)
+            self.card.setTag(tagInputView!.tags.sorted())
             var childs:[Card] = [Card]()
                 for card in self.subCards
                 {
                     childs.append(card.card)
+                    
+                    //save media to local and to iCloud
                     if card.isKind(of: PicView.self){
-                        
                         var url = Constant.Configuration.url.PicCard
                         url.appendPathComponent(card.card.getId() + ".jpg")
                         let picView = card as! PicView
@@ -894,7 +908,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         }
                         if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
                             //User.uploadPhotoUsingQCloud(url: url)
-                            Cloud.upload(image: url, id: card.card.getId()){_,_ in
+                            Cloud.upload(image: url, id: card.card.getId(),parentID:self.card.getRootParent().getId()){_,_ in
                                 
                             }
                         }
@@ -916,7 +930,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             print(error.localizedDescription)
                         }
                        if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
-                            Cloud.upload(text: url, id: card.card.getId()){_,_ in
+                            Cloud.upload(text: url, id: card.card.getId(),parentID:self.card.getRootParent().getId()){_,_ in
                                 
                             }
                         }
@@ -929,7 +943,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         url.appendPathComponent(card.card.getId() + ".wav")
                         if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
                            // User.uploadAudioUsingQCloud(url: url)
-                            Cloud.upload(audio: url, id: card.card.getId()){_,_ in
+                            Cloud.upload(audio: url, id: card.card.getId(),parentID:self.card.getRootParent().getId()){_,_ in
                                 
                             }
                         }
@@ -939,7 +953,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                         url.appendPathComponent(card.card.getId() + ".mov")
                             if manager.fileExists(atPath:url.path) && isAutoSyncOn(){
                                // User.uploadMovieUsingQCloud(url: url)
-                                Cloud.upload(video: url, id: card.card.getId()){_,_ in
+                                Cloud.upload(video: url, id: card.card.getId(),parentID:self.card.getRootParent().getId()){_,_ in
                                     
                                 }
                             }
@@ -952,35 +966,34 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 
             }
             
-            let interval = NSTimeIntervalSince1970
-            let card = Card(title: cardTitle.text, tag: tagInputView?.tags.sorted(), description:"", id: UUID().uuidString, definition: definition.text, color: color, cardType:Card.CardType.card.rawValue,modifytime:String(interval))
             
-            
-            card.addChildNotes(childs)
-            self.card = card
+            self.card.addChildNotes(childs)
              if !isSubCard{
-                Cloud.addCard(card: card) { (bool) in
-                    if bool{
-                        DispatchQueue.main.async {
-                        AlertView.show(success: "Adding Card Succeed")
-                        }
-                    }else{
-                        DispatchQueue.main.async {
-                        AlertView.show(error: "Adding Card to iCoud Failed")
-                        }
-                    }
-                }
-          
-            
-            let url = Constant.Configuration.url.Card.appendingPathComponent(card.getId() + ".card")
-            manager.createFile(atPath: url.path, contents: nil, attributes: nil)
-            let datawrite = NSKeyedArchiver.archivedData(withRootObject: card as Any)
+                let url = Constant.Configuration.url.Card.appendingPathComponent(self.card.getId() + ".card")
+                manager.createFile(atPath: url.path, contents: nil, attributes: nil)
+                let datawrite = NSKeyedArchiver.archivedData(withRootObject: self.card as Any)
                 do{
                     try datawrite.write(to: url)
                 }catch{
                     print("Failed to save the file")
                 }
+            
+            
+                if isAutoSyncOn(){
+                    Cloud.addCard(card: self.card) { (bool) in
+                        if bool{
+                            DispatchQueue.main.async {
+                                AlertView.show(success: NSLocalizedString("Success", comment: ""))
+                            }
+                        }else{
+                            DispatchQueue.main.async {
+                                AlertView.show(error: NSLocalizedString("Failure", comment: ""))
+                            }
+                        }
+                    }
+                }
             }
+            
         }else if self.type == CardEditor.type.save{
             let manager = FileManager.default
             if card != nil{
@@ -1000,9 +1013,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             if picView.commentView.text != nil{
                                 card.card.setDescription(picView.commentView.text!)
                             }
-                            if manager.fileExists(atPath: (url.path)){
+                            if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
                                // User.uploadPhotoUsingQCloud(url: url)
-                                Cloud.upload(image: url, id: card.card.getId()){_,_ in
+                                Cloud.upload(image: url, id: card.card.getId(),parentID:self.card!.getId()){_,_ in
                                     
                                 }
                             }
@@ -1016,8 +1029,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             url.appendPathComponent(card.card.getId() + ".rtf")
                            // User.uploadAttrUsingQCloud(url:url)
                             let manager = FileManager.default
-                            if manager.fileExists(atPath: (url.path)){
-                                Cloud.upload(text: url, id: card.card.getId()){_,_ in}
+                            if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
+                                Cloud.upload(text: url, id: card.card.getId(),parentID:self.card!.getId()){_,_ in}
                             }
                         }else if card.isKind(of: VoiceCardView.self){
                             let voiceCard = card as! VoiceCardView
@@ -1025,16 +1038,16 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             let manager = FileManager.default
                             var url = Constant.Configuration.url.Audio
                             url.appendPathComponent(card.card.getId() + ".wav")
-                            if manager.fileExists(atPath: (url.path)){
+                            if manager.fileExists(atPath: (url.path)) && isAutoSyncOn(){
                                // User.uploadAudioUsingQCloud(url: url)
-                                Cloud.upload(audio: url, id: card.card.getId()){_,_ in}
+                                Cloud.upload(audio: url, id: card.card.getId(),parentID:self.card!.getId()){_,_ in}
                             }
                         }else if card.isKind(of: MovieView.self){
                                 var url = Constant.Configuration.url.Movie
                                 url.appendPathComponent(card.card.getId() + ".mov")
-                                if manager.fileExists(atPath:url.path){
+                                if manager.fileExists(atPath:url.path) && isAutoSyncOn(){
                                    // User.uploadMovieUsingQCloud(url: url)
-                                    Cloud.upload(video: url, id: card.card.getId()){_,_ in}
+                                    Cloud.upload(video: url, id: card.card.getId(),parentID:self.card!.getId()){_,_ in}
                                 }
                             
                         }else if card.isKind(of: CardView.SubCardView.self){
@@ -1053,17 +1066,6 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                     
                     //upload card to icloud
                      if !isSubCard{
-                        Cloud.updateCard(card:self.card!){ (bool) in
-                            if bool{
-                               print("update card Success")
-                            }else{
-                                DispatchQueue.main.async {
-                                    AlertView.show(error: "Updating subcards Failed")
-                                }
-                            }
-                        }
-                        
-        
                         let url = Constant.Configuration.url.Card.appendingPathComponent((self.card?.getId())! + ".card")
                         manager.createFile(atPath: url.path, contents: nil, attributes: nil)
                         let datawrite = NSKeyedArchiver.archivedData(withRootObject:self.card! as Any)
@@ -1071,6 +1073,16 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                             try datawrite.write(to: url)
                         }catch{
                             print("fail to add")
+                        }
+                        
+                        if(isAutoSyncOn()){
+                            Cloud.updateCard(card:self.card!){ (bool) in
+                                if bool{
+                                    print("update card Success")
+                                }else{
+                                    print("upload failed")
+                                }
+                            }
                         }
                     }
                 
@@ -1125,23 +1137,59 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     
+    @objc func goOcr(image: UIImage){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow(vc: self)
+            return
+        }
+       
+        let vc = OCRController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.image = image
+        self.present(vc, animated: true) {}
+    }
+    
+    @objc func goTranslate(){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow(vc: self)
+            return
+        }
+       
+        
+        let vc = TranslationController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func goVoice(){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow(vc: self)
+            return
+        }
+        let card = VoiceCard(id: UUID().uuidString, title: "")
+        let vc = VoiceRecognitionController()
+        vc.loadVoiceCardView(voiceCard: card)
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
     private func addButtonSetting(){
         func createButtonWithLabel(title:String,frame:CGRect,icon:FAType)->UIView{
-            let subCardLabel = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height - 20))
-            subCardLabel.textAlignment = .center
-            subCardLabel.font = UIFont.systemFont(ofSize: 15)
-            subCardLabel.textColor = .white
-            subCardLabel.text = title
-            subCardLabel.setFAText(prefixText: "", icon: icon, postfixText: "", size: 30)
-            subCardLabel.textAlignment = .center
-            let button = UIView(frame: frame)
-            button.backgroundColor = .black
-            button.layer.cornerRadius = 25
-            button.addSubview(subCardLabel)
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 5, width: 20, height: 20))
+            imageView.setFAIconWithName(icon: icon, textColor: UIColor.init(hex: "58AAED"))
+            imageView.center.x = frame.width/2
             
-            let titleLabel = UILabel(frame: CGRect(x: 0, y: subCardLabel.frame.height, width: frame.width, height: 20))
+            let button = UIView(frame: frame)
+            button.backgroundColor = .clear
+            button.layer.cornerRadius = 25
+            button.addSubview(imageView)
+            
+            let titleLabel = UILabel(frame: CGRect(x: 0, y: 30, width: frame.width, height: 20))
             titleLabel.text = title
-            titleLabel.textColor = .white
+            titleLabel.textColor = UIColor.flatGray()
             titleLabel.font = UIFont.systemFont(ofSize: 10)
             titleLabel.textAlignment = .center
             button.addSubview(titleLabel)
@@ -1160,83 +1208,149 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             
             let titleLabel = UILabel(frame: CGRect(x: 0, y: imageView.frame.height, width: frame.width, height: 20))
             titleLabel.text = title
-            titleLabel.textColor = UIColor.flatGray
+            titleLabel.textColor = UIColor.flatGray()
             titleLabel.font = UIFont.systemFont(ofSize: 10)
             titleLabel.textAlignment = .center
             button.addSubview(titleLabel)
             return button
         }
         
-            addSubCard = createButtonWithLabel(title: "SubCard", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"subCard")!)
-            let subCardtapGesture = UITapGestureRecognizer()
-            subCardtapGesture.numberOfTapsRequired = 1
-            subCardtapGesture.numberOfTouchesRequired = 1
-            subCardtapGesture.addTarget(self, action: #selector(addCard))
-            addSubCard.addGestureRecognizer(subCardtapGesture)
+        addSubCard = createButtonWithLabel(title: NSLocalizedString("subcard", comment: ""), frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"subCard")!)
+        let subCardtapGesture = UITapGestureRecognizer()
+        subCardtapGesture.numberOfTapsRequired = 1
+        subCardtapGesture.numberOfTouchesRequired = 1
+        subCardtapGesture.addTarget(self, action: #selector(addCard))
+        addSubCard.addGestureRecognizer(subCardtapGesture)
             
             
-            addExa = createButtonWithLabel(title: "Key-Value", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"keyValue")!)
-            let exaTapGesture = UITapGestureRecognizer()
-            exaTapGesture.numberOfTapsRequired = 1
-            exaTapGesture.numberOfTouchesRequired = 1
-            exaTapGesture.addTarget(self, action: #selector(addExample))
-            addExa.addGestureRecognizer(exaTapGesture)
+        addExa = createButtonWithLabel(title: NSLocalizedString("key_value", comment: ""), frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"keyValue")!)
+        let exaTapGesture = UITapGestureRecognizer()
+        exaTapGesture.numberOfTapsRequired = 1
+        exaTapGesture.numberOfTouchesRequired = 1
+        exaTapGesture.addTarget(self, action: #selector(addExample))
+        addExa.addGestureRecognizer(exaTapGesture)
             
             
-            addPicCard = createButtonWithLabel(title: "Photo", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"pic")!)
-            let picGesture = UITapGestureRecognizer()
-            picGesture.numberOfTapsRequired = 1
-            picGesture.numberOfTouchesRequired = 1
-            picGesture.addTarget(self, action: #selector(addPic))
-            addPicCard.addGestureRecognizer(picGesture)
+        addPicCard = createButtonWithLabel(title: NSLocalizedString("photo_card", comment: ""), frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"pic")!)
+        let picGesture = UITapGestureRecognizer()
+        picGesture.numberOfTapsRequired = 1
+        picGesture.numberOfTouchesRequired = 1
+        picGesture.addTarget(self, action: #selector(addPic))
+        addPicCard.addGestureRecognizer(picGesture)
             
             
-            addText = createButtonWithLabel(title: "Text", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"text")!)
-            let addtextGesture = UITapGestureRecognizer()
-            addtextGesture.numberOfTapsRequired = 1
-            addtextGesture.numberOfTouchesRequired = 1
-            addtextGesture.addTarget(self, action: #selector(addTextView))
-            addText.addGestureRecognizer(addtextGesture)
+        addText = createButtonWithLabel(title: NSLocalizedString("text_card", comment: ""), frame: CGRect(x: 0, y: 0,width: 50, height: 50),image:UIImage(named:"text")!)
+        let addtextGesture = UITapGestureRecognizer()
+        addtextGesture.numberOfTapsRequired = 1
+        addtextGesture.numberOfTouchesRequired = 1
+        addtextGesture.addTarget(self, action: #selector(addTextView))
+        addText.addGestureRecognizer(addtextGesture)
             
-            addVoiceView = createButtonWithLabel(title: "Voice", frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"voice")!)
-            let addVoiceGesture = UITapGestureRecognizer()
-            addVoiceGesture.numberOfTapsRequired = 1
-            addVoiceGesture.numberOfTouchesRequired = 1
-            addVoiceGesture.addTarget(self, action: #selector(addVoice))
-            addVoiceView.addGestureRecognizer(addVoiceGesture)
+        addVoiceView = createButtonWithLabel(title: NSLocalizedString("voice_card", comment: ""), frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"voice")!)
+        let addVoiceGesture = UITapGestureRecognizer()
+        addVoiceGesture.numberOfTapsRequired = 1
+        addVoiceGesture.numberOfTouchesRequired = 1
+        addVoiceGesture.addTarget(self, action: #selector(addVoice))
+        addVoiceView.addGestureRecognizer(addVoiceGesture)
             
         
             
-            addMovieView = createButtonWithLabel(title: "Video", frame: CGRect(x: 0, y: 0, width: 50, height: 50), image:UIImage(named:"movie")!)
-            let addVideoGesture = UITapGestureRecognizer()
-            addVideoGesture.numberOfTapsRequired = 1
-            addVideoGesture.numberOfTouchesRequired = 1
-            addVideoGesture.addTarget(self, action: #selector(addVideo))
-            addMovieView.addGestureRecognizer(addVideoGesture)
+        addMovieView = createButtonWithLabel(title: NSLocalizedString("video_card", comment: ""), frame: CGRect(x: 0,y: 0, width: 50, height: 50), image:UIImage(named:"movie")!)
+        let addVideoGesture = UITapGestureRecognizer()
+        addVideoGesture.numberOfTapsRequired = 1
+        addVideoGesture.numberOfTouchesRequired = 1
+        addVideoGesture.addTarget(self, action: #selector(addVideo))
+        addMovieView.addGestureRecognizer(addVideoGesture)
         
             
-            addButtonList.append(addSubCard)
-            addButtonList.append(addExa)
-            addButtonList.append(addPicCard)
-            addButtonList.append(addText)
-            addButtonList.append(addVoiceView)
-            addButtonList.append(addMovieView)
+       
+        addOCR = createButtonWithLabel(title: NSLocalizedString("OCR", comment: ""), frame: CGRect(x: 0, y: 0,width: 50, height: 50), icon: .FAExpand)
+        let addOCRGesture = UITapGestureRecognizer()
+        addOCRGesture.numberOfTapsRequired = 1
+        addOCRGesture.numberOfTouchesRequired = 1
+        addOCRGesture.addTarget(self, action: #selector(OCR))
+        addOCR.addGestureRecognizer(addOCRGesture)
         
-            toolBox = SpringView(frame: CGRect(x: addButton.frame.origin.x, y: addButton.frame.origin.y, width: 0, height: 0))
-            self.toolBox.frame = CGRect(x: 0, y: 0, width: 220, height: 160)
-            toolBox.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 253/255, alpha: 1)
-            self.toolBox.clipsToBounds = true
-            self.toolBox.layer.cornerRadius = 10
-            var index = 0
-            for addButton in self.addButtonList{
-                let line = index/3
-                let mode = index%3
-                addButton.frame = CGRect(x: 25 + 60 * mode, y: 25 + 60 * line, width: 50, height: 50)
-                self.toolBox.addSubview(addButton)
-                index += 1
-            }
+        addTranslate = createButtonWithLabel(title: NSLocalizedString("Translate", comment: ""), frame: CGRect(x: 0, y: 0, width: 50, height: 50), icon: .FALanguage)
+        let addTranslateGesture = UITapGestureRecognizer()
+        addTranslateGesture.numberOfTapsRequired = 1
+        addTranslateGesture.numberOfTouchesRequired = 1
+        addTranslateGesture.addTarget(self, action: #selector(goTranslate))
+        addTranslate.addGestureRecognizer(addTranslateGesture)
+        
+        
+        addVoiceTranslate = createButtonWithLabel(title: NSLocalizedString("Voice Translate", comment: ""), frame: CGRect(x: 0, y: 0, width: 50, height: 50), icon: .FASoundcloud)
+        let addVoiceTranslateGesture = UITapGestureRecognizer()
+        addVoiceTranslateGesture.numberOfTapsRequired = 1
+        addVoiceTranslateGesture.numberOfTouchesRequired = 1
+        addVoiceTranslateGesture.addTarget(self, action: #selector(goVoice))
+        addVoiceTranslate.addGestureRecognizer(addVoiceTranslateGesture)
+        
+            
+        addButtonList.append(addSubCard)
+        addButtonList.append(addExa)
+        addButtonList.append(addPicCard)
+        addButtonList.append(addText)
+        addButtonList.append(addVoiceView)
+        addButtonList.append(addMovieView)
+        addButtonList.append(addTranslate)
+        addButtonList.append(addOCR)
+        addButtonList.append(addVoiceTranslate)
+        
+        toolBox = SpringView(frame: CGRect(x: addButton.frame.origin.x, y: addButton.frame.origin.y, width: 0, height: 0))
+        self.toolBox.frame = CGRect(x: 0, y: 0, width: 220, height: 220)
+        toolBox.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 253/255, alpha: 1)
+        self.toolBox.clipsToBounds = true
+        self.toolBox.layer.cornerRadius = 10
+        var index = 0
+        for addButton in self.addButtonList{
+            let line = index/3
+            let mode = index%3
+            addButton.frame = CGRect(x: 25 + 60 * mode, y: 25 + 60 * line, width: 50, height: 50)
+            self.toolBox.addSubview(addButton)
+            index += 1
+        }
     }
     
+    
+    @objc private func OCR(){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow(vc:self)
+            return
+        }
+        
+        let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
+            print("Choose from Album")
+        
+            let vc = self.presentHGImagePicker(maxSelected:1) {[unowned self] (assets) in
+                //结果处理
+                print("共选择了\(assets.count)张图片，分别如下：")
+                for asset in assets {
+                    asset.getImage(completionHandler: { (image) in
+                        self.goOcr(image: image)
+                    })
+                }
+            }
+            
+          
+        }
+        
+        let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (action) in
+            let cameraPicker = UIImagePickerController()
+            cameraPicker.delegate = self
+            cameraPicker.sourceType = .camera
+            cameraPicker.mediaTypes = [kUTTypeImage as String]
+             self.present(cameraPicker, animated: true, completion: nil)
+        }
+        alertSheet.addAction(cancelAction)
+        alertSheet.addAction(fromalbum)
+        alertSheet.addAction(takePhoto)
+        
+        self.present(alertSheet, animated: true, completion: nil)
+    }
     
     
     @objc func turnOffToolBox(){
@@ -1288,6 +1402,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         let view = gesture.view as! CardView
        
         let id = view.card.getId()
+        
+        /*
         var index = 0
         for subCard in subCards{
             if subCard.card.getId() == id {
@@ -1295,6 +1411,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             }
             index += 1
         }
+        */
+        
+        var index = subCards.index(of: view)!
         if gesture.state == .began{
             theLastOrigin = gesture.view?.frame.origin
         }else if gesture.state == .changed && view.isEditMode{
@@ -1319,7 +1438,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                     break
                 }else if(view.center.y > (subCards.last?.center.y)!){
                     subCards.append(view)
-                    subCards.remove(at: subCardIndex)
+                    subCards.remove(at: index)
                 }
                 subCardIndex += 1
             }
@@ -1334,9 +1453,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
  
  */
     @objc private func addPic(){
-        let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
+        let alertSheet = UIAlertController(title: NSLocalizedString("select_from", comment: ""), message: "", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title:NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil)
+        let fromalbum = UIAlertAction(title: NSLocalizedString("album", comment: ""), style: .default) { (action) in
             print("Choose from Album")
         
             let vc = self.presentHGImagePicker(maxSelected:10) {[unowned self] (assets) in
@@ -1345,7 +1464,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
                 for asset in assets {
                     print(asset)
                     asset.getImage(completionHandler: { (image) in
-                        let piccard = PicCard(image)
+                        let piccard = PicCard(image,parent: self.card)
                         var url = Constant.Configuration.url.PicCard
                         url.appendPathComponent(piccard.getId() + ".jpg")
                         
@@ -1385,7 +1504,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
            // self.present(picView, animated: true, completion: nil)
         }
         
-        let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (action) in
+        let takePhoto = UIAlertAction(title: NSLocalizedString("take_photo", comment: ""), style: .default) { (action) in
             let cameraPicker = UIImagePickerController()
             self.picTureAction = "addPic"
             cameraPicker.delegate = self
@@ -1404,9 +1523,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     
     @objc private func updatePic(_ sender:UITapGestureRecognizer){
         selectedPictureView = (sender.view as! PicView)
-        let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
+        let alertSheet = UIAlertController(title: NSLocalizedString("select_from", comment: ""), message: "", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil)
+        let fromalbum = UIAlertAction(title: NSLocalizedString("album", comment: ""), style: .default) { (action) in
             print("choose form album")
             let cameraPicker = UIImagePickerController()
             self.picTureAction = "updatePic"
@@ -1416,7 +1535,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             //在需要的地方present出来
             self.present(cameraPicker, animated: true, completion: nil)
         }
-        let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (action) in
+        let takePhoto = UIAlertAction(title: NSLocalizedString("take_photo", comment: ""), style: .default) { (action) in
             let cameraPicker = UIImagePickerController()
             self.picTureAction = "updatePic"
             cameraPicker.delegate = self
@@ -1440,7 +1559,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         if picTureAction == "addPic"{
         print("get Photo")
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        let piccard = PicCard(image)
+        let piccard = PicCard(image,parent: self.card)
             var url = Constant.Configuration.url.PicCard
             url.appendPathComponent(piccard.getId() + ".jpg")
             
@@ -1481,7 +1600,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             let id = UUID().uuidString
             try? FileManager.default.createDirectory(at:Constant.Configuration.url.Movie, withIntermediateDirectories: true, attributes: nil)
             try? FileManager.default.copyItem(at: videoURL, to: URL(fileURLWithPath: Constant.Configuration.url.Movie.appendingPathComponent(id + ".mov").path))
-            let movieCard = MovieCard(id: id)
+            let movieCard = MovieCard(id: id,parent: self.card)
            // movieCard.path = videoURL.path
             let movieView = MovieView(card: movieCard)
             cardViewAddPanGesture(movieView)
@@ -1506,7 +1625,8 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     @objc private func addCard(){
         let date = NSDate()
         let interval = date.timeIntervalSince1970
-        let card = Card(title: "title", tag: nil, description: "", id: UUID().uuidString, definition: "definition", color: color, cardType: Card.CardType.card.rawValue, modifytime:String(interval))
+        let card = Card(title: NSLocalizedString("title", comment: ""), tag: nil, description: "", id: UUID().uuidString, definition: NSLocalizedString("definition", comment: ""), color: color, cardType: Card.CardType.card.rawValue, modifytime:String(interval))
+        card.setParent(card: self.card)
         let cardView = CardView.getSubCardView(card)
         cardView.hero.id = cardView.card.getId()
         cardView.delegate = self
@@ -1570,6 +1690,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         if addButtonStateisOpen{turnOffToolBox()}
         let textCard = TextCard()
         let textView = TextView(card:textCard)
+        textCard.setParent(card: self.card)
         cardViewAddPanGesture(textView)
         textView.textView.delegate = self
         textView.delegate = self
@@ -1605,6 +1726,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
         if subCards.count > 0 && location.y > (subCards.last?.frame.origin.y)! + (subCards.last?.frame.height)! && !(subCards.last?.isKind(of: TextView.self))! && !addButtonStateisOpen{
             let textCard = TextCard(id: UUID().uuidString)
             let view = TextView(card: textCard)
+            textCard.setParent(card: self.card)
             cardViewAddPanGesture(view)
             view.delegate = self
             view.textView.delegate = self
@@ -1616,6 +1738,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             view.textView.becomeFirstResponder()
         }else if subCards.count == 0 && location.y > definition.frame.origin.y + definition.frame.height && !addButtonStateisOpen{
             let textCard = TextCard(id: UUID().uuidString)
+            textCard.setParent(card: self.card)
             let view = TextView(card: textCard)
             cardViewAddPanGesture(view)
             view.delegate = self
@@ -1631,9 +1754,9 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     @objc private func addVideo(){
-        let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
+        let alertSheet = UIAlertController(title: NSLocalizedString("select_from", comment: ""), message: "", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil)
+        let fromalbum = UIAlertAction(title: NSLocalizedString("album", comment: ""), style: .default) { (action) in
             print("choose form album")
             let cameraPicker = UIImagePickerController()
             self.picTureAction = "addVideo"
@@ -1644,7 +1767,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
             //在需要的地方present出来
             self.present(cameraPicker, animated: true, completion: nil)
         }
-        let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (action) in
+        let takePhoto = UIAlertAction(title: NSLocalizedString("take_photo", comment: ""), style: .default) { (action) in
             let cameraPicker = UIImagePickerController()
             self.picTureAction = "addVideo"
             cameraPicker.delegate = self
@@ -1659,7 +1782,7 @@ class CardEditor:UIViewController,UITextViewDelegate,UIImagePickerControllerDele
     }
     
     @objc private func addVoice(){
-        let voiceCard = VoiceCard(id: UUID().uuidString,title:"record")
+        let voiceCard = VoiceCard(id: UUID().uuidString,title:"record",parent: self.card)
         let voiceView = VoiceCardView(card: voiceCard)
         voiceView.hero.id = voiceCard.getId()
         voiceView.delegate = self

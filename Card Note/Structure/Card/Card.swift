@@ -60,11 +60,12 @@ class Card:NSObject,NSCoding,Encodable{
         case title = "title"
         case tag = "tag"
         case descriptions = "description"
-        case childCards = "subcard"
+        case childCards = "childCards"
         case definition = "definition"
         case type = "type"
-        case modifyTime = "time"
+        case modifyTime = "modifytime"
         case color = "color"
+        case parentCard = "parentCard"
     }
     
     func getType()->String{
@@ -83,6 +84,7 @@ class Card:NSObject,NSCoding,Encodable{
             try container.encode(tag,forKey:.tag)
             try container.encode(modifyTime,forKey:.modifyTime)
             try container.encode(type,forKey:.type)
+            try container.encode(parentCard, forKey: .parentCard)
     }
     
     func encode(with aCoder: NSCoder) {
@@ -95,6 +97,7 @@ class Card:NSObject,NSCoding,Encodable{
          aCoder.encode(title, forKey: "title")
          aCoder.encode(type, forKey: "type")
          aCoder.encode(modifyTime, forKey: "modifytime")
+         aCoder.encode(parentCard, forKey: "parentCard")
     }
     
     
@@ -193,6 +196,16 @@ class Card:NSObject,NSCoding,Encodable{
         return nil
     }
     func getParentCard()->Card{return parentCard!}
+    func setParent(card:Card){
+        self.parentCard = card
+    }
+    func getRootParent()->Card{
+        if self.parentCard != nil{
+            return (self.parentCard?.getRootParent())!
+        }else{
+            return self
+        }
+    }
     
     func getId()->String{return id}
     

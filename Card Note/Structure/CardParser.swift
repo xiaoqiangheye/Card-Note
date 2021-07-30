@@ -72,9 +72,9 @@ class CardParser{
                 url.appendPathComponent(card.getId() + "_DEFINITION.rtf")
                 if !manager.fileExists(atPath: url.path){
                     //download
-                    let opr = Cloud.downloadDefinition(id: card.getId())
-                    queue.addOperation(opr)
-                    queue.waitUntilAllOperationsAreFinished()
+                   // let opr = Cloud.downloadDefinition(id: card.getId())
+                   // queue.addOperation(opr)
+                   // queue.waitUntilAllOperationsAreFinished()
                 }
             }else if type == "example"{
                 card = ExampleCard(id: id, title: title)

@@ -8,7 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		6651F8F8996E3377C2ECF81E /* Pods_Card_NoteUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B856506D58ACFAFF835483C /* Pods_Card_NoteUITests.framework */; };
-		788C2B07BC3E8E32495A8350 /* Pods_Card_Note.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7EEFFE77D9DE1A7E4BCD7E /* Pods_Card_Note.framework */; };
+		9A0F3010269DC23E00A49368 /* Pods_Card_Note.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7EEFFE77D9DE1A7E4BCD7E /* Pods_Card_Note.framework */; };
+		9A0F3014269DDEBB00A49368 /* ToolsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0F3013269DDEBB00A49368 /* ToolsController.swift */; };
+		9A202B4F269EE69D004F7956 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A202B4E269EE69D004F7956 /* NativeAdView.xib */; };
+		9A202B66269F15E2004F7956 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A202B65269F15E2004F7956 /* libbase.a */; };
+		9A202B6C269F571F004F7956 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A202B6A269F571F004F7956 /* libbase.a */; };
+		9A202B70269F5726004F7956 /* libocronline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A202B6F269F5726004F7956 /* libocronline.a */; };
+		9A202B74269F572D004F7956 /* libStreamASR.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A202B72269F572D004F7956 /* libStreamASR.a */; };
+		9A202B7A269F5771004F7956 /* libonline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A202B76269F5771004F7956 /* libonline.a */; };
+		9A202B7B269F5771004F7956 /* libspeechtransonline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A202B78269F5771004F7956 /* libspeechtransonline.a */; };
+		9A202B7C269F5771004F7956 /* libocrtrans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A202B79269F5771004F7956 /* libocrtrans.a */; };
+		9A202B8F26A01C9F004F7956 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9A202B9126A01C9F004F7956 /* Localizable.strings */; };
 		9A295FE922D0DD3300ECCBDD /* MovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A295FE822D0DD3300ECCBDD /* MovieView.swift */; };
 		9A295FEC22D0DE6400ECCBDD /* VoiceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A295FEB22D0DE6400ECCBDD /* VoiceCardView.swift */; };
 		9A295FEE22D0DE7000ECCBDD /* PicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A295FED22D0DE7000ECCBDD /* PicView.swift */; };
@@ -18,6 +28,7 @@
 		9A4DAEE6214B7E790046403C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4DAEE5214B7E790046403C /* ProgressBar.swift */; };
 		9A4DAEE8214F3C830046403C /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4DAEE7214F3C830046403C /* LoadingViewController.swift */; };
 		9A7ABE9C216DB3DF00EC5115 /* ImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */; };
+		9A96C38322E216EB00055E7D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A96C38222E216EB00055E7D /* CloudKit.framework */; };
 		9AB6E31F22DF706200B9A61B /* HGImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB6E31E22DF706200B9A61B /* HGImagePickerController.swift */; };
 		9AB6E32322DF779800B9A61B /* HGImagePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB6E32222DF779800B9A61B /* HGImagePickerCell.swift */; };
 		9AB6E32522DF77E300B9A61B /* HGImageCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB6E32422DF77E300B9A61B /* HGImageCollectionViewController.swift */; };
@@ -26,13 +37,14 @@
 		9AB6E32B22DF7A3600B9A61B /* HGImage.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AB6E32A22DF7A3600B9A61B /* HGImage.storyboard */; };
 		9ACBA40522DB662500ADA54B /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACBA40422DB662500ADA54B /* WebViewController.swift */; };
 		9ACDF85922CF88CE00DE10AD /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACDF85822CF88CE00DE10AD /* Network.swift */; };
+		9AD2F83626A05D1900A0B0A8 /* ProductManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2F83526A05D1900A0B0A8 /* ProductManager.swift */; };
+		9AD2F83B26A15AF200A0B0A8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9AD2F83D26A15AF200A0B0A8 /* InfoPlist.strings */; };
+		9AD2F84026A1929000A0B0A8 /* VIPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2F83F26A1929000A0B0A8 /* VIPController.swift */; };
 		9AF3F2D621F80A3800E6909A /* VideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF3F2D521F80A3800E6909A /* VideoController.swift */; };
 		9AFBF9DE21981A1B0043C394 /* AboutUsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFBF9DD21981A1B0043C394 /* AboutUsController.swift */; };
 		A7214CA7270B1CD58FBD4C3F /* Pods_Card_NoteTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C150CF217182CC2033B49C66 /* Pods_Card_NoteTests.framework */; };
 		B602B1562093232600CD8A40 /* VoiceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1552093232600CD8A40 /* VoiceCard.swift */; };
 		B602B1582093244300CD8A40 /* RecordManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B602B1572093244300CD8A40 /* RecordManager.swift */; };
-		B6054A2B2100F3D800E7CFF6 /* libSpeechRecognition.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6054A232100F3D800E7CFF6 /* libSpeechRecognition.a */; };
-		B605E0F3208CA90000F2C260 /* CardParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B605E0F2208CA90000F2C260 /* CardParser.swift */; };
 		B605E0FC208CAADE00F2C260 /* ExampleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B605E0FB208CAADE00F2C260 /* ExampleCard.swift */; };
 		B605E101208CAB0D00F2C260 /* TextCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B605E100208CAB0D00F2C260 /* TextCard.swift */; };
 		B605E10A208CB22900F2C260 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B605E109208CB22800F2C260 /* UIKit.framework */; };
@@ -53,10 +65,7 @@
 		B6155EBD208AEE840031F262 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6155EBC208AEE840031F262 /* SearchBar.swift */; };
 		B61A7419213EC6200080DBF1 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B61A7418213EC6200080DBF1 /* libstdc++.6.0.9.tbd */; };
 		B61A741B213EC95B0080DBF1 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B61A741A213EC95B0080DBF1 /* libc++.tbd */; };
-		B61D68F920961BFB00B69009 /* libonline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B61D68F820961BFB00B69009 /* libonline.a */; };
-		B61D68FB20961C0600B69009 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B61D68FA20961C0600B69009 /* libbase.a */; };
 		B61D690D2096217E00B69009 /* TranslationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61D690C2096217E00B69009 /* TranslationManager.swift */; };
-		B61DAA1B2123D63E0004217B /* libocronline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B61DAA1A2123D63E0004217B /* libocronline.a */; };
 		B61DAA1D2123D7520004217B /* OCRManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61DAA1C2123D7520004217B /* OCRManager.swift */; };
 		B61DAA232123FBF20004217B /* OCRController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61DAA222123FBF20004217B /* OCRController.swift */; };
 		B61DAA2C21246C630004217B /* OCRResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61DAA2B21246C620004217B /* OCRResultController.swift */; };
@@ -78,7 +87,6 @@
 		B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6613B0E2080404B001D117B /* SearchEngine.swift */; };
 		B672D432211FE50200A51D9D /* AccountSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B672D431211FE50200A51D9D /* AccountSettingController.swift */; };
 		B672D43B2120176600A51D9D /* Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B672D43A2120176600A51D9D /* Cloud.swift */; };
-		B672D43D21202D3400A51D9D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B672D43C21202D3300A51D9D /* CloudKit.framework */; };
 		B6791227208DFFF100A417FD /* PicCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6791226208DFFF100A417FD /* PicCard.swift */; };
 		B67FA6262075D1CB00EFF7E9 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */; };
 		B68ACBBF206BB1EF0085E5C5 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68ACBBE206BB1EF0085E5C5 /* Card.swift */; };
@@ -127,16 +135,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B62EC9AC208207D5004EE3C0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B62EC9AD208207D5004EE3C0 /* Embed PlugIns */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -156,6 +154,36 @@
 		5E7EEFFE77D9DE1A7E4BCD7E /* Pods_Card_Note.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Card_Note.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B856506D58ACFAFF835483C /* Pods_Card_NoteUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Card_NoteUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8623B9B4289FE2350DFEB709 /* Pods-Card Note.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Card Note.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Card Note/Pods-Card Note.debug.xcconfig"; sourceTree = "<group>"; };
+		9A0F2E5D269DADBC00A49368 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E5E269DADBC00A49368 /* ChameleonFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ChameleonFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E5F269DADBC00A49368 /* Font_Awesome_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Font_Awesome_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E60269DADBC00A49368 /* Hero.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Hero.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E61269DADBC00A49368 /* Instructions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Instructions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E62269DADBC00A49368 /* RAMPaperSwitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RAMPaperSwitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E63269DADBC00A49368 /* Reachability.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Reachability.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E64269DADBC00A49368 /* SCLAlertView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SCLAlertView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E65269DADBC00A49368 /* Spring.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Spring.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E66269DADBC00A49368 /* SwiftMessages.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftMessages.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E67269DADBC00A49368 /* SwiftyJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F2E68269DADBC00A49368 /* SwiftyStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F3013269DDEBB00A49368 /* ToolsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsController.swift; sourceTree = "<group>"; };
+		9A202B4E269EE69D004F7956 /* NativeAdView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NativeAdView.xib; sourceTree = "<group>"; };
+		9A202B53269F11B6004F7956 /* Card Note */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Card Note"; sourceTree = "<group>"; };
+		9A202B65269F15E2004F7956 /* libbase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libbase.a; path = "Card Note/Translation/libbase.a"; sourceTree = "<group>"; };
+		9A202B6A269F571F004F7956 /* libbase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbase.a; sourceTree = "<group>"; };
+		9A202B6B269F571F004F7956 /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
+		9A202B6E269F5726004F7956 /* OCRSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRSDK.h; sourceTree = "<group>"; };
+		9A202B6F269F5726004F7956 /* libocronline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libocronline.a; sourceTree = "<group>"; };
+		9A202B72269F572D004F7956 /* libStreamASR.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libStreamASR.a; sourceTree = "<group>"; };
+		9A202B73269F572D004F7956 /* StreamASRSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamASRSDK.h; sourceTree = "<group>"; };
+		9A202B76269F5771004F7956 /* libonline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libonline.a; sourceTree = "<group>"; };
+		9A202B77269F5771004F7956 /* TranslateSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslateSDK.h; sourceTree = "<group>"; };
+		9A202B78269F5771004F7956 /* libspeechtransonline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libspeechtransonline.a; sourceTree = "<group>"; };
+		9A202B79269F5771004F7956 /* libocrtrans.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libocrtrans.a; sourceTree = "<group>"; };
+		9A202B9326A01CB0004F7956 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9A202B9626A01D63004F7956 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		9A202B9726A01D68004F7956 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		9A202B9826A01D6B004F7956 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9A295FE822D0DD3300ECCBDD /* MovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieView.swift; sourceTree = "<group>"; };
 		9A295FEB22D0DE6400ECCBDD /* VoiceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCardView.swift; sourceTree = "<group>"; };
 		9A295FED22D0DE7000ECCBDD /* PicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicView.swift; sourceTree = "<group>"; };
@@ -165,6 +193,7 @@
 		9A4DAEE5214B7E790046403C /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		9A4DAEE7214F3C830046403C /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		9A7ABE9B216DB3DF00EC5115 /* ImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageController.swift; sourceTree = "<group>"; };
+		9A96C38222E216EB00055E7D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		9AB6E31E22DF706200B9A61B /* HGImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HGImagePickerController.swift; sourceTree = "<group>"; };
 		9AB6E32222DF779800B9A61B /* HGImagePickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HGImagePickerCell.swift; sourceTree = "<group>"; };
 		9AB6E32422DF77E300B9A61B /* HGImageCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HGImageCollectionViewController.swift; sourceTree = "<group>"; };
@@ -173,14 +202,16 @@
 		9AB6E32A22DF7A3600B9A61B /* HGImage.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = HGImage.storyboard; path = View/HGImage.storyboard; sourceTree = "<group>"; };
 		9ACBA40422DB662500ADA54B /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		9ACDF85822CF88CE00DE10AD /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		9AD2F83526A05D1900A0B0A8 /* ProductManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductManager.swift; sourceTree = "<group>"; };
+		9AD2F83C26A15AF200A0B0A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9AD2F83E26A15AF900A0B0A8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		9AD2F83F26A1929000A0B0A8 /* VIPController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIPController.swift; sourceTree = "<group>"; };
 		9AF3F2D521F80A3800E6909A /* VideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoController.swift; sourceTree = "<group>"; };
 		9AFBF9DD21981A1B0043C394 /* AboutUsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsController.swift; sourceTree = "<group>"; };
 		A49FDFBC7E6AE1B1258392DF /* Pods-Card Note.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Card Note.release.xcconfig"; path = "Pods/Target Support Files/Pods-Card Note/Pods-Card Note.release.xcconfig"; sourceTree = "<group>"; };
 		B493201C489E4D937F65B90B /* Pods-Card NoteTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Card NoteTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Card NoteTests/Pods-Card NoteTests.release.xcconfig"; sourceTree = "<group>"; };
 		B602B1552093232600CD8A40 /* VoiceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceCard.swift; sourceTree = "<group>"; };
 		B602B1572093244300CD8A40 /* RecordManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordManager.swift; sourceTree = "<group>"; };
-		B6054A232100F3D800E7CFF6 /* libSpeechRecognition.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSpeechRecognition.a; sourceTree = "<group>"; };
-		B605E0F2208CA90000F2C260 /* CardParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardParser.swift; sourceTree = "<group>"; };
 		B605E0FB208CAADE00F2C260 /* ExampleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCard.swift; sourceTree = "<group>"; };
 		B605E100208CAB0D00F2C260 /* TextCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCard.swift; sourceTree = "<group>"; };
 		B605E109208CB22800F2C260 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -203,12 +234,7 @@
 		B61A7418213EC6200080DBF1 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = "libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		B61A741A213EC95B0080DBF1 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		B61D68F32096149900B69009 /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
-		B61D68F720961BF200B69009 /* FanYiSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FanYiSDK.h; sourceTree = "<group>"; };
-		B61D68F820961BFB00B69009 /* libonline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libonline.a; sourceTree = "<group>"; };
-		B61D68FA20961C0600B69009 /* libbase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbase.a; sourceTree = "<group>"; };
 		B61D690C2096217E00B69009 /* TranslationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationManager.swift; sourceTree = "<group>"; };
-		B61DAA192123D6350004217B /* OCRSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRSDK.h; sourceTree = "<group>"; };
-		B61DAA1A2123D63E0004217B /* libocronline.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libocronline.a; sourceTree = "<group>"; };
 		B61DAA1C2123D7520004217B /* OCRManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRManager.swift; sourceTree = "<group>"; };
 		B61DAA222123FBF20004217B /* OCRController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRController.swift; sourceTree = "<group>"; };
 		B61DAA2B21246C620004217B /* OCRResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRResultController.swift; sourceTree = "<group>"; };
@@ -233,7 +259,6 @@
 		B6613B0E2080404B001D117B /* SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEngine.swift; sourceTree = "<group>"; };
 		B672D431211FE50200A51D9D /* AccountSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingController.swift; sourceTree = "<group>"; };
 		B672D43A2120176600A51D9D /* Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
-		B672D43C21202D3300A51D9D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B6791226208DFFF100A417FD /* PicCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicCard.swift; sourceTree = "<group>"; };
 		B67FA6252075D1CB00EFF7E9 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		B68ACBBE206BB1EF0085E5C5 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
@@ -276,27 +301,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A202B66269F15E2004F7956 /* libbase.a in Frameworks */,
+				9A96C38322E216EB00055E7D /* CloudKit.framework in Frameworks */,
 				B61A741B213EC95B0080DBF1 /* libc++.tbd in Frameworks */,
 				B61A7419213EC6200080DBF1 /* libstdc++.6.0.9.tbd in Frameworks */,
-				B672D43D21202D3400A51D9D /* CloudKit.framework in Frameworks */,
+				9A202B6C269F571F004F7956 /* libbase.a in Frameworks */,
+				9A202B70269F5726004F7956 /* libocronline.a in Frameworks */,
 				B6E8FA32208F171A00A0B22B /* WebKit.framework in Frameworks */,
+				9A202B7B269F5771004F7956 /* libspeechtransonline.a in Frameworks */,
 				B6E8FA30208F170B00A0B22B /* libsqlite3.0.tbd in Frameworks */,
 				B605E11E208CB27C00F2C260 /* libz.tbd in Frameworks */,
 				B605E11C208CB27200F2C260 /* JavaScriptCore.framework in Frameworks */,
-				B61D68FB20961C0600B69009 /* libbase.a in Frameworks */,
 				B605E11A208CB26C00F2C260 /* AdSupport.framework in Frameworks */,
 				B605E118208CB26300F2C260 /* Security.framework in Frameworks */,
 				B605E116208CB25A00F2C260 /* SystemConfiguration.framework in Frameworks */,
 				B605E114208CB25300F2C260 /* CoreTelephony.framework in Frameworks */,
+				9A202B7C269F5771004F7956 /* libocrtrans.a in Frameworks */,
 				B605E112208CB24A00F2C260 /* CoreLocation.framework in Frameworks */,
 				B605E110208CB24300F2C260 /* QuartzCore.framework in Frameworks */,
-				B6054A2B2100F3D800E7CFF6 /* libSpeechRecognition.a in Frameworks */,
-				B61DAA1B2123D63E0004217B /* libocronline.a in Frameworks */,
+				9A0F3010269DC23E00A49368 /* Pods_Card_Note.framework in Frameworks */,
 				B605E10E208CB23A00F2C260 /* CoreGraphics.framework in Frameworks */,
+				9A202B7A269F5771004F7956 /* libonline.a in Frameworks */,
 				B605E10C208CB23000F2C260 /* Foundation.framework in Frameworks */,
+				9A202B74269F572D004F7956 /* libStreamASR.a in Frameworks */,
 				B605E10A208CB22900F2C260 /* UIKit.framework in Frameworks */,
-				B61D68F920961BFB00B69009 /* libonline.a in Frameworks */,
-				788C2B07BC3E8E32495A8350 /* Pods_Card_Note.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +360,44 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		9A202B69269F571F004F7956 /* libbase */ = {
+			isa = PBXGroup;
+			children = (
+				9A202B6A269F571F004F7956 /* libbase.a */,
+				9A202B6B269F571F004F7956 /* base.h */,
+			);
+			path = libbase;
+			sourceTree = "<group>";
+		};
+		9A202B6D269F5726004F7956 /* ocrSDK */ = {
+			isa = PBXGroup;
+			children = (
+				9A202B6E269F5726004F7956 /* OCRSDK.h */,
+				9A202B6F269F5726004F7956 /* libocronline.a */,
+			);
+			path = ocrSDK;
+			sourceTree = "<group>";
+		};
+		9A202B71269F572D004F7956 /* StreamASRSDK */ = {
+			isa = PBXGroup;
+			children = (
+				9A202B72269F572D004F7956 /* libStreamASR.a */,
+				9A202B73269F572D004F7956 /* StreamASRSDK.h */,
+			);
+			path = StreamASRSDK;
+			sourceTree = "<group>";
+		};
+		9A202B75269F5771004F7956 /* translateiOSSDK */ = {
+			isa = PBXGroup;
+			children = (
+				9A202B76269F5771004F7956 /* libonline.a */,
+				9A202B77269F5771004F7956 /* TranslateSDK.h */,
+				9A202B78269F5771004F7956 /* libspeechtransonline.a */,
+				9A202B79269F5771004F7956 /* libocrtrans.a */,
+			);
+			path = translateiOSSDK;
+			sourceTree = "<group>";
+		};
 		9A295FEA22D0DD3F00ECCBDD /* CardView */ = {
 			isa = PBXGroup;
 			children = (
@@ -361,9 +427,23 @@
 		B605E108208CB22700F2C260 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9A202B65269F15E2004F7956 /* libbase.a */,
+				9A202B53269F11B6004F7956 /* Card Note */,
+				9A0F2E5D269DADBC00A49368 /* Alamofire.framework */,
+				9A0F2E5E269DADBC00A49368 /* ChameleonFramework.framework */,
+				9A0F2E5F269DADBC00A49368 /* Font_Awesome_Swift.framework */,
+				9A0F2E60269DADBC00A49368 /* Hero.framework */,
+				9A0F2E61269DADBC00A49368 /* Instructions.framework */,
+				9A0F2E62269DADBC00A49368 /* RAMPaperSwitch.framework */,
+				9A0F2E63269DADBC00A49368 /* Reachability.framework */,
+				9A0F2E64269DADBC00A49368 /* SCLAlertView.framework */,
+				9A0F2E65269DADBC00A49368 /* Spring.framework */,
+				9A0F2E66269DADBC00A49368 /* SwiftMessages.framework */,
+				9A0F2E67269DADBC00A49368 /* SwiftyJSON.framework */,
+				9A0F2E68269DADBC00A49368 /* SwiftyStoreKit.framework */,
+				9A96C38222E216EB00055E7D /* CloudKit.framework */,
 				B61A741A213EC95B0080DBF1 /* libc++.tbd */,
 				B61A7418213EC6200080DBF1 /* libstdc++.6.0.9.tbd */,
-				B672D43C21202D3300A51D9D /* CloudKit.framework */,
 				B61F2E0920FCF1CC00A6CD22 /* libstdc++.6.0.9.tbd */,
 				B60B995E209C8C23004BC2D4 /* StoreKit.framework */,
 				B6E8FA31208F171A00A0B22B /* WebKit.framework */,
@@ -439,6 +519,8 @@
 				9AB6E32422DF77E300B9A61B /* HGImageCollectionViewController.swift */,
 				9AB6E32622DF784200B9A61B /* HGImageCollectionViewCell.swift */,
 				9AB6E32822DF787200B9A61B /* HGImageCompleteButton.swift */,
+				9A0F3013269DDEBB00A49368 /* ToolsController.swift */,
+				9AD2F83F26A1929000A0B0A8 /* VIPController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -450,7 +532,6 @@
 				B6613B0C20803A59001D117B /* Constraint.swift */,
 				B6613B0E2080404B001D117B /* SearchEngine.swift */,
 				B602B1572093244300CD8A40 /* RecordManager.swift */,
-				B605E0F2208CA90000F2C260 /* CardParser.swift */,
 				B6FB6C9621032E7400915B3B /* SpeechManager.swift */,
 				B6FDCEE520BAFD3400BEBD35 /* ImageManager.swift */,
 				B672D43A2120176600A51D9D /* Cloud.swift */,
@@ -462,10 +543,6 @@
 		B61D68DE209613BB00B69009 /* Translation */ = {
 			isa = PBXGroup;
 			children = (
-				B61D68F720961BF200B69009 /* FanYiSDK.h */,
-				B61D68FA20961C0600B69009 /* libbase.a */,
-				B6054A232100F3D800E7CFF6 /* libSpeechRecognition.a */,
-				B61D68F820961BFB00B69009 /* libonline.a */,
 				B61D690C2096217E00B69009 /* TranslationManager.swift */,
 			);
 			path = Translation;
@@ -474,8 +551,6 @@
 		B61DAA112123D6100004217B /* OCR */ = {
 			isa = PBXGroup;
 			children = (
-				B61DAA192123D6350004217B /* OCRSDK.h */,
-				B61DAA1A2123D63E0004217B /* libocronline.a */,
 				B61DAA1C2123D7520004217B /* OCRManager.swift */,
 			);
 			path = OCR;
@@ -484,6 +559,8 @@
 		B6BA3A9D2064AE5300290BBB = {
 			isa = PBXGroup;
 			children = (
+				9AD2F83D26A15AF200A0B0A8 /* InfoPlist.strings */,
+				9A202B9126A01C9F004F7956 /* Localizable.strings */,
 				B6BA3AA82064AE5300290BBB /* Card Note */,
 				B6BA3AC02064AE5400290BBB /* Card NoteTests */,
 				B6BA3ACB2064AE5400290BBB /* Card NoteUITests */,
@@ -506,6 +583,10 @@
 		B6BA3AA82064AE5300290BBB /* Card Note */ = {
 			isa = PBXGroup;
 			children = (
+				9A202B75269F5771004F7956 /* translateiOSSDK */,
+				9A202B71269F572D004F7956 /* StreamASRSDK */,
+				9A202B6D269F5726004F7956 /* ocrSDK */,
+				9A202B69269F571F004F7956 /* libbase */,
 				B64BAD8B209C3FE200B9ED73 /* Card Note.entitlements */,
 				B61D68F32096149900B69009 /* bridge.h */,
 				B61DAA112123D6100004217B /* OCR */,
@@ -525,6 +606,8 @@
 				B612ABC821415DCB00EB5314 /* googleMapsSupportedLanguage.plist */,
 				B6BA3AB02064AE5300290BBB /* Card_Note.xcdatamodeld */,
 				B6BA3ADA2064AF4C00290BBB /* Card.xib */,
+				9A202B4E269EE69D004F7956 /* NativeAdView.xib */,
+				9AD2F83526A05D1900A0B0A8 /* ProductManager.swift */,
 			);
 			path = "Card Note";
 			sourceTree = "<group>";
@@ -558,7 +641,6 @@
 				B6BA3AA22064AE5300290BBB /* Sources */,
 				B6BA3AA32064AE5300290BBB /* Frameworks */,
 				B6BA3AA42064AE5300290BBB /* Resources */,
-				B62EC9AC208207D5004EE3C0 /* Embed Frameworks */,
 				B62EC9AD208207D5004EE3C0 /* Embed PlugIns */,
 				669CB5498020A98EEFC1836B /* [CP] Embed Pods Frameworks */,
 			);
@@ -659,6 +741,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = B6BA3A9D2064AE5300290BBB;
 			productRefGroup = B6BA3AA72064AE5300290BBB /* Products */;
@@ -677,13 +760,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A202B4F269EE69D004F7956 /* NativeAdView.xib in Resources */,
 				9AB6E32B22DF7A3600B9A61B /* HGImage.storyboard in Resources */,
 				B6BA3AB72064AE5300290BBB /* LaunchScreen.storyboard in Resources */,
 				B6BA3AB42064AE5300290BBB /* Assets.xcassets in Resources */,
+				9A202B8F26A01C9F004F7956 /* Localizable.strings in Resources */,
 				B6555E3B212A8A8C0042C9C3 /* languageList.plist in Resources */,
 				B6BA3AAF2064AE5300290BBB /* Main.storyboard in Resources */,
 				B6BA3ADB2064AF4C00290BBB /* Card.xib in Resources */,
 				B612ABC921415DCB00EB5314 /* googleMapsSupportedLanguage.plist in Resources */,
+				9AD2F83B26A15AF200A0B0A8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -728,7 +814,7 @@
 		};
 		669CB5498020A98EEFC1836B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -736,8 +822,10 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Font-Awesome-Swift/Font_Awesome_Swift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
 				"${BUILT_PRODUCTS_DIR}/Instructions/Instructions.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/RAMPaperSwitch/RAMPaperSwitch.framework",
 				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework",
@@ -745,14 +833,17 @@
 				"${BUILT_PRODUCTS_DIR}/SwiftMessages/SwiftMessages.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyStoreKit/SwiftyStoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Font_Awesome_Swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Instructions.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RAMPaperSwitch.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView.framework",
@@ -760,6 +851,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftMessages.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyStoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -818,11 +910,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AFBF9DE21981A1B0043C394 /* AboutUsController.swift in Sources */,
+				9A0F3014269DDEBB00A49368 /* ToolsController.swift in Sources */,
 				B64DD43B211183C200BB0B66 /* TagOptionView.swift in Sources */,
 				B6555E3E212A97B30042C9C3 /* TranslationController.swift in Sources */,
 				B62EC9892081FF1A004EE3C0 /* UserViewController.swift in Sources */,
 				9A295FF022D0DE7C00ECCBDD /* ExaView.swift in Sources */,
 				9AB6E32922DF787200B9A61B /* HGImageCompleteButton.swift in Sources */,
+				9AD2F84026A1929000A0B0A8 /* VIPController.swift in Sources */,
 				B64489D220A2FB0100ED3400 /* CardViewPanelDelegate.swift in Sources */,
 				B6A86DF62088F4EF00F2C6EC /* AlertView.swift in Sources */,
 				B6613B09207B80A1001D117B /* Palette.swift in Sources */,
@@ -839,7 +933,6 @@
 				B6E46AEC20DF9DC400263EFB /* SwitchSetting.swift in Sources */,
 				B61DAA232123FBF20004217B /* OCRController.swift in Sources */,
 				B602B1582093244300CD8A40 /* RecordManager.swift in Sources */,
-				B605E0F3208CA90000F2C260 /* CardParser.swift in Sources */,
 				B6613B0F2080404B001D117B /* SearchEngine.swift in Sources */,
 				B6555E3021273B840042C9C3 /* VoiceRecognitionController.swift in Sources */,
 				B6BA3AAA2064AE5300290BBB /* AppDelegate.swift in Sources */,
@@ -848,6 +941,7 @@
 				9A7ABE9C216DB3DF00EC5115 /* ImageController.swift in Sources */,
 				B6985A8E20BD7D460014A89B /* AttributedTextViewDelegate.swift in Sources */,
 				9A295FE922D0DD3300ECCBDD /* MovieView.swift in Sources */,
+				9AD2F83626A05D1900A0B0A8 /* ProductManager.swift in Sources */,
 				9AB6E31F22DF706200B9A61B /* HGImagePickerController.swift in Sources */,
 				B672D432211FE50200A51D9D /* AccountSettingController.swift in Sources */,
 				9A4DAEE8214F3C830046403C /* LoadingViewController.swift in Sources */,
@@ -920,11 +1014,30 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		9A202B9126A01C9F004F7956 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9A202B9326A01CB0004F7956 /* en */,
+				9A202B9826A01D6B004F7956 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		9AD2F83D26A15AF200A0B0A8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9AD2F83C26A15AF200A0B0A8 /* en */,
+				9AD2F83E26A15AF900A0B0A8 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		B6BA3AAD2064AE5300290BBB /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B6BA3AAE2064AE5300290BBB /* Base */,
 				B61F2E0820FC775B00A6CD22 /* en */,
+				9A202B9626A01D63004F7956 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -933,6 +1046,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B6BA3AB62064AE5300290BBB /* Base */,
+				9A202B9726A01D68004F7956 /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -944,6 +1058,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1001,6 +1116,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1051,14 +1167,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8623B9B4289FE2350DFEB709 /* Pods-Card Note.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Card Note/Card Note.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3KSH8TJ2RK;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6A3BNZY2G7;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Card\\ Note",
@@ -1069,7 +1186,7 @@
 				);
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/Card\\ Note";
 				INFOPLIST_FILE = "Card Note/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)/**",
@@ -1079,20 +1196,30 @@
 					"$(PROJECT_DIR)/Card\\ Note/OCR",
 					"$(PROJECT_DIR)/Card\\ Note",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Card\\ Note/OCR",
+					"$(PROJECT_DIR)/Card\\ Note/OCR",
+					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/libbase",
+					"$(PROJECT_DIR)/Card\\ Note/ocrSDK",
+					"$(PROJECT_DIR)/Card\\ Note/StreamASRSDK",
+					"$(PROJECT_DIR)/translateiOSSDK",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				MARKETING_VERSION = 1.0.2;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Blueberry.CardNote;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wei.CardNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Card Note/bridge.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "armv7 armv7s arm64";
+				VALID_ARCHS = "armv7 armv7s x86 x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -1100,15 +1227,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A49FDFBC7E6AE1B1258392DF /* Pods-Card Note.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Card Note/Card Note.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 3KSH8TJ2RK;
+				DEVELOPMENT_TEAM = 6A3BNZY2G7;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Card\\ Note",
@@ -1120,7 +1248,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				"HEADER_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/Card\\ Note";
 				INFOPLIST_FILE = "Card Note/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1130,25 +1258,35 @@
 					"$(PROJECT_DIR)/Card\\ Note/OCR",
 					"$(PROJECT_DIR)/Card\\ Note",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Card\\ Note/OCR",
+					"$(PROJECT_DIR)/Card\\ Note/OCR",
+					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/Translation",
+					"$(PROJECT_DIR)/Card\\ Note/libbase",
+					"$(PROJECT_DIR)/Card\\ Note/ocrSDK",
+					"$(PROJECT_DIR)/Card\\ Note/StreamASRSDK",
+					"$(PROJECT_DIR)/translateiOSSDK",
 				);
 				"LIBRARY_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Card\\ Note/**",
 				);
+				MARKETING_VERSION = 1.0.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Blueberry.CardNote;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wei.CardNote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Card Note/bridge.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "armv7 armv7s arm64";
+				VALID_ARCHS = "armv7 armv7s x86 x86_64 arm64";
 			};
 			name = Release;
 		};

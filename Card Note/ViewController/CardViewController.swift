@@ -15,6 +15,7 @@ import SwiftMessages
 import Font_Awesome_Swift
 import Instructions
 import Reachability
+import MobileCoreServices
 
 //coarchmarks
 extension CardViewController:CoachMarksControllerDataSource{
@@ -38,16 +39,16 @@ extension CardViewController:CoachMarksControllerDataSource{
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
         if index == 0{
-        coachViews.bodyView.hintLabel.text = "Welcome to Card Note. Ready for a walk?"
+        coachViews.bodyView.hintLabel.text = NSLocalizedString("first_step", comment: "")
         coachViews.bodyView.nextLabel.text = "Ok"
         }else if index == 1{
-        coachViews.bodyView.hintLabel.text = "Click '+' to add a new card."
+        coachViews.bodyView.hintLabel.text = NSLocalizedString("second_step", comment: "")
         coachViews.bodyView.nextLabel.text = "Ok"
         }else if index == 2{
-        coachViews.bodyView.hintLabel.text = "This is an search Bar for you to search your cards."
+        coachViews.bodyView.hintLabel.text = NSLocalizedString("third_step", comment: "")
         coachViews.bodyView.nextLabel.text = "OK"
         }else if index == 3{
-        coachViews.bodyView.hintLabel.text = "This is a tool Bar to select your cards."
+        coachViews.bodyView.hintLabel.text = NSLocalizedString("fourth_step", comment: "")
         coachViews.bodyView.nextLabel.text = "OK"
             
         
@@ -72,8 +73,8 @@ extension CardViewController{
     }
 }
 
-class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate,UIDocumentInteractionControllerDelegate{
-    @IBOutlet weak var addCardButton: FloatButton!
+class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelegate,CardViewPanelDelegate,UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate{
+    @IBOutlet var addCardButton: FloatButton!
     var scrollView:UIScrollView!
     var searchTextView:SearchBar = SearchBar()
     var slideView:UIView!
@@ -81,6 +82,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     let coachMarksController = CoachMarksController()
     
     //nav
+    var syncView:UIView!
     var syncButton:UIButton!
     var filterButton:UIButton!
     var filterView = FilterView()
@@ -93,15 +95,23 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     var isSynced = false
     var internet:Reachability!
     var sortType:SortType = .modifytime
-    
+    var addButtonStateisOpen:Bool = false
+    var toolBox:SpringView!
     //Add New Card Button Clicked
     @IBAction func addNewCard(_ sender:UIButton){
-        
-        let vc = storyboard?.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.type = CardEditor.type.add
-        vc.delegate = self
-        self.present(vc, animated: true, completion: nil)
+        if !addButtonStateisOpen{
+            addButtonStateisOpen = true
+            addCardButton.removeFromSuperview()
+            self.view.addSubview(toolBox)
+            self.view.bringSubview(toFront: toolBox)
+            self.toolBox.center = self.view.center
+            self.toolBox.animation = "fadeIn"
+            self.toolBox.curve = "easeOut"
+            self.toolBox.duration = 0.5
+            self.toolBox.x = (self.addCardButton.center.x - self.toolBox.center.x)
+            self.toolBox.y = (self.addCardButton.center.y - self.toolBox.center.y)
+            self.toolBox.animate()
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -139,19 +149,24 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
             }
         }
         
-        // self.view.backgroundColor = .clear
-        internet = Reachability.init()
-        internet.whenReachable = { reachability in
-            if reachability.connection == .wifi {
-                print("Reachable via WiFi")
-                let syncwithWIFI = UserDefaults.standard.bool(forKey: Constant.Key.SyncWithWifi)
-                if(syncwithWIFI){
-                    needToSync = true
+       
+        do{
+            internet = try Reachability.init()
+            internet.whenReachable = { reachability in
+                if reachability.connection == .wifi {
+                    print("Reachable via WiFi")
+                    let syncwithWIFI = UserDefaults.standard.bool(forKey: Constant.Key.SyncWithWifi)
+                    if(syncwithWIFI){
+                        needToSync = true
+                    }
+                } else {
+                    print("Reachable via Cellular")
                 }
-            } else {
-                print("Reachable via Cellular")
             }
+        }catch{
+            print("Error initializing network setting")
         }
+        
         
         filterView.delegate = self
         coachMarksController.dataSource = self
@@ -179,6 +194,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         addCardButton.frame.origin = CGPoint(x: self.view.frame.width - 50, y: self.view.frame.height - 200)
         addCardButton.frame.size = CGSize(width: 50, height: 50)
         addCardButton.yBottomOffSet = 49
+        addButtonSetting()
         
         let gl = CAGradientLayer.init()
         gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:CGFloat(UIDevice.current.Xdistance()) + 60);
@@ -205,20 +221,30 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         slideView.backgroundColor = .white
        
         //filter, Sync, Sort Button
-        filterButton = createButtonUnderBar(title: "Filter")
+        let filterstring = NSLocalizedString("Filter", comment: "filter")
+        
+        filterButton = createButtonUnderBar(title: filterstring)
         
         syncButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         syncButton.setFAIcon(icon: .FASpinner, forState: .normal)
         syncButton.setTitleColor(.gray, for: .normal)
         syncButton.isHidden = true
+        syncButton.center = self.view.center
         
-        sortButton = createButtonUnderBar(title: "Sort")
+        syncView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        syncView.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 0.5)
+        syncView.isHidden = true
+        syncView.addSubview(syncButton)
+        
+        
+        let sortstring = NSLocalizedString("Sort", comment: "sort")
+        sortButton = createButtonUnderBar(title: sortstring)
         
         filterButton.frame = CGRect(x: 40, y: 30, width: 65, height: 30)
         filterButton.addTarget(self, action: #selector(showFilter), for: .touchDown)
         sortButton.frame = CGRect(x: 110, y: 30, width: 65, height: 30)
         sortButton.addTarget(self, action: #selector(sortSetting), for: .touchDown)
-        syncButton.frame.origin = CGPoint(x: 220, y: 30)
+        
         ascendDecend = UIButton(frame: CGRect(x: 185, y: 30, width: 30, height: 30))
         ascendDecend.setFAIcon(icon: .FASortDesc, iconSize: 20, forState: .normal)
         ascendDecend.layer.cornerRadius = 15
@@ -233,7 +259,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         
         slideView.addSubview(filterButton)
         slideView.addSubview(sortButton)
-        slideView.addSubview(syncButton)
+        //slideView.addSubview(syncButton)
         slideView.addSubview(ascendDecend)
         
         scrollView = UIScrollView()
@@ -250,7 +276,8 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         
         //gesture for endEditing
         let gesture = UITapGestureRecognizer(target: self, action: #selector(endEditing))
-        self.view.addGestureRecognizer(gesture)
+        gesture.addTarget(self, action: #selector(turnOffToolBox))
+        scrollView.addGestureRecognizer(gesture)
         
         
         //filterView
@@ -260,6 +287,26 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         loadCard()
         if autoSync{
             ifCanSync()
+        }
+        self.view.addSubview(syncView)
+    }
+    
+    @objc private func turnOffToolBox(){
+        if addButtonStateisOpen{
+           addButtonStateisOpen = false
+           self.toolBox.animation = "fadeOut"
+           self.toolBox.curve = "easeOut"
+           self.toolBox.duration = 0.5
+           self.toolBox.x = self.addCardButton.center.x - self.toolBox.center.x
+           self.toolBox.y = self.addCardButton.center.y - self.toolBox.center.y
+           self.toolBox.scaleX = 0.1
+           self.toolBox.scaleY = 0.1
+           self.toolBox.animate()
+           self.toolBox.animateNext {
+                self.toolBox.center = self.addCardButton.center
+                self.toolBox.removeFromSuperview()
+                self.view.addSubview(self.addCardButton)
+           }
         }
     }
     
@@ -307,14 +354,16 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         sortView.addSubview(exitButton)
         
         let name = UIButton(frame: CGRect(x: 0, y: 30, width: 100, height: 30))
-        name.setTitle("Name", for: .normal)
+        let namestring = NSLocalizedString("Name", comment: "sort by name")
+        name.setTitle(namestring, for: .normal)
         name.setTitleColor(.black, for: .normal)
         name.addTarget(self, action: #selector(setSortTypeName), for: .touchDown)
         sortView.addSubview(name)
         name.addBottomLine()
         
         let time = UIButton(frame: CGRect(x: 0, y: 60, width: 100, height: 30))
-        time.setTitle("Time", for: .normal)
+        let timestring = NSLocalizedString("Time", comment: "sort by time")
+        time.setTitle(timestring, for: .normal)
         time.setTitleColor(.black, for: .normal)
         time.addTarget(self, action: #selector(setSortTypeTime), for: .touchDown)
         sortView.addSubview(time)
@@ -690,6 +739,7 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
     
     @objc func syncCard(){
         self.isSynced = true
+        /*
         let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
         rotateAnimation.fromValue = 0.0
         rotateAnimation.toValue = CGFloat(Double.pi * 2.0)
@@ -697,33 +747,248 @@ class CardViewController:UIViewController,UIScrollViewDelegate,UITextFieldDelega
         rotateAnimation.repeatCount = 100000
         rotateAnimation.delegate = self
         rotateAnimation.isRemovedOnCompletion = false
-        syncButton.setFAIcon(icon: .FASpinner, iconSize: 20, forState: .normal)
-        syncButton.setTitleColor(.gray, for: .normal)
-        syncButton.titleLabel!.layer.add(rotateAnimation, forKey: "rotate")
-        syncButton.isHidden = false
+         
+         syncButton.setFAIcon(icon: .FASpinner, iconSize: 20, forState: .normal)
+         syncButton.setTitleColor(.gray, for: .normal)
+         syncButton.titleLabel!.layer.add(rotateAnimation, forKey: "rotate")
+         syncButton.isHidden = false
+         syncView.isHidden = false
+        */
+        
+        
+        
+        
+        
+        let processController = LoadingViewController()
+        processController.setAlert("Syncing")
+        processController.modalPresentationStyle = .overCurrentContext
+        self.present(processController, animated: true, completion: nil)
         sync { [unowned self] (bool) in
             if bool{
                 DispatchQueue.main.async {
+                    processController.dismiss(animated: true, completion: nil)
                     //AlertView.show(success: "Sync Succeed.")
-                    self.syncButton.layer.removeAllAnimations()
-                    self.syncButton.setFAIcon(icon: .FACheck, forState: .normal)
+                    //self.syncButton.layer.removeAllAnimations()
+                    //self.syncButton.setFAIcon(icon: .FACheck, forState: .normal)
                     UIView.animate(withDuration: 1, delay: 1, options: UIView.AnimationOptions.init(), animations: {
                         
                     }, completion: { (bool) in
-                        self.syncButton.isHidden = true
+                        //self.syncButton.isHidden = true
+                        //syncView.isHidden = true
                     })
                     self.loadCard()
                 }
             }else{
+                //self.syncButton.isHidden = true
+                //syncView.isHidden = true
                 DispatchQueue.main.async {
+                    processController.dismiss(animated: true, completion: nil)
                     AlertView.show(error: "Sync Failed. Check The Internet.")
                 }
             }
         }
     }
     
+    private func addButtonSetting(){
+        func createButtonWithLabel(title:String,frame:CGRect,icon:FAType)->UIView{
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 5, width: 20, height: 20))
+            imageView.setFAIconWithName(icon: icon, textColor: UIColor.init(hex: "58AAED"))
+            imageView.center.x = frame.width/2
+            
+            
+            let button = UIView(frame: frame)
+            button.backgroundColor = .clear
+            button.layer.cornerRadius = 25
+            button.addSubview(imageView)
+            
+            let titleLabel = UILabel(frame: CGRect(x: 0, y: 30, width: frame.width, height: 20))
+            titleLabel.text = title
+            titleLabel.textColor = UIColor.flatGray()
+            titleLabel.font = UIFont.systemFont(ofSize: 10)
+            titleLabel.textAlignment = .center
+            button.addSubview(titleLabel)
+            return button
+        }
+        
+    
+        
+        func createButtonWithLabel(title:String,frame:CGRect,image:UIImage)->UIView{
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+            imageView.image = image
+            imageView.center.x = frame.width/2
+            
+            let button = UIView(frame: frame)
+            button.backgroundColor = .clear
+            button.layer.cornerRadius = 25
+            button.addSubview(imageView)
+            
+            let titleLabel = UILabel(frame: CGRect(x: 0, y: imageView.frame.height, width: frame.width, height: 20))
+            titleLabel.text = title
+            titleLabel.textColor = UIColor.flatGray()
+            titleLabel.font = UIFont.systemFont(ofSize: 10)
+            titleLabel.textAlignment = .center
+            button.addSubview(titleLabel)
+            return button
+        }
+        
+            let addCard = createButtonWithLabel(title: NSLocalizedString("subcard", comment: ""), frame: CGRect(x: 0, y: 0, width: 50, height: 50),image:UIImage(named:"subCard")!)
+            let subCardtapGesture = UITapGestureRecognizer()
+            subCardtapGesture.numberOfTapsRequired = 1
+            subCardtapGesture.numberOfTouchesRequired = 1
+            subCardtapGesture.addTarget(self, action: #selector(goAddCard))
+            addCard.addGestureRecognizer(subCardtapGesture)
+            
+            
+            
+        let ocr = createButtonWithLabel(title: NSLocalizedString("OCR", comment: ""), frame: CGRect(x: 0, y: 0, width: 55, height: 55), icon: .FAExpand)
+            let picGesture = UITapGestureRecognizer()
+            picGesture.numberOfTapsRequired = 1
+            picGesture.numberOfTouchesRequired = 1
+            picGesture.addTarget(self, action: #selector(addPic))
+            ocr.addGestureRecognizer(picGesture)
+            
+            
+            
+            
+        let tra = createButtonWithLabel(title: NSLocalizedString("Translate", comment: ""), frame: CGRect(x: 0, y: 0, width: 55, height: 55), icon: .FALanguage)
+            let traGesture = UITapGestureRecognizer()
+            traGesture.numberOfTapsRequired = 1
+            traGesture.numberOfTouchesRequired = 1
+            traGesture.addTarget(self, action: #selector(goTranslate))
+            tra.addGestureRecognizer(traGesture)
+        
+        
+        let voice = createButtonWithLabel(title: NSLocalizedString("Voice Translate", comment: ""), frame: CGRect(x: 0, y: 0, width: 55, height: 55), icon: .FASoundcloud)
+            let addVoiceGesture = UITapGestureRecognizer()
+            addVoiceGesture.numberOfTapsRequired = 1
+            addVoiceGesture.numberOfTouchesRequired = 1
+            addVoiceGesture.addTarget(self, action: #selector(goVoice))
+            voice.addGestureRecognizer(addVoiceGesture)
+            
+        
+            var addButtonList = [UIView]()
+            addButtonList.append(addCard)
+            addButtonList.append(tra)
+            addButtonList.append(ocr)
+            addButtonList.append(voice)
+            
+        
+            toolBox = SpringView(frame: CGRect(x: addCardButton.frame.origin.x, y: addCardButton.frame.origin.y, width: 0, height: 0))
+            self.toolBox.frame = CGRect(x: 0, y: 0, width: 160, height: 160)
+            toolBox.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 253/255, alpha: 1)
+            self.toolBox.clipsToBounds = true
+            self.toolBox.layer.cornerRadius = 10
+            var index = 0
+            for addButton in addButtonList{
+                let line = index/2
+                let mode = index%2
+                addButton.frame = CGRect(x: 25 + 60 * mode, y: 25 + 60 * line, width: 50, height: 50)
+                self.toolBox.addSubview(addButton)
+                index += 1
+            }
+    }
+    
+    @objc private func goAddCard(){
+        let vc = storyboard?.instantiateViewController(withIdentifier: "cardEditor") as! CardEditor
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.type = CardEditor.type.add
+        vc.delegate = self
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc private func addPic(){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow()
+            return
+        }
+        
+        let alertSheet = UIAlertController(title: "Select From", message: "", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let fromalbum = UIAlertAction(title: "Album", style: .default) { (action) in
+            print("Choose from Album")
+        
+            let vc = self.presentHGImagePicker(maxSelected:1) {[unowned self] (assets) in
+                //结果处理
+                print("共选择了\(assets.count)张图片，分别如下：")
+                for asset in assets {
+                    asset.getImage(completionHandler: { (image) in
+                        self.goOcr(image: image)
+                    })
+                }
+            }
+        }
+        
+        let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (action) in
+            let cameraPicker = UIImagePickerController()
+            cameraPicker.delegate = self
+            cameraPicker.sourceType = .camera
+            cameraPicker.mediaTypes = [kUTTypeImage as String]
+             self.present(cameraPicker, animated: true, completion: nil)
+        }
+        alertSheet.addAction(cancelAction)
+        alertSheet.addAction(fromalbum)
+        alertSheet.addAction(takePhoto)
+        
+        self.present(alertSheet, animated: true, completion: nil)
+    }
+    
+    @objc func goOcr(image: UIImage){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow()
+            return
+        }
+       
+        let vc = OCRController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.image = image
+        self.present(vc, animated: true) {}
+    }
+    
+    @objc func goTranslate(){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow()
+            return
+        }
+       
+        
+        let vc = TranslationController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func goVoice(){
+        //check rest recognition
+        if(!checkRestRecognition()) {
+            popOutWindow()
+            return
+        }
+        let card = VoiceCard(id: UUID().uuidString, title: "")
+        let vc = VoiceRecognitionController()
+        vc.loadVoiceCardView(voiceCard: card)
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
     
     
+    func checkRestRecognition()->Bool{
+        let num = UserDefaults.standard.integer(forKey: "num")
+        return UserDefaults.standard.bool(forKey: "VIP") || num > 0
+    }
+    
+    private func popOutWindow(){
+        let alertController = UIAlertController(title: NSLocalizedString("used_up", comment: ""),
+                                message: NSLocalizedString("used_up_message", comment: ""), preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil)
+                let okAction = UIAlertAction(title: NSLocalizedString("VIP", comment: ""), style: .default, handler: { action in
+                    // go to vip page
+                })
+        alertController.addAction(cancelAction)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
 }
 
 

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if canImport(UIKit)
+
 import UIKit
 
 @objc public protocol HeroViewControllerDelegate {
@@ -50,9 +52,11 @@ internal extension HeroTransition {
       let delegate = tabBarController.selectedViewController as? HeroViewControllerDelegate {
       closure(delegate)
     } else {
-      for vc in vc.childViewControllers where vc.isViewLoaded {
+      for vc in vc.children where vc.isViewLoaded {
         self.closureProcessForHeroDelegate(vc: vc, closure: closure)
       }
     }
   }
 }
+
+#endif

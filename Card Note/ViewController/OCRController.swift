@@ -20,7 +20,7 @@ class Point:UIButton{
         self.superFrame = superFrame
        super.init(frame: CGRect(origin:point, size: CGSize(width: 30, height: 30)))
        self.center = point
-        self.setTitleColor(UIColor.flatBlue, for: .normal)
+        self.setTitleColor(UIColor.flatBlue(), for: .normal)
         self.setFAIcon(icon: .FACircleO, iconSize: 30, forState: .normal)
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(Point.pan))
         self.addGestureRecognizer(gesture)
@@ -139,8 +139,15 @@ class OCRController:UIViewController,PointDelegate{
     }
     
     @objc func recognize(){
+        if(!checkRestRecognition()){
+            popOutWindow(vc:self)
+            return
+        }
         self.startRecognize()
     }
+    
+    
+   
     
     @objc func startRecognize(){
         print("start to recognize")
@@ -149,24 +156,27 @@ class OCRController:UIViewController,PointDelegate{
         processController.setAlert("Extracting Text...")
         processController.modalPresentationStyle = .overCurrentContext
         self.present(processController, animated: false, completion: nil)
-        OCRManager.ocr(usingAPI: imageView.image!) { [unowned self] (error, strings) in
-            if error == nil{
-                if strings.count == 0{
+        OCRManager.ocr(image: self.imageView.image!) { [unowned self] (strings) in
+            if strings != nil{
+                if strings!.count == 0{
                     DispatchQueue.main.async {
                     processController.dismiss(animated: true, completion: nil)
-                AlertView.show(alert: "No text recognized.")
+                         AlertView.show(alert: "No text recognized.")
                     }
                     return
                 }
                 DispatchQueue.main.async {
                     processController.dismiss(animated: false, completion: nil)
                     let vc = OCRResultController()
-                    vc.strings = strings
+                    vc.modalPresentationStyle = .fullScreen
+                    vc.strings = strings!
                     self.present(vc, animated: true, completion: nil)
                 }
-            }else{
-                AlertView.show(alert: "Seems no internet.")
-                print(error?.localizedDescription as Any)
+            } else {
+                DispatchQueue.main.async {
+                processController.dismiss(animated: true, completion: nil)
+                     AlertView.show(alert: "Check the internet.")
+                }
             }
         }
     }

@@ -171,13 +171,7 @@ class CardView: UIView{
     }
     
     func reload(){
-        Cloud.downloadDefinition(id: card.getId()) { [weak self](bool, error) in
-            if(error == nil && bool){
-                DispatchQueue.main.async {
-                    self?.labelofDes.text = self?.card.getDefinition()
-                }
-            }
-        }
+        
     }
     
     @objc func share(){
@@ -271,7 +265,9 @@ class CardView: UIView{
                 self.becomeFirstResponder()
                 uimenu = UIMenuController.shared
                 uimenu.arrowDirection = .default
-                uimenu.menuItems = [UIMenuItem(title: "Move", action: #selector(self.editMode)),UIMenuItem(title: "Delete", action: #selector(self.deleteCard)),UIMenuItem(title: "Share", action: #selector(self.share))]
+                uimenu.menuItems = [UIMenuItem(title: NSLocalizedString("move", comment: ""), action: #selector(self.editMode)),
+                                    UIMenuItem(title: NSLocalizedString("delete", comment: ""), action: #selector(self.deleteCard)),
+                                    UIMenuItem(title: NSLocalizedString("share", comment: ""), action: #selector(self.share))]
                 uimenu.setTargetRect(self.bounds, in: self)
                 uimenu.setMenuVisible(true, animated: true)
             }
@@ -279,22 +275,22 @@ class CardView: UIView{
     
     @objc func editMode(){
         if !isEditMode{
-        observeButton = UIButton(frame: CGRect(x: self.frame.width-40, y: 10, width: 30, height: 30))
-        observeButton.setFAIcon(icon: .FACheck, iconSize: 20, forState: .normal)
-        observeButton.setTitleColor(Constant.Color.translusentGray, for: .normal)
-        observeButton.backgroundColor = UIColor(red:70/255 , green: 70/255, blue: 70/255, alpha: 0.6)
-        observeButton.layer.cornerRadius = 15
-        observeButton.addTarget(self, action: #selector(observeMode), for: .touchDown)
-        self.addSubview(observeButton)
-        _isEditMode = true
+            observeButton = UIButton(frame: CGRect(x: self.frame.width-40, y: 10, width: 30, height: 30))
+            observeButton.setFAIcon(icon: .FACheck, iconSize: 20, forState: .normal)
+            observeButton.setTitleColor(Constant.Color.translusentGray, for: .normal)
+            observeButton.backgroundColor = UIColor(red:70/255 , green: 70/255, blue: 70/255, alpha: 0.6)
+            observeButton.layer.cornerRadius = 15
+            observeButton.addTarget(self, action: #selector(observeMode), for: .touchDown)
+            self.addSubview(observeButton)
+            _isEditMode = true
         }
     }
     
     @objc func observeMode(){
         if isEditMode{
-        observeButton.removeFromSuperview()
-        observeButton = nil
-        _isEditMode = false
+            observeButton.removeFromSuperview()
+            observeButton = nil
+            _isEditMode = false
         }
     }
     
@@ -316,7 +312,7 @@ class CardView: UIView{
             translatedTitle.textAlignment = .center
             translatedContent.textColor = .black
             translatedContent.frame = content.frame
-            translatedContent.backgroundColor = .clear
+            translatedContent.backgroundColor = .white
             translatedContent.font = UIFont(name: "ChalkboardSE-Bold", size: 15)
             TranslationManager.translate(text: title.text!) { (translate) in
                 if translate != nil{

@@ -170,6 +170,15 @@ class RecordManager {
         }
     }
     
+    func stop(){
+        if player != nil{
+            
+                player?.stop()
+                state = State.haveRecord
+            
+        }
+    }
+    
     func continuePlaying(){
         if player != nil{
             if !(player?.isPlaying)!{

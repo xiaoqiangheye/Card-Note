@@ -62,7 +62,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         
         class func getSingleSettingCard(title:String, action: (SettingCard)->())->SettingCard{
             let view = SettingCard(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.8, height: 50))
-            view.backgroundColor = UIColor.randomFlat
+            view.backgroundColor = UIColor.randomFlat()
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
             label.font = UIFont.systemFont(ofSize: 18)
             label.textColor = UIColor.init(contrastingBlackOrWhiteColorOn: view.backgroundColor!, isFlat: true)
@@ -85,7 +85,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             view.addSubview(view.imageView)
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
             label.font = UIFont.systemFont(ofSize: 15)
-            label.textColor = UIColor.flatGray
+            label.textColor = UIColor.flatGray()
             label.text = title
             label.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2 + 50)
             label.textAlignment = .center
@@ -121,8 +121,17 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
          
         */
         
+        let gl = CAGradientLayer.init()
+        gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:CGFloat(UIDevice.current.Xdistance()) + 60);
+        gl.startPoint = CGPoint(x:0, y:0);
+        gl.endPoint = CGPoint(x:1, y:1);
+        gl.colors = [Constant.Color.blueLeft.cgColor,Constant.Color.blueRight.cgColor]
+        gl.locations = [NSNumber(value:0),NSNumber(value:1)]
+        gl.cornerRadius = 0
+        self.view.layer.addSublayer(gl)
         
-        //title
+        
+        /*
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width * 0.7, height:CGFloat(UIDevice.current.Xdistance())/2))
         titleLabel.center.y = 50
         titleLabel.center.x = UIScreen.main.bounds.width/2
@@ -131,6 +140,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         titleLabel.textAlignment = .center
         titleLabel.text = "Me"
         self.view.addSubview(titleLabel)
+        */
  
         
         
@@ -138,7 +148,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
          scrollView
          */
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: CGFloat(UIDevice.current.Xdistance() + 20), width: UIScreen.main.bounds.width, height: self.view.bounds.height - CGFloat(UIDevice.current.Xdistance()) - 20))
+        scrollView = UIScrollView(frame: CGRect(x: 0, y: CGFloat(UIDevice.current.Xdistance() + 60), width: UIScreen.main.bounds.width, height: self.view.bounds.height - CGFloat(UIDevice.current.Xdistance()) - 20))
         scrollView.delegate = self
         scrollView.contentSize.width = UIScreen.main.bounds.width
         scrollView.contentSize.height = 100
@@ -181,7 +191,8 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
          sync
          */
-        sync = SettingCard.getSingleSettingCard(color:.white,title: "Sync",icon:UIImage(named: "sync")!,action: { (settingCard) in
+        let syncString = NSLocalizedString("Sync", comment: "")
+        sync = SettingCard.getSingleSettingCard(color:.white,title: syncString,icon:UIImage(named: "sync")!,action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(syncSetting))
             settingCard.addGestureRecognizer(tapGesture)
@@ -211,7 +222,8 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
         help
         */
-        help = SettingCard.getSingleSettingCard(color: .white, title: "Help", icon:UIImage(named: "help")!,action: { (settingCard) in
+        let helpString = NSLocalizedString("Help", comment: "")
+        help = SettingCard.getSingleSettingCard(color: .white, title: helpString, icon:UIImage(named: "help")!,action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(helpSetting))
             settingCard.addGestureRecognizer(tapGesture)
@@ -226,9 +238,10 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
         About us
         */
-        aboutUs = SettingCard.getSingleSettingCard(color: .white, title: "Terms", icon:UIImage(),action: { (settingCard) in
+        let termsString = NSLocalizedString("VIP", comment: "")
+        aboutUs = SettingCard.getSingleSettingCard(color: .white, title: termsString, icon:UIImage(),action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
-            tapGesture.addTarget(self, action: #selector(aboutUsSetting))
+            tapGesture.addTarget(self, action: #selector(vip))
             settingCard.addGestureRecognizer(tapGesture)
         })
         
@@ -242,7 +255,8 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
         Rate us
         */
-        rateUs = SettingCard.getSingleSettingCard(color: .white, title: "Rate us", icon:UIImage(named: "rateUs")!,action: { (settingCard) in
+        let rateString = NSLocalizedString("Rate Us", comment: "")
+        rateUs = SettingCard.getSingleSettingCard(color: .white, title: rateString, icon:UIImage(named: "rateUs")!,action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(rateUsSetting))
             settingCard.addGestureRecognizer(tapGesture)
@@ -256,7 +270,8 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
         Version
         */
-        version = SettingCard.getSingleSettingCard(color: .white, title: "Version", icon:UIImage.init(icon:.FACloudDownload, size: CGSize(width: 50, height: 50)), action: {settingcard in
+        let versionString = NSLocalizedString("Version", comment: "")
+        version = SettingCard.getSingleSettingCard(color: .white, title: versionString, icon:UIImage.init(icon:.FACloudDownload, size: CGSize(width: 50, height: 50)), action: {settingcard in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(versions))
             settingcard.addGestureRecognizer(tapGesture)
@@ -271,7 +286,8 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
         /**
          tag
          */
-        tag = SettingCard.getSingleSettingCard(color: .white, title: "Tag", icon: UIImage.init(icon: .FATags, size: CGSize(width: 50, height: 50)), action: { (settingCard) in
+        let tagString = NSLocalizedString("Tag", comment: "tag")
+        tag = SettingCard.getSingleSettingCard(color: .white, title: tagString, icon: UIImage.init(icon: .FATags, size: CGSize(width: 50, height: 50)), action: { (settingCard) in
             let tapGesture = UITapGestureRecognizer()
             tapGesture.addTarget(self, action: #selector(tags))
             settingCard.addGestureRecognizer(tapGesture)
@@ -295,7 +311,7 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
     }
     
     @objc func rateUsSetting(){
-        let urlString = NSString(format: "itms-apps://itunes.apple.com/app/id%@?action=write-review","1410342694")//替换为对应的APPID
+        let urlString = NSString(format: "itms-apps://itunes.apple.com/app/id%@?action=write-review","1576665096")//替换为对应的APPID
         UIApplication.shared.open(URL(string:urlString as String)!, options: [:], completionHandler: nil)
     }
     
@@ -332,6 +348,11 @@ class UserViewController:UIViewController,UIScrollViewDelegate{
             AlertView.show(error: "The device is unable to send mail.")
             print("The mail can't not be sent in this device.")
         }
+    }
+    
+    @objc func vip(){
+        let vip = VIPController()
+        self.present(vip, animated: true, completion: nil)
     }
     
     

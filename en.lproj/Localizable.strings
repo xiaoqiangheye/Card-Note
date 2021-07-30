@@ -1,0 +1,80 @@
+/* 
+  Localizable.strings
+  Card Note
+
+  Created by Wei Wei on 7/15/21.
+  Copyright © 2021 WeiQiang. All rights reserved.
+*/
+"Filter" = "Filter";
+"Sort" = "Sort";
+
+
+"OCR" = "OCR";
+"Translate" = "Translate";
+"Voice Translate" = "Voice Translate";
+"Sync" = "Sync";
+"Help" = "Help";
+"Version" = "Version";
+"Tag" = "Tag";
+"Rate us" = "Rate us";
+"Terms" = "Terms";
+"Name" = "Name";
+"Time" = "Time";
+
+
+"Success" = "Success";
+"Failure" = "Failure";
+
+
+"first_step" = "Welcome to Card Note. Ready for a walk?";
+"second_step" = "Click '+' to add a new card.";
+"third_step" = "This is an search Bar for you to search your cards.";
+"fourth_step" = "This is a tool Bar to select your cards.";
+
+
+"definition" = "What does this card record?";
+"definition_label" = "Desctiption";
+"subcard" = "Subcard";
+"key_value" = "Key-Value";
+"text_card" = "Text";
+"photo_card" = "Photo";
+"video_card" = "Video";
+"voice_card" = "Voice";
+
+
+
+"select_from" = "Select From";
+"album" = "Album";
+"cancel" = "Cancel";
+"take_photo" = "Take Photo";
+
+"key" = "Key";
+"value" = "Value";
+
+"used_up" = "Daily recognitions used up";
+"cancel" = "cancel";
+"VIP" = "GO VIP";
+"used_up_message" = "Thanks you for your supoort. Due to the cost of recognition, One only has 10 recognition
+per day. You could use it tomorrow or you could join our subscriptions to gain unlimited access.";
+
+//cardview
+"move" = "Move";
+"extract_text" = "Extract Text";
+"footnote" = "Footnote";
+"hide_footnote" = "Hide Footnote";
+"delete" = "Delete";
+"share" = "Share";
+"cancel_translate" = "Cancel Translation";
+
+//VIP
+"forever" = "Forever";
+"one_month" = "One Month";
+"one_year" = "One Year";
+"month" = "Month";
+"year" = "Year";
+"privilege" = "Without vip: up to 10 recognitions per day. VIP: No Ads. Unlimited OCR, Translation, Speech recognition";
+"purchase" = "Purchase";
+"restore" = "Restore";
+
+
+"CFBundleDisplayName" = "Canote";

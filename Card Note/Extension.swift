@@ -586,8 +586,41 @@ extension UIColor {
     }
 }
 
+extension Date {
+    func get(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
+        return calendar.dateComponents(Set(components), from: self)
+    }
+
+    func get(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
+        return calendar.component(component, from: self)
+    }
+}
+
+func checkRestRecognition()->Bool{
+    let num = UserDefaults.standard.integer(forKey: "num")
+    return UserDefaults.standard.bool(forKey: "VIP") || num > 0
+}
+
+func popOutWindow(vc:UIViewController){
+    let alertController = UIAlertController(title: NSLocalizedString("used_up", comment: ""),
+                            message: NSLocalizedString("used_up_message", comment: ""), preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil)
+            let okAction = UIAlertAction(title: NSLocalizedString("VIP", comment: ""), style: .default, handler: { action in
+                // go to vip page
+                let vip = VIPController()
+                vc.present(vip, animated: true, completion: nil)
+            })
+    alertController.addAction(cancelAction)
+    alertController.addAction(okAction)
+    vc.present(alertController, animated: true, completion: nil)
+}
 
 
+func minusOneRecognition(){
+    if(!UserDefaults.standard.bool(forKey: "VIP")){
+        UserDefaults.standard.setValue(UserDefaults.standard.integer(forKey:"num")-1, forKey: "num")
+    }
+}
 
 
 

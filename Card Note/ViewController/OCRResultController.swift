@@ -18,6 +18,7 @@ class OCRResultController:UIViewController{
         let gl = CAGradientLayer.init()
         var height:CGFloat = 100
         if UIDevice.current.isX(){height = 120}
+        self.view.backgroundColor = .white
         gl.frame = CGRect(x:0,y:0,width:self.view.frame.width,height:height)
         gl.startPoint = CGPoint(x:0, y:0);
         gl.endPoint = CGPoint(x:1, y:1);
@@ -53,6 +54,7 @@ class OCRResultController:UIViewController{
     
         self.textView = UITextView(frame: CGRect(x: 0, y: height, width: self.view.frame.width, height: self.view.frame.height - 80))
         self.textView.text = ""
+        self.textView.backgroundColor = .white
         textView.font = UIFont.systemFont(ofSize: 15)
         textView.textColor = .black
         loadText(strings: strings)
